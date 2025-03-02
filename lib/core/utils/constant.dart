@@ -5,6 +5,7 @@ import '../helper/cash_helper.dart';
 import 'color_mange.dart';
 
 enum ToastStates { success, error, warning }
+
 class Constants {
   static void navigateTo(context, widget) => Navigator.push(
         context,
@@ -27,7 +28,7 @@ class Constants {
         },
       );
 
- static void showToast({
+  static void showToast({
     required String text,
     required ToastStates state,
   }) =>
@@ -41,27 +42,52 @@ class Constants {
         fontSize: 16.0,
       );
 
+  static Color chooseToastColor(ToastStates state) {
+    Color color;
 
+    switch (state) {
+      case ToastStates.success:
+        color = Colors.green;
+        break;
+      case ToastStates.error:
+        color = Colors.red;
+        break;
+      case ToastStates.warning:
+        color = Colors.amber;
+        break;
+    }
 
-
-static Color chooseToastColor(ToastStates state) {
-  Color color;
-
-  switch (state) {
-    case ToastStates.success:
-      color = Colors.green;
-      break;
-    case ToastStates.error:
-      color = Colors.red;
-      break;
-    case ToastStates.warning:
-      color = Colors.amber;
-      break;
+    return color;
   }
 
-  return color;
-}
- static AppBar gradientAppBar({String? txt,}) {
+  static AppBar defaultAppBar(
+    BuildContext context, {
+    String? txt,
+  }) {
+    return AppBar(
+      title: Text(
+        txt!,
+        style: Theme.of(context)
+            .textTheme
+            .headlineSmall!
+            .copyWith(fontWeight: FontWeight.w600),
+      ),
+      toolbarHeight: 80,
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.arrow_forward_ios_outlined,
+            size: 20,
+          ),
+          onPressed: () {},
+        )
+      ],
+    );
+  }
+
+  static AppBar gradientAppBar({
+    String? txt,
+  }) {
     return AppBar(
       title: Text(
         txt!,
@@ -84,11 +110,10 @@ static Color chooseToastColor(ToastStates state) {
     );
   }
 
-static const String baseUrl = '';
+  static const String baseUrl = '';
 }
 
-const defaultImage = 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1650642518~exp=1650643118~hmac=0b7b8e50b2226fc9d468e5746126dab422b68123c63261be18e8cf420ebc2725&w=740';
+const defaultImage =
+    'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1650642518~exp=1650643118~hmac=0b7b8e50b2226fc9d468e5746126dab422b68123c63261be18e8cf420ebc2725&w=740';
 
 String? uId = CashHelper.getData(key: 'uId');
-
-
