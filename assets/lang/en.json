@@ -1,3 +1,10 @@
 {
-    "Skip": "Skip"
+    "Skip": "Skip",
+      "Next": "Next",
+      "previous": "previous",
+      "Login" : "Login",
+      "Enter Phone Number": "Enter Phone Number",
+      "Enter Password": "Enter Password",
+      "Login Discription": "Enter your information to access your bills and manage your guarantees and reminders easily."
+
 }

@@ -1,8 +1,10 @@
+import 'package:ahfaz_damanak/features/login/presentation/pages/login_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/helper/cash_helper.dart';
 import '../../core/utils/color_mange.dart';
+import '../../core/utils/constant.dart';
 import '../../core/utils/images_mange.dart';
 
 class BoardingModel {
@@ -54,16 +56,14 @@ class _OnBoardingState extends State<OnBoarding> {
   ];
 
   bool isLast = false;
+  String next = 'Next'.tr();
 
   var boardingController = PageController();
 
   void submit() {
     CashHelper.saveData(key: 'OnBoarding', value: true).then((value) {
       if (value) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const SizedBox()),
-            (route) => false);
+        Constants.navigateAndFinish(context, const LoginScreen());
       }
     });
   }
@@ -110,16 +110,30 @@ class _OnBoardingState extends State<OnBoarding> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                FloatingActionButton.extended(
+                TextButton(
+                  onPressed: () {
+                    boardingController.previousPage(
+                        duration: const Duration(milliseconds: 720),
+                        curve: Curves.fastLinearToSlowEaseIn);
+                  },
+                  child: Text(
+                    'previous'.tr(),
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
                   onPressed: () {
                     if (isLast) {
                       submit();
+                      next = ' Start'.tr();
                     }
                     boardingController.nextPage(
                         duration: const Duration(milliseconds: 720),
                         curve: Curves.fastLinearToSlowEaseIn);
                   },
-                  label: const Text('Next'),
+                  child: Text(
+                    next.tr(),
+                  ),
                 ),
               ],
             )
@@ -132,9 +146,11 @@ class _OnBoardingState extends State<OnBoarding> {
   Widget buildBoarding(BoardingModel model) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            model.title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          Center(
+            child: Text(
+              model.title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
           const SizedBox(
             height: 20,
@@ -143,9 +159,11 @@ class _OnBoardingState extends State<OnBoarding> {
           const SizedBox(
             height: 30,
           ),
-          Text(
-            model.body,
-            style: const TextStyle(fontSize: 15),
+          Center(
+            child: Text(
+              model.body,
+              style: const TextStyle(fontSize: 15),
+            ),
           ),
         ],
       );

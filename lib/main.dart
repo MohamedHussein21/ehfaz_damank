@@ -2,6 +2,8 @@ import 'package:ahfaz_damanak/features/splach/splach_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import 'core/helper/cash_helper.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -11,9 +13,15 @@ Future main() async {
       Locale('en'),
       Locale('tr'),
     ],
-    fallbackLocale: Locale('en'),
+    fallbackLocale: Locale('tr'),
     child: const MyApp(),
   ));
+  WidgetsFlutterBinding.ensureInitialized();
+  await CashHelper.init();
+
+  // Widget widget;
+
+  // bool? onBoarding = CashHelper.getData(key: 'OnBoarding');
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +34,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       locale: context.locale,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Ehfaz Damanak',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
