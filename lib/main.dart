@@ -1,8 +1,8 @@
-import 'package:ahfaz_damanak/config/themes/app_theme.dart';
 import 'package:ahfaz_damanak/features/splach/splach_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import 'config/themes/app_theme.dart';
 import 'core/helper/cash_helper.dart';
 
 Future main() async {
