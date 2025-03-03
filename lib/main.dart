@@ -1,3 +1,4 @@
+import 'package:ahfaz_damanak/config/themes/app_theme.dart';
 import 'package:ahfaz_damanak/features/splach/splach_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +36,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       title: 'Ehfaz Damanak',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: appTheme(),
       home: SplashScreen(),
     );
   }

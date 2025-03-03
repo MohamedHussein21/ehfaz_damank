@@ -5,6 +5,10 @@
       "Login" : "Login",
       "Enter Phone Number": "Enter Phone Number",
       "Enter Password": "Enter Password",
-      "Login Discription": "Enter your information to access your bills and manage your guarantees and reminders easily."
+      "Login Discription": "Enter your information to access your bills and manage your guarantees and reminders easily.",
+      " Password": " Password",
+      "Phone Number": "Phone Number",
+      "remember me": "remember me"
+
 
 }

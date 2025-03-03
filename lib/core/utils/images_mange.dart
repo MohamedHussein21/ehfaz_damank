@@ -3,9 +3,9 @@ const String imgPath = 'assets/images';
 class ImageAssets {
   static String logo = '$imgPath/logo.png';
 
-  static String aboutUs = '$imgPath/about_us.png';
+  static String smartPhone = '$imgPath/smart-phone.png';
 
-  static String choose = '$imgPath/choose.png';
+  static String password = '$imgPath/password-check.png';
 
   static String conditions = '$imgPath/conditions.png';
 

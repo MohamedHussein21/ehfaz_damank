@@ -13,5 +13,5 @@ class ColorManger {
 
   static Color bodyColor = const Color(0xffF2F6FE);
 
-  static Color grayColor = const Color(0xffEAECEE);
+  static Color grayColor = const Color(0xff828282);
 }

@@ -148,6 +148,7 @@ class _OnBoardingState extends State<OnBoarding> {
         children: [
           Center(
             child: Text(
+              textAlign: TextAlign.center,
               model.title,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
@@ -161,6 +162,7 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
           Center(
             child: Text(
+              textAlign: TextAlign.center,
               model.body,
               style: const TextStyle(fontSize: 15),
             ),
