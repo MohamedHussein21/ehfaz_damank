@@ -6,24 +6,29 @@ import '../../core/utils/font_mange.dart';
 
 ThemeData appTheme() {
   return ThemeData(
-    scaffoldBackgroundColor: ColorManger.bodyColor,
+    scaffoldBackgroundColor: ColorManger.wightColor,
     fontFamily: FontFamily.fontFamily,
     primaryColor: ColorManger.defaultColor,
     appBarTheme: AppBarTheme(
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: ColorManger.bodyColor,
+            statusBarColor: ColorManger.wightColor,
             statusBarIconBrightness: Brightness.dark),
-        backgroundColor: ColorManger.bodyColor,
+        backgroundColor: ColorManger.wightColor,
         elevation: 0,
         titleTextStyle: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: ColorManger.defaultColor),
-        iconTheme: IconThemeData(color: ColorManger.defaultColor, size: 25)),
+            color: ColorManger.blackColor),
+        iconTheme: IconThemeData(color: ColorManger.wightColor, size: 25)),
     iconTheme: IconThemeData(color: ColorManger.defaultColor),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: ColorManger.defaultColor),
     primaryIconTheme: IconThemeData(color: ColorManger.defaultColor),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedLabelStyle: TextStyle(color: ColorManger.defaultColor),
+        unselectedLabelStyle: TextStyle(color: ColorManger.grayColor),
+        unselectedIconTheme: IconThemeData(color: ColorManger.grayColor),
+        selectedIconTheme: IconThemeData(color: ColorManger.defaultColor)),
   );
 }

@@ -8,7 +8,31 @@
       "Login Discription": "Enter your information to access your bills and manage your guarantees and reminders easily.",
       " Password": " Password",
       "Phone Number": "Phone Number",
-      "remember me": "remember me"
+      "remember me": "remember me",
+      "Forget Password": "Forget Password",
+    "Don't have an account?": "Don't have an account?",
+    "Sign Up": "Sign Up",
+    "Make New Account": "Make New Account",
+    "Register Discription": "Register your account to save your bills, manage your guarantees, and receive reminders easily.",
+    "Name": "Name",
+    "Enter Your name": "Enter Your name",
+    "Confirm Password": "Confirm Password",
+    "Already have an account?" : "Already have an account?",
+    "Confirm" : "Confirm",
+    "The code was not sent.":"The code was not sent.",
+    "Sent Agin":"Sent Agin ",
+    "The code was not sent.!!":" The code was not sent.!!",
+    "Hallo":"Hallo",
+    "Main" :"Main",
+    "Bills":"Bills",
+    "Statistics":"Statistics",
+    "Notification":"Notification"
 
 
 }
+
+
+
+
+
+

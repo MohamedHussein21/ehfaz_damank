@@ -7,19 +7,19 @@ class DefaultTextForm extends StatelessWidget {
   final ValueChanged? onSubmit;
   final ValueChanged? onChange;
   final GestureTapCallback? onTap;
-  bool isPassword = false;
+  bool? isPassword = false;
   final String? Function(String? val)? validate;
   final String hint;
   final TextStyle? hintStyle;
-  final IconData? prefix;
-  final Widget? suffix;
+  final Widget? prefix;
+  final IconData? suffix;
   final VoidCallback? suffixPressed;
   bool isClickable = true;
 
   DefaultTextForm({
     Key? key,
     this.controller,
-    required this.isPassword,
+    this.isPassword,
     required this.type,
     this.onSubmit,
     this.onChange,
@@ -39,7 +39,7 @@ class DefaultTextForm extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         keyboardType: type,
-        obscureText: isPassword,
+        obscureText: isPassword!,
         enabled: isClickable,
         onFieldSubmitted: onSubmit,
         onChanged: onChange,
@@ -49,13 +49,13 @@ class DefaultTextForm extends StatelessWidget {
           hintText: hint,
           hintTextDirection: TextDirection.rtl,
           hintStyle: hintStyle,
-          prefixIcon: Icon(
-            prefix,
-          ),
+          prefixIcon: prefix,
           suffixIcon: suffix != null
-              ? GestureDetector(
-                  onTap: suffixPressed,
-                  child: suffix,
+              ? IconButton(
+                  onPressed: suffixPressed,
+                  icon: Icon(
+                    suffix,
+                  ),
                 )
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

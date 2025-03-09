@@ -1,3 +1,4 @@
+import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/features/login/presentation/pages/login_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -72,17 +73,15 @@ class _OnBoardingState extends State<OnBoarding> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
+          leadingWidth: MediaQueryValue(context).heigh * 0.1,
+          leading: TextButton(
               onPressed: submit,
               child: Text(
                 'Skip'.tr(),
                 style: TextStyle(color: ColorManger.defaultColor),
-              )),
-        ],
-      ),
+              ))),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(28.0),
         child: Column(
           children: [
             Expanded(
@@ -112,17 +111,6 @@ class _OnBoardingState extends State<OnBoarding> {
               children: [
                 TextButton(
                   onPressed: () {
-                    boardingController.previousPage(
-                        duration: const Duration(milliseconds: 720),
-                        curve: Curves.fastLinearToSlowEaseIn);
-                  },
-                  child: Text(
-                    'previous'.tr(),
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
                     if (isLast) {
                       submit();
                       next = ' Start'.tr();
@@ -133,6 +121,17 @@ class _OnBoardingState extends State<OnBoarding> {
                   },
                   child: Text(
                     next.tr(),
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    boardingController.previousPage(
+                        duration: const Duration(milliseconds: 720),
+                        curve: Curves.fastLinearToSlowEaseIn);
+                  },
+                  child: Text(
+                    'previous'.tr(),
                   ),
                 ),
               ],
@@ -153,12 +152,12 @@ class _OnBoardingState extends State<OnBoarding> {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: MediaQueryValue(context).heigh * 0.1,
           ),
           Expanded(child: Image.asset(model.image)),
-          const SizedBox(
-            height: 30,
+          SizedBox(
+            height: MediaQueryValue(context).heigh * 0.1,
           ),
           Center(
             child: Text(

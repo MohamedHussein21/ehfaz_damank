@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -27,6 +29,17 @@ class Constants {
           return false;
         },
       );
+
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+    massage, {
+    required BuildContext scaffoldContext,
+    required String text,
+    required Color color,
+  }) =>
+      ScaffoldMessenger.of(scaffoldContext).showSnackBar(SnackBar(
+        content: Text(text),
+        backgroundColor: color,
+      ));
 
   static void showToast({
     required String text,
@@ -60,27 +73,79 @@ class Constants {
     return color;
   }
 
+  static Future<dynamic> defaultDialog(
+      {required BuildContext context,
+      String? image,
+      String? title,
+      List<Widget>? action}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: ColorManger.wightColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Column(
+            children: [
+              Image(image: AssetImage(image!)),
+              const SizedBox(height: 10),
+              Text(
+                title!,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.spaceAround,
+          actions: action,
+        );
+      },
+    );
+  }
+
   static AppBar defaultAppBar(
     BuildContext context, {
     String? txt,
   }) {
     return AppBar(
-      title: Text(
-        txt!,
-        style: Theme.of(context)
-            .textTheme
-            .headlineSmall!
-            .copyWith(fontWeight: FontWeight.w600),
-      ),
-      toolbarHeight: 80,
-      actions: [
-        IconButton(
+        title: Text(
+          txt!,
+          style: Theme.of(context)
+              .textTheme
+              .headlineSmall!
+              .copyWith(fontWeight: FontWeight.w600, fontSize: 20),
+        ),
+        toolbarHeight: 80,
+        leading: IconButton(
           icon: Icon(
-            Icons.arrow_forward_ios_outlined,
+            Icons.arrow_back_ios,
             size: 20,
+            color: ColorManger.blackColor,
           ),
-          onPressed: () {},
-        )
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ));
+  }
+
+  static buildTextField(
+      String label, TextEditingController controller, String hint,
+      {int? maxLine}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        const SizedBox(height: 8),
+        TextField(
+          maxLines: maxLine,
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hint,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        const SizedBox(height: 10),
       ],
     );
   }

@@ -27,7 +27,7 @@ class DefaultButton extends StatelessWidget {
                 MaterialStateProperty.all(ColorManger.defaultColor)),
         child: Text(
           title!,
-          style: const TextStyle(fontSize: 12),
+          style: const TextStyle(fontSize: 12, color: Colors.white),
         ),
       ),
     );

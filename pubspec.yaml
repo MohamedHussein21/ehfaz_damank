@@ -40,6 +40,15 @@ dependencies:
   dio: ^5.8.0+1
   fluttertoast: ^8.2.12
   easy_localization: ^3.0.1
+  flutter_otp_text_field: ^1.5.1+1
+  persistent_bottom_nav_bar: ^6.2.1
+  fl_chart: ^0.70.2
+  qr_flutter: ^4.1.0
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
+  pdf: ^3.11.3
+  image_picker: ^1.1.2
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:

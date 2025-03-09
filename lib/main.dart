@@ -1,9 +1,11 @@
 import 'package:ahfaz_damanak/features/splach/splach_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'config/themes/app_theme.dart';
 import 'core/helper/cash_helper.dart';
+import 'features/main/presentation/cubit/cubit.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,9 +14,10 @@ Future main() async {
     path: 'assets/lang',
     supportedLocales: const [
       Locale('en'),
-      Locale('tr'),
+      Locale('ar'),
     ],
-    fallbackLocale: Locale('tr'),
+    fallbackLocale: Locale('ar'),
+    startLocale: Locale('ar'),
     child: const MyApp(),
   ));
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,14 +33,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      supportedLocales: context.supportedLocales,
-      localizationsDelegates: context.localizationDelegates,
-      locale: context.locale,
-      debugShowCheckedModeBanner: false,
-      title: 'Ehfaz Damanak',
-      theme: appTheme(),
-      home: SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MainCubit(),
+        ),
+      ],
+      child: MaterialApp(
+        supportedLocales: context.supportedLocales,
+        localizationsDelegates: context.localizationDelegates,
+        locale: context.locale,
+        debugShowCheckedModeBanner: false,
+        title: 'Ehfaz Damanak',
+        theme: appTheme(),
+        home: SplashScreen(),
+      ),
     );
   }
 }
