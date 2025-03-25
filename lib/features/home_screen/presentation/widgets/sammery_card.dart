@@ -5,12 +5,18 @@ import '../../../../core/utils/color_mange.dart';
 class SummaryCard extends StatelessWidget {
   final String title;
   final String value;
+  final String image;
 
-  SummaryCard({required this.title, required this.value});
+  const SummaryCard(
+      {super.key,
+      required this.title,
+      required this.value,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 150,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(
@@ -23,9 +29,11 @@ class SummaryCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.4,
       child: Column(
         children: [
-          Text(title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Image(image: AssetImage(image), height: 30),
           SizedBox(height: 10),
+          Text(title,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+          Spacer(),
           Text(value, style: TextStyle(fontSize: 18, color: Colors.purple)),
         ],
       ),

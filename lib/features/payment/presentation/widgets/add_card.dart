@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/icons_assets.dart';
-import '../../../main/presentation/pages/main_screen.dart';
 
 class AddBankCardScreen extends StatelessWidget {
   const AddBankCardScreen({super.key});
@@ -28,8 +27,7 @@ class AddBankCardScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Constants.buildTextField(
                 'اسم حامل البطاقة', nameController, 'ادخل اسم حامل البطاقة'),
@@ -46,7 +44,7 @@ class AddBankCardScreen extends StatelessWidget {
                 SizedBox(width: 12),
                 Expanded(
                     child: Constants.buildTextField(
-                        'تاريخ الانتهاء', cvvController, 'شهر / سنة'))
+                        'تاريخ الانتهاء', dateController, 'شهر / سنة'))
               ],
             ),
             SizedBox(height: 24),

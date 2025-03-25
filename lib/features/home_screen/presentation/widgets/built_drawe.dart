@@ -1,13 +1,16 @@
+import 'package:ahfaz_damanak/core/helper/cash_helper.dart';
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/icons_assets.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:ahfaz_damanak/features/login/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../../conect_us/conect_us.dart';
+import '../../../contactUs/presentation/pages/contact_screen.dart';
+import '../../../nots/presentation/pages/motsScreen.dart';
 import '../../../payment/presentation/pages/payment_screen.dart';
 import '../../../plans/presentation/pages/plans_screen.dart';
-import '../../../profileScreen/presentation/pages/profile_screen.dart';
+import '../../../profile_screen/presentation/pages/profile-screen.dart';
 
 class BuiltDrawe extends StatelessWidget {
   const BuiltDrawe({super.key});
@@ -43,7 +46,9 @@ class BuiltDrawe extends StatelessWidget {
           ListTile(
             leading: Image(image: AssetImage(IconsAssets.note)),
             title: Text("التذكيرات "),
-            onTap: () {},
+            onTap: () {
+              Constants.navigateTo(context, RemindersScreen());
+            },
           ),
           Divider(
             height: 0.1,
@@ -87,7 +92,10 @@ class BuiltDrawe extends StatelessWidget {
           ListTile(
             leading: Image(image: AssetImage(IconsAssets.elements)),
             title: Text("تسجيل الخروج", style: TextStyle(color: Colors.red)),
-            onTap: () {},
+            onTap: () {
+              CashHelper.removeData(key: 'api_token').then((value) =>
+                  Constants.navigateAndFinish(context, LoginScreen()));
+            },
           ),
         ],
       ),

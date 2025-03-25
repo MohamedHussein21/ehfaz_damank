@@ -129,6 +129,31 @@ class Constants {
         ));
   }
 
+  static buildTextFormField(
+      String label, TextEditingController controller, String hint,
+      {int? maxLine,
+      TextInputType? keyboardType,
+      String? Function(String?)? validator}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        const SizedBox(height: 8),
+        TextFormField(
+          maxLines: maxLine,
+          controller: controller,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            hintText: hint,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          validator: validator,
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+
   static buildTextField(
       String label, TextEditingController controller, String hint,
       {int? maxLine}) {
@@ -181,4 +206,4 @@ class Constants {
 const defaultImage =
     'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1650642518~exp=1650643118~hmac=0b7b8e50b2226fc9d468e5746126dab422b68123c63261be18e8cf420ebc2725&w=740';
 
-String? uId = CashHelper.getData(key: 'uId');
+String? token = CashHelper.getData(key: 'api_token');

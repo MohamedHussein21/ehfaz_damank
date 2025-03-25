@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:ahfaz_damanak/features/add_screen/presentation/pages/add_screen.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/pages/bills_screen.dart';
 import 'package:ahfaz_damanak/features/main/presentation/cubit/main_state.dart';
 import 'package:ahfaz_damanak/features/notifaction_screen/presentation/pages/notifcation_screen.dart';
 import 'package:ahfaz_damanak/features/statistics_screen/presentation/pages/statistics_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../add_fatoura/presentation/pages/add_screen.dart';
 import '../../../home_screen/presentation/pages/home_screen.dart';
 
 class MainCubit extends Cubit<MainStates> {

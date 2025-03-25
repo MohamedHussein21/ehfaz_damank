@@ -1,7 +1,12 @@
 import 'package:ahfaz_damanak/core/utils/constant.dart';
+import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/color_mange.dart';
+import '../../data/models/bills_model.dart';
+import '../cubit/bills_screen_state.dart';
 import '../widgets/billDetails.dart';
 import '../widgets/billing_filter.dart';
 
@@ -13,64 +18,19 @@ class BillsScreen extends StatefulWidget {
 }
 
 class _BillsScreenState extends State<BillsScreen> {
-  List<Map<String, dynamic>> bills = [
-    {
-      "id": "INV-2025001",
-      "title": "كافور",
-      "amount": "3,500",
-      "tax": "150",
-      "date": "25 يناير 2025",
-      "category": "مشتريات",
-      "merchant": "كافور مول",
-      "qrData": "فاتورة كافور - رقم INV-2025001",
-      "warrantyType": "ضمان سنة",
-      "warrantyEndDate": "25 يناير 2026",
-      "warrantyStatus": "ساري"
-    },
-    {
-      "id": "INV-2025002",
-      "title": "فاتورة الكهرباء",
-      "amount": "300",
-      "tax": "20",
-      "date": "25 يناير 2025",
-      "category": "مرافق عامة",
-      "merchant": "شركة الكهرباء",
-      "qrData": "فاتورة كهرباء - رقم INV-2025002",
-      "warrantyType": "لا يوجد",
-      "warrantyEndDate": "-",
-      "warrantyStatus": "-"
-    },
-    {
-      "id": "INV-2025003",
-      "title": "إيجار المنزل",
-      "amount": "800",
-      "tax": "0",
-      "date": "25 يناير 2025",
-      "category": "إيجارات",
-      "merchant": "مالك العقار",
-      "qrData": "إيجار منزل - رقم INV-2025003",
-      "warrantyType": "لا يوجد",
-      "warrantyEndDate": "-",
-      "warrantyStatus": "-"
-    }
-  ];
-
-  List<Map<String, dynamic>> filteredBills = [];
   TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    filteredBills = bills;
+    context.read<BillsScreenCubit>().getBills();
     searchController.addListener(_filterBills);
   }
 
   void _filterBills() {
-    setState(() {
-      filteredBills = bills.where((bill) {
-        return bill["title"].contains(searchController.text);
-      }).toList();
-    });
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void openFilterSheet() {
@@ -87,67 +47,101 @@ class _BillsScreenState extends State<BillsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "فواتيري",
-          style: TextStyle(color: ColorManger.blackColor),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () => openFilterSheet(),
-                    icon: Icon(Icons.filter_list)),
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      hintText: " ابحث عن فاتورة...",
-                      filled: true,
-                      fillColor: Colors.white,
-                      suffixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+    return BlocProvider(
+      create: (context) => BillsScreenCubit()..getBills(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "My bills".tr(),
+            style: TextStyle(color: ColorManger.blackColor),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(60),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => openFilterSheet(),
+                      icon: const Icon(Icons.filter_list)),
+                  Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "search bill....".tr(),
+                        filled: true,
+                        fillColor: Colors.white,
+                        suffixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: ListView.builder(
-        itemCount: filteredBills.length,
-        itemBuilder: (context, index) {
-          final bill = filteredBills[index];
-          return Dismissible(
-            key: Key(bill['title']),
-            background: Container(
-                color: Colors.red,
-                alignment: Alignment.centerRight,
-                child: const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Icon(Icons.delete, color: Colors.white))),
-            onDismissed: (direction) => setState(() => bills.removeAt(index)),
-            child: ListTile(
-              title: Text(bill["title"],
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(bill["date"]),
-              trailing: Text("${bill["amount"]} ريال",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
-              onTap: () => Constants.navigateTo(
-                context,
-                BillDetailsScreen(bill: bill),
-              ),
-            ),
-          );
-        },
+        body: BlocBuilder<BillsScreenCubit, BillsScreenState>(
+          builder: (context, state) {
+            if (state is BillsScreenLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is BillsScreenSuccess) {
+              final bills = (state.billsModel).where((bill) {
+                return (bill.name?.toLowerCase() ?? '')
+                    .contains(searchController.text.toLowerCase());
+              }).toList();
+
+              if (bills.isEmpty) {
+                return Center(
+                  child: Text(
+                    'لا توجد فواتير متاحة'.tr(),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: bills.length,
+                itemBuilder: (context, index) {
+                  final bill = bills[index];
+                  return Dismissible(
+                    key: Key(bill.name ?? ''),
+                    background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        child: const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Icon(Icons.delete, color: Colors.white))),
+                    onDismissed: (direction) => context
+                        .read<BillsScreenCubit>()
+                        .deleteBill(id: bill.id ?? 0),
+                    child: ListTile(
+                      title: Text(bill.name ?? '',
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(bill.purchaseDate ?? ''),
+                      trailing: bill.price != null
+                          ? Text("${bill.price} ريال",
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold))
+                          : const SizedBox(),
+                      onTap: () => Constants.navigateTo(
+                        context,
+                        BillDetailsScreen(bill: state.billsModel[index]),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else if (state is BillsScreenError) {
+              return Center(child: Text(state.message));
+            } else {
+              return Center(child: Text('No bills found'.tr()));
+            }
+          },
+        ),
       ),
     );
   }

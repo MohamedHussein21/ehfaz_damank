@@ -11,9 +11,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/utils/icons_assets.dart';
+import '../../data/models/bills_model.dart';
 
 class BillDetailsScreen extends StatelessWidget {
-  final Map<String, dynamic> bill;
+  final Bill bill;
 
   const BillDetailsScreen({super.key, required this.bill});
 
@@ -83,31 +84,48 @@ class BillDetailsScreen extends StatelessWidget {
             ),
             Center(
               child: QrImageView(
-                data: bill["qrData"] ?? "فاتورة رقم ${bill["id"]}",
+                data: bill.id?.toString() ?? "فاتورة رقم ${bill.id}",
                 size: 150,
               ),
             ),
             const SizedBox(height: 20),
             _buildSectionTitle("بيانات الفاتورة"),
-            _buildDetailRow("اسم الفاتورة /المنتج", bill["title"]),
-            _buildDetailRow("تاريخ الشراء", bill["date"]),
-            _buildDetailRow(" المبلغ المدفوع", "${bill["amount"]} ريال"),
-            _buildDetailRow("جهة الشراء ", bill["merchant"]),
-            _buildDetailRow("الفئة", bill["category"]),
-            _buildDetailRow("رقم الفاتورة", bill["id"]),
+            _buildDetailRow("اسم الفاتورة /المنتج", bill.name ?? ''),
+            _buildDetailRow("تاريخ الشراء", bill.purchaseDate ?? ''),
+            _buildDetailRow("المبلغ المدفوع", "${bill.price} ريال"),
+            _buildDetailRow("جهة الشراء", bill.storeName ?? ''),
+            _buildDetailRow("الفئة", bill.categoryId?.toString() ?? ''),
+            _buildDetailRow("رقم الفاتورة", bill.fatoraNumber ?? ''),
             const SizedBox(height: 20),
             _buildSectionTitle("تفاصيل الضمان والصيانة"),
-            _buildDetailRow(" هل الفاتورة تشمل ضمان ؟", bill["warrantyType"]),
-            _buildDetailRow(" نهاسة الضمان ", bill["warrantyEndDate"],
+            _buildDetailRow(
+                "هل الفاتورة تشمل ضمان؟", bill.daman?.toString() ?? ''),
+            _buildDetailRow("نهاية الضمان", bill.damanDate ?? '',
                 valueColor: Colors.red),
-            _buildDetailRow("تنبيه بانتهاء الضمان ", bill["warrantyStatus"]),
+            _buildDetailRow(
+                "تنبيه بانتهاء الضمان", bill.damanReminder?.toString() ?? ''),
             const SizedBox(height: 20),
             _buildSectionTitle("المرفقات والمستندات"),
             Row(
               children: [
-                _buildAttachment(icon: Icons.picture_as_pdf, label: "PDF"),
-                const SizedBox(width: 10),
-                _buildAttachment(icon: Icons.image, label: "صورة"),
+                if (bill.image != null && bill.image!.endsWith('.pdf'))
+                  _buildAttachment(
+                      icon: Icons.picture_as_pdf,
+                      label: "PDF",
+                      filePath: bill.image!),
+                if (bill.image != null &&
+                    !bill.image!.endsWith('.png') &&
+                    !bill.image!.endsWith('.jpg'))
+                  _buildAttachment(
+                      icon: Icons.image, label: "صورة", filePath: bill.image!),
+                if (bill.image == null)
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      "لا يوجد مرفقات",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
               ],
             ),
             const SizedBox(height: 30),
@@ -115,7 +133,9 @@ class BillDetailsScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      shareBillAsPDF();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorManger.defaultColor,
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -167,6 +187,16 @@ class BillDetailsScreen extends StatelessWidget {
                 style:
                     pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 10),
+            pw.Text("اسم الفاتورة /المنتج: ${bill.name ?? ''}"),
+            pw.Text("تاريخ الشراء: ${bill.purchaseDate ?? ''}"),
+            pw.Text("المبلغ المدفوع: ${bill.price} ريال"),
+            pw.Text("جهة الشراء: ${bill.storeName ?? ''}"),
+            pw.Text("الفئة: ${bill.categoryId?.toString() ?? ''}"),
+            pw.Text("رقم الفاتورة: ${bill.fatoraNumber ?? ''}"),
+            pw.Text("هل الفاتورة تشمل ضمان؟: ${bill.daman?.toString() ?? ''}"),
+            pw.Text("نهاية الضمان: ${bill.damanDate ?? ''}"),
+            pw.Text(
+                "تنبيه بانتهاء الضمان: ${bill.damanReminder?.toString() ?? ''}"),
           ],
         ),
       ),
@@ -203,20 +233,33 @@ class BillDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAttachment({required IconData icon, required String label}) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
+  Widget _buildAttachment(
+      {required IconData icon,
+      required String label,
+      required String filePath}) {
+    return GestureDetector(
+      onTap: () {
+        // Handle file opening
+        if (filePath.endsWith('.pdf')) {
+          // Open PDF file
+        } else {
+          // Open image file
+        }
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 40, color: Colors.black54),
           ),
-          child: Icon(icon, size: 40, color: Colors.black54),
-        ),
-        const SizedBox(height: 5),
-        Text(label, style: const TextStyle(fontSize: 14)),
-      ],
+          const SizedBox(height: 5),
+          Text(label, style: const TextStyle(fontSize: 14)),
+        ],
+      ),
     );
   }
 }

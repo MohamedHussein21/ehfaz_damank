@@ -56,8 +56,8 @@ class _OnBoardingState extends State<OnBoarding> {
     ),
   ];
 
+  bool isFirst = true;
   bool isLast = false;
-  String next = 'Next'.tr();
 
   var boardingController = PageController();
 
@@ -111,17 +111,12 @@ class _OnBoardingState extends State<OnBoarding> {
               children: [
                 TextButton(
                   onPressed: () {
-                    if (isLast) {
-                      submit();
-                      next = ' Start'.tr();
-                    }
+                    submit();
                     boardingController.nextPage(
                         duration: const Duration(milliseconds: 720),
                         curve: Curves.fastLinearToSlowEaseIn);
                   },
-                  child: Text(
-                    next.tr(),
-                  ),
+                  child: isLast ? Text('Start'.tr()) : Text('Next'.tr()),
                 ),
                 const Spacer(),
                 TextButton(
@@ -130,9 +125,11 @@ class _OnBoardingState extends State<OnBoarding> {
                         duration: const Duration(milliseconds: 720),
                         curve: Curves.fastLinearToSlowEaseIn);
                   },
-                  child: Text(
-                    'previous'.tr(),
-                  ),
+                  child: isFirst
+                      ? const SizedBox()
+                      : Text(
+                          'previous'.tr(),
+                        ),
                 ),
               ],
             )

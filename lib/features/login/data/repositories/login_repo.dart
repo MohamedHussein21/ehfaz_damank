@@ -11,15 +11,15 @@ class LoginRepo extends BaseLoginRepository {
 
   LoginRepo(this.baseRemoteDataSource);
 
-  Future<Either<Failure, UserModel>> userLogin(
-      String email, String password) async {
+  Future<Either<Failure, AuthResponse>> userLogin(
+      String phone, String password) async {
     final result =
-        await baseRemoteDataSource.userLogin(email: email, password: password);
+        await baseRemoteDataSource.userLogin(phone: phone, password: password);
 
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(massage: failure.errorModel.detail));
+      return Left(FailureServer(msg: failure.errorModel.detail));
     }
   }
 }

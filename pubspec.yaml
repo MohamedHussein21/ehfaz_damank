@@ -49,6 +49,8 @@ dependencies:
   pdf: ^3.11.3
   image_picker: ^1.1.2
   dartz: ^0.10.1
+  buildcondition: ^0.0.4
+  file_picker: ^9.2.1
 
 dev_dependencies:
   flutter_test:

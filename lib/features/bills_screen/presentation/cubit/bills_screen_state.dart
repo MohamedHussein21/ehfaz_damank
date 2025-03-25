@@ -1,4 +1,7 @@
-part of 'bills_screen_cubit.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../data/models/bills_model.dart';
+import '../../data/models/del_model.dart';
 
 abstract class BillsScreenState extends Equatable {
   const BillsScreenState();
@@ -8,3 +11,37 @@ abstract class BillsScreenState extends Equatable {
 }
 
 class BillsScreenInitial extends BillsScreenState {}
+
+class BillsScreenLoading extends BillsScreenState {}
+
+class BillsScreenSuccess extends BillsScreenState {
+  final List<Bill> billsModel;
+
+  const BillsScreenSuccess(this.billsModel);
+
+  @override
+  List<Object> get props => [billsModel];
+}
+
+class BillsScreenError extends BillsScreenState {
+  final String message;
+
+  const BillsScreenError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class BillDeletingLouding extends BillsScreenState {}
+
+class BillDeletingSuccus extends BillsScreenState {
+  final DeleteModel deleteModel;
+
+  const BillDeletingSuccus({required this.deleteModel});
+}
+
+class BillDeletingError extends BillsScreenState {
+  final String message;
+
+  const BillDeletingError(this.message);
+}

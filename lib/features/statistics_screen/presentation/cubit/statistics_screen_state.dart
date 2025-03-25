@@ -8,3 +8,12 @@ abstract class StatisticsScreenState extends Equatable {
 }
 
 class StatisticsScreenInitial extends StatisticsScreenState {}
+
+class StatisticsScreenLoading extends StatisticsScreenState {}
+
+class StatisticsScreenSuccess extends StatisticsScreenState {
+  final StatisticsModel statistics;
+  const StatisticsScreenSuccess(this.statistics);
+}
+
+class StatisticsScreenError extends StatisticsScreenState {}

@@ -9,8 +9,8 @@ class LoginUseCase {
 
   LoginUseCase(this.baseAuthRepository);
 
-  Future<Either<Failure, UserModel>> execute(
-      {required String email, required String password}) async {
-    return await baseAuthRepository.userLogin(email, password);
+  Future<Either<Failure, AuthResponse>> execute(
+      {required String phone, required String password}) async {
+    return await baseAuthRepository.userLogin(phone, password);
   }
 }

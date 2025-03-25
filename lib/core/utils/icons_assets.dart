@@ -18,4 +18,8 @@ class IconsAssets {
   static String star = '$iconsPath/star.png';
   static String profile = '$iconsPath/profile.png';
   static String payment = '$iconsPath/payment.png';
+
+  static String mony = '$iconsPath/mony.png';
+  static String allInvoice = '$iconsPath/all-invoice.png';
+  static String allNote = '$iconsPath/notebook.png';
 }

@@ -94,7 +94,7 @@ class _BuyPlanScreenState extends State<BuyPlanScreen> {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   Spacer(),
-                  Text('30 ريال /شهر ')
+                  Text('300 ريال /شهر ')
                 ],
               ),
               SizedBox(height: MediaQueryValue(context).heigh * 0.01),

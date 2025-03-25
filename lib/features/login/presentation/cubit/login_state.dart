@@ -11,11 +11,11 @@ class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
-class LoginLoaded extends LoginState {
-  final UserModel user;
+class LoginSuccess extends LoginState {
+  final AuthResponse user;
   final String token;
 
-  const LoginLoaded(this.user, this.token);
+  const LoginSuccess(this.user, this.token);
 }
 
 class LoginError extends LoginState {

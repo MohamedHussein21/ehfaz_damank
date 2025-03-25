@@ -50,17 +50,29 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
             _buildPlanSelector(),
             SizedBox(
               height: MediaQueryValue(context).heigh * 0.37,
-              child: Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 2,
-                  itemBuilder: (context, index) => _buildPlanDetails(),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildPlanDetails(
+                        context: context,
+                        planName: 'الباقة المجانية',
+                        planPrice: 'free',
+                        buttonColor: Colors.green,
+                        featureStatus: [true, true, false, false],
+                        plantype: 'الباقة الاساسية'),
+                    _buildPlanDetails(
+                        context: context,
+                        planName: 'الباقة المدفوعة',
+                        planPrice: '300 ريال ',
+                        buttonColor: ColorManger.defaultColor,
+                        featureStatus: [true, true, true, true],
+                        plantype: 'شراء الباقة'),
+                  ],
                 ),
               ),
             ),
-            _buildCardSelection(),
-            _buildPaymentButton(),
           ],
         ),
       ),
@@ -97,7 +109,13 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
     );
   }
 
-  Widget _buildPlanDetails() {
+  Widget _buildPlanDetails(
+      {required BuildContext context,
+      required String planName,
+      required String planPrice,
+      required Color buttonColor,
+      required List<bool> featureStatus,
+      required String plantype}) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -108,46 +126,44 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text('الباقة الأساسية',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Text('Free')
-                ],
-              ),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('تخزين حتى 10 فاتورة', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('إشعارات انتهاء الضمان ', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('تصدير الفواتير PDF', false),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('دعم الأولوية', false),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.02),
-              SizedBox(
-                width: MediaQueryValue(context).width * 0.6,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManger.defaultColor,
-                    side: BorderSide(color: ColorManger.defaultColor),
-                    foregroundColor: ColorManger.wightColor,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 12),
-                  ),
-                  onPressed: () {
-                    Constants.navigateTo(context, BuyPlanScreen());
-                  },
-                  child: Text("الباقه الحالية "),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(planName,
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Spacer(),
+                Text(planPrice)
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildPlanFeature('تخزين حتى 10 فاتورة', featureStatus[0]),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildPlanFeature('إشعارات انتهاء الضمان ', featureStatus[1]),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildPlanFeature('تصدير الفواتير PDF', featureStatus[2]),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildPlanFeature('دعم الأولوية', featureStatus[3]),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.6,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonColor,
+                  side: BorderSide(color: buttonColor),
+                  foregroundColor: ColorManger.wightColor,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                 ),
+                onPressed: () {
+                  Constants.navigateTo(context, BuyPlanScreen());
+                },
+                child: Text(plantype),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

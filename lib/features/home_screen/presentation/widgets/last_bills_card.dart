@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
+import '../../data/models/home_model.dart';
 
 class LastBillsCard extends StatelessWidget {
   final String title;
@@ -17,18 +18,20 @@ class LastBillsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Card(
-        color: ColorManger.wightColor,
-        child: ListTile(
-          title: Text(title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          subtitle: Text(date),
-          trailing: Text(amount,
-              style: TextStyle(
-                fontSize: 16,
-              )),
+    return SizedBox(
+      child: GestureDetector(
+        onTap: () {},
+        child: Card(
+          color: ColorManger.wightColor,
+          child: ListTile(
+            title: Text(title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            subtitle: Text(date),
+            trailing: Text(amount,
+                style: TextStyle(
+                  fontSize: 16,
+                )),
+          ),
         ),
       ),
     );
@@ -36,28 +39,33 @@ class LastBillsCard extends StatelessWidget {
 }
 
 class LastBillsAdded extends StatelessWidget {
-  const LastBillsAdded({super.key});
+  final OrdersResponse? ordersResponse;
+
+  const LastBillsAdded({super.key, this.ordersResponse});
 
   @override
   Widget build(BuildContext context) {
-    List<LastBillsCard> invoices = [
-      LastBillsCard(title: "كافور", amount: "3,500 ريال", date: "25 مارس 2025"),
-      LastBillsCard(
-          title: "فاتورة الكهرباء", amount: "300 ريال", date: "25 مارس 2025"),
-      LastBillsCard(
-          title: "إيجار المنزل", amount: "800 ريال", date: "25 مارس 2025"),
-    ];
+    final invoices = ordersResponse!.orders.map((order) {
+      return LastBillsCard(
+        title: order.name ?? '',
+        amount: "${order.price} ريال",
+        date: order.purchaseDate ?? '',
+      );
+    }).toList();
+
     return Scaffold(
       appBar: Constants.defaultAppBar(
         context,
         txt: "last bills Added".tr(),
       ),
-      body: ListView.builder(
-          shrinkWrap: true,
-          itemCount: invoices.length,
-          itemBuilder: (context, index) {
-            return invoices[index];
-          }),
+      body: invoices.isEmpty
+          ? Center(child: Text("لا يوجد فواتير متاحة"))
+          : ListView.builder(
+              shrinkWrap: true,
+              itemCount: invoices.length,
+              itemBuilder: (context, index) {
+                return invoices[index];
+              }),
     );
   }
 }

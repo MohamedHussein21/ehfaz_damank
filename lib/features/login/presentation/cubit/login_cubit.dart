@@ -1,5 +1,6 @@
 import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
 import 'package:ahfaz_damanak/features/login/data/repositories/login_repo.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,19 +15,19 @@ class LoginCubit extends Cubit<LoginState> {
 
   static LoginCubit get(context) => BlocProvider.of(context);
 
-  UserModel? userModel;
+  UserData? userModel;
   void userLogin({
-    required String email,
+    required String phone,
     required String password,
   }) async {
     emit(LoginLoading());
-    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource();
+    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
     BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
     final result = await LoginUseCase(baseAuthRepository)
-        .execute(email: email, password: password);
-    result.fold((l) => emit(LoginError(l.massage)), (r) {
-      emit(LoginLoaded(r, r.token ?? ''));
-      userModel = r;
+        .execute(phone: phone, password: password);
+    result.fold((l) => emit(LoginError(l.msg)), (r) {
+      emit(LoginSuccess(r, r.apiToken));
+      userModel = r.data;
     });
   }
 }

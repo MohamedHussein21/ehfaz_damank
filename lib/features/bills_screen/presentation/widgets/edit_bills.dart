@@ -1,3 +1,4 @@
+import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/pages/bills_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
@@ -6,7 +7,7 @@ import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/icons_assets.dart';
 
 class EditBillScreen extends StatefulWidget {
-  final Map<String, dynamic> bill;
+  final Bill bill;
 
   const EditBillScreen({super.key, required this.bill});
 
@@ -21,7 +22,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
   late TextEditingController categoryController;
   late TextEditingController statusController;
   late TextEditingController merchantController;
-  late TextEditingController qrDataController;
+  late TextEditingController fatoraNumberController;
   late TextEditingController warrantyEndDateController;
   late TextEditingController warrantyNoteController;
 
@@ -32,32 +33,34 @@ class _EditBillScreenState extends State<EditBillScreen> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(text: widget.bill["title"]);
-    amountController = TextEditingController(text: widget.bill["amount"]);
-    dateController = TextEditingController(text: widget.bill["date"]);
-    categoryController = TextEditingController(text: widget.bill["category"]);
-    statusController = TextEditingController(text: widget.bill["status"]);
-    merchantController = TextEditingController(text: widget.bill["merchant"]);
-    qrDataController = TextEditingController(text: widget.bill["qrData"]);
+    titleController = TextEditingController(text: widget.bill.name);
+    amountController =
+        TextEditingController(text: widget.bill.price?.toString());
+    dateController = TextEditingController(text: widget.bill.purchaseDate);
+    categoryController =
+        TextEditingController(text: widget.bill.categoryId?.toString());
+    statusController =
+        TextEditingController(text: widget.bill.daman?.toString());
+    merchantController = TextEditingController(text: widget.bill.storeName);
+    fatoraNumberController =
+        TextEditingController(text: widget.bill.fatoraNumber);
     warrantyEndDateController =
-        TextEditingController(text: widget.bill["warrantyEndDate"]);
-    warrantyNoteController =
-        TextEditingController(text: widget.bill["warrantyNote"]);
-    includesWarranty = widget.bill["includesWarranty"] ?? false;
+        TextEditingController(text: widget.bill.damanDate);
+    warrantyNoteController = TextEditingController(text: widget.bill.notes);
+    includesWarranty = widget.bill.daman == 1;
   }
 
   void saveBill() {
     setState(() {
-      widget.bill["title"] = titleController.text;
-      widget.bill["amount"] = amountController.text;
-      widget.bill["date"] = dateController.text;
-      widget.bill["category"] = categoryController.text;
-      widget.bill["status"] = statusController.text;
-      widget.bill["merchant"] = merchantController.text;
-      widget.bill["qrData"] = qrDataController.text;
-      widget.bill["warrantyEndDate"] = warrantyEndDateController.text;
-      widget.bill["warrantyNote"] = warrantyNoteController.text;
-      widget.bill["includesWarranty"] = includesWarranty;
+      widget.bill.name = titleController.text;
+      widget.bill.price = int.tryParse(amountController.text);
+      widget.bill.purchaseDate = dateController.text;
+      widget.bill.categoryId = int.tryParse(categoryController.text);
+      widget.bill.daman = includesWarranty ? 1 : 0;
+      widget.bill.storeName = merchantController.text;
+      widget.bill.fatoraNumber = fatoraNumberController.text;
+      widget.bill.damanDate = warrantyEndDateController.text;
+      widget.bill.notes = warrantyNoteController.text;
     });
     Navigator.pop(context, widget.bill);
   }
@@ -88,7 +91,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
               buildTextField("المبلغ المدفوع", amountController),
               buildTextField("تاريخ الشراء", dateController),
               buildTextField("اسم المتجر", merchantController),
-              buildTextField("رقم الفاتورة", qrDataController),
+              buildTextField("رقم الفاتورة", fatoraNumberController),
               Text('فئة الفاتورة '),
               const SizedBox(height: 8),
               CategoryPicker(controller: categoryController),

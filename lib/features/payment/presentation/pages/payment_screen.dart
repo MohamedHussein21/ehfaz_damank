@@ -7,16 +7,22 @@ import 'package:flutter/material.dart';
 import '../widgets/add_card.dart';
 
 class PaymentMethodsScreen extends StatelessWidget {
+  const PaymentMethodsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('طرق الدفع المحفوظة', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Icon(Icons.arrow_back, color: Colors.black),
-      ),
+          title:
+              Text('طرق الدفع المحفوظة', style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

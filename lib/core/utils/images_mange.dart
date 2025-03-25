@@ -44,4 +44,6 @@ class ImageAssets {
   static String smartphone = '$imgPath/smartphone.png';
 
   static String googleDrive = '$imgPath/google-drive.png';
+
+  static String reminder = '$imgPath/reminder.png';
 }
