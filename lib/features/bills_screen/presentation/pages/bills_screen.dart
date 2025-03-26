@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/color_mange.dart';
-import '../../data/models/bills_model.dart';
 import '../cubit/bills_screen_state.dart';
 import '../widgets/billDetails.dart';
 import '../widgets/billing_filter.dart';

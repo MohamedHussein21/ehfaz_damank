@@ -2,8 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../../core/errors/server_excption.dart';
 import '../../../../core/network/api_constant.dart';
@@ -47,51 +49,44 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
     required int reminder,
     required XFile image,
   }) async {
-    File imageFile = File(image.path);
-
     FormData formData = FormData.fromMap({
-      'category_id': categoryId,
-      'name': name,
-      'store_name': storeName,
-      'purchase_date': purchaseDate,
-      'fatora_number': fatoraNumber,
-      'daman': daman,
-      'daman_date': damanDate,
-      'notes': notes,
-      'price': price,
-      'reminder': reminder,
-      'image': await MultipartFile.fromFile(imageFile.path, filename: 'hh.png'),
+      "category_id": categoryId.toString(),
+      "name": name,
+      "store_name": storeName,
+      "purchase_date": purchaseDate,
+      "fatora_number": fatoraNumber,
+      "daman": daman.toString(),
+      "daman_date": damanDate,
+      "notes": notes,
+      "price": price.toString(),
+      "reminder": reminder.toString(),
+      if (image != null)
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: image.path.split('/').last,
+          contentType: MediaType("image", "jpeg"),
+        ),
     });
 
     final response = await Dio().post(
       ApiConstant.addFatora,
+      data: formData,
       options: Options(
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': 'Bearer $token',
+          "Content-Type": "multipart/form-data",
+          "Authorization": "Bearer $token",
         },
-        //  validateStatus: (status) => status! < 500,
       ),
-      data: formData,
     );
 
     log('Response Data: ${response.data}');
-
-    return FatoraModel.fromJson(response.data['data']);
-    try {} on DioException catch (e) {
-      if (e.response != null) {
-        log('Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
-        throw ServerException(
-            errorModel: ErrorModel.fromJson(e.response?.data));
-      } else {
-        log('Dio Error: ${e.message}');
-        throw ServerException(
-            errorModel: ErrorModel(detail: 'Unexpected error occurred'));
-      }
-    } catch (e) {
-      log('Unexpected Error: $e');
-      throw ServerException(
-          errorModel: ErrorModel(detail: 'Something went wrong!'));
+    log(response.statusCode.toString());
+    if (response.statusCode == 200) {
+      return FatoraModel.fromJson(response.data['data']);
+    } else {
+      Constants.showToast(
+          text: response.data['message'], state: ToastStates.error);
+      throw ServerException(errorModel: ErrorModel.fromJson(response.data));
     }
   }
 
@@ -102,7 +97,6 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
         ApiConstant.delFatora,
         options: Options(
           headers: ApiConstant.headers,
-          validateStatus: (status) => status! < 500,
         ),
         data: {
           'id': id,

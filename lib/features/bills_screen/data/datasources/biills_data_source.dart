@@ -1,6 +1,6 @@
-import 'dart:convert';
-
+import 'package:ahfaz_damanak/features/bills_screen/data/models/edit_fatora.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/server_excption.dart';
 import '../../../../core/network/api_constant.dart';
@@ -12,6 +12,20 @@ import '../models/del_model.dart';
 abstract class BillsDataSource {
   Future<List<Bill>> getMyFatoras();
   Future<DeleteModel> deleteBill(int billId);
+  Future<EditFatouraResponseModel> editFatoura(
+    int categoryId,
+    int price,
+    String name,
+    String storeName,
+    String purchaseDate,
+    String fatoraNumber,
+    XFile image,
+    int daman,
+    int damanReminder,
+    String damanDate,
+    String notes,
+    int orderId,
+  );
 }
 
 class BillsDataSourceImpl implements BillsDataSource {
@@ -62,6 +76,41 @@ class BillsDataSourceImpl implements BillsDataSource {
       if (response.statusCode == 200) {
         final data = response.data['data'];
         return DeleteModel.fromJson(data);
+      } else {
+        throw ServerException(errorModel: ErrorModel.fromJson(response.data));
+      }
+    } on DioException catch (e) {
+      throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+    }
+  }
+
+  Future<EditFatouraResponseModel> editFatoura(
+      int categoryId,
+      int price,
+      String name,
+      String storeName,
+      String purchaseDate,
+      String fatoraNumber,
+      XFile image,
+      int daman,
+      int damanReminder,
+      String damanDate,
+      String notes,
+      int orderId) async {
+    try {
+      final response = await dio.get(
+        ApiConstant.editFatora,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        return EditFatouraResponseModel.fromJson(data);
       } else {
         throw ServerException(errorModel: ErrorModel.fromJson(response.data));
       }

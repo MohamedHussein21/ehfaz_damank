@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/icons_assets.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
@@ -8,7 +6,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/models/home_model.dart';
 import '../cubit/home_screen_cubit.dart';
 import '../widgets/built_drawe.dart';
 import '../widgets/last_bills_card.dart';

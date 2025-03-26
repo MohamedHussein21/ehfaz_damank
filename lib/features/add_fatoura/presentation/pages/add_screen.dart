@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -85,7 +86,7 @@ class _AddNewBillState extends State<AddNewBill> {
 
     if (pickedDate != null) {
       setState(() {
-        controller.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+        controller.text = DateFormat('yyyy-MM-dd', 'en').format(pickedDate);
       });
     }
   }
@@ -363,7 +364,7 @@ class _AddNewBillState extends State<AddNewBill> {
                                 daman: dman,
                                 damanDate: warrantyEndDateController.text,
                                 notes: warrantyNoteController.text,
-                                image: selectedImage!,
+                                image: selectedImage,
                                 price: int.tryParse(amountController.text) ?? 0,
                                 reminder: selectedReminderValue,
                               );

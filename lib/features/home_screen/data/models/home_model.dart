@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Bill {
   int? id;
   int? userId;
@@ -60,7 +58,7 @@ class OrdersResponse {
   final String msg;
   final List<Bill> orders;
   final List<Bill> expireOrders;
-  final int pricesInMonth;
+  final String pricesInMonth;
   final int countOrders;
   final int expireOrdersInMonth;
 

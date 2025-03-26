@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/Failure.dart';
 import '../../data/models/bills_model.dart';
 import '../../data/models/del_model.dart';
+import '../../data/models/edit_fatora.dart';
 import '../repositories/Bills_rep.dart';
 
 class BillsUseCase {
@@ -15,5 +17,19 @@ class BillsUseCase {
   Future<Either<Failure, DeleteModel>> deleteBill({required int id}) =>
       repository.deleteBill(id);
 
-  Future<Either<Failure, List<Bill>>> editBill() => repository.getMyFatoras();
+  Future<Either<Failure, EditFatouraResponseModel>> editBill(
+          {required int categoryId,
+          required int price,
+          required String name,
+          required String storeName,
+          required String purchaseDate,
+          required String fatoraNumber,
+          required XFile image,
+          required int daman,
+          required int damanReminder,
+          required String damanDate,
+          required String notes,
+          required int orderId}) =>
+      repository.editFatoura(categoryId, price, name, storeName, purchaseDate,
+          fatoraNumber, image, daman, damanReminder, damanDate, notes, orderId);
 }

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/models/bills_model.dart';
 import '../../data/models/del_model.dart';
+import '../../data/models/edit_fatora.dart';
 
 abstract class BillsScreenState extends Equatable {
   const BillsScreenState();
@@ -44,4 +45,18 @@ class BillDeletingError extends BillsScreenState {
   final String message;
 
   const BillDeletingError(this.message);
+}
+
+class EditFatouraLouding extends BillsScreenState {}
+
+class EditFatouraSuccus extends BillsScreenState {
+  final EditFatouraResponseModel editFatouraResponseModel;
+
+  const EditFatouraSuccus({required this.editFatouraResponseModel});
+}
+
+class EditFatouraError extends BillsScreenState {
+  final String message;
+
+  const EditFatouraError(this.message);
 }

@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
-
-class FatoraModel extends Equatable {
+class FatoraModel {
   final int id;
+  final int price;
   final int userId;
   final int categoryId;
   final String name;
@@ -11,13 +10,12 @@ class FatoraModel extends Equatable {
   final int daman;
   final String damanDate;
   final String notes;
-  final String image;
-  final int price;
-  final String createdAt;
   final String updatedAt;
+  final String createdAt;
 
-  const FatoraModel({
+  FatoraModel({
     required this.id,
+    required this.price,
     required this.userId,
     required this.categoryId,
     required this.name,
@@ -27,28 +25,25 @@ class FatoraModel extends Equatable {
     required this.daman,
     required this.damanDate,
     required this.notes,
-    required this.image,
-    required this.price,
-    required this.createdAt,
     required this.updatedAt,
+    required this.createdAt,
   });
 
   factory FatoraModel.fromJson(Map<String, dynamic> json) {
     return FatoraModel(
-      id: json["id"],
-      userId: json["user_id"],
-      categoryId: int.parse(json["category_id"]),
-      name: json["name"],
-      storeName: json["store_name"],
-      purchaseDate: json["purchase_date"],
-      fatoraNumber: json["fatora_number"],
-      daman: int.parse(json["daman"]),
-      damanDate: json["daman_date"],
-      notes: json["notes"],
-      image: json["image"],
-      price: int.parse(json["price"]),
-      createdAt: json["created_at"],
-      updatedAt: json["updated_at"],
+      id: json['id'],
+      price: int.tryParse(json['price'].toString()) ?? 0,
+      userId: json['user_id'],
+      categoryId: int.tryParse(json['category_id'].toString()) ?? 0,
+      name: json['name'],
+      storeName: json['store_name'],
+      purchaseDate: json['purchase_date'],
+      fatoraNumber: json['fatora_number'],
+      daman: int.tryParse(json['daman'].toString()) ?? 0,
+      damanDate: json['daman_date'],
+      notes: json['notes'],
+      updatedAt: json['updated_at'],
+      createdAt: json['created_at'],
     );
   }
 
@@ -64,7 +59,6 @@ class FatoraModel extends Equatable {
       "daman": daman.toString(),
       "daman_date": damanDate,
       "notes": notes,
-      "image": image,
       "price": price.toString(),
       "created_at": createdAt,
       "updated_at": updatedAt,
@@ -83,7 +77,6 @@ class FatoraModel extends Equatable {
         daman,
         damanDate,
         notes,
-        image,
         price,
         createdAt,
         updatedAt,
