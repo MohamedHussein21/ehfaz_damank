@@ -8,8 +8,8 @@ import '../../data/models/edit_fatora.dart';
 
 abstract class BillsRep {
   Future<Either<Failure, List<Bill>>> getMyFatoras();
-  Future<Either<Failure, DeleteModel>> deleteBill(int billId);
-  Future<Either<Failure, EditFatouraResponseModel>> editFatoura(
+  Future<Either<Failure, DeleteModel>> deleteBill(String billId);
+  Future<Either<Failure, EditFatoraModel>> editFatoura(
       int categoryId,
       int price,
       String name,
@@ -22,4 +22,6 @@ abstract class BillsRep {
       String damanDate,
       String notes,
       int orderId);
+  Future<Either<Failure, List<Bill>>> getFilter(
+      int? categoryId, String? orderBy, String? damanOrder);
 }

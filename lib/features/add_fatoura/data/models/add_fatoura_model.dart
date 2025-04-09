@@ -8,6 +8,7 @@ class FatoraModel {
   final String purchaseDate;
   final String fatoraNumber;
   final int daman;
+    int? damanReminder;
   final String damanDate;
   final String notes;
   final String updatedAt;
@@ -24,6 +25,7 @@ class FatoraModel {
     required this.fatoraNumber,
     required this.daman,
     required this.damanDate,
+    this.damanReminder,
     required this.notes,
     required this.updatedAt,
     required this.createdAt,
@@ -41,6 +43,7 @@ class FatoraModel {
       fatoraNumber: json['fatora_number'],
       daman: int.tryParse(json['daman'].toString()) ?? 0,
       damanDate: json['daman_date'],
+      damanReminder: json['daman_reminder'] ??0,
       notes: json['notes'],
       updatedAt: json['updated_at'],
       createdAt: json['created_at'],
@@ -58,6 +61,7 @@ class FatoraModel {
       "fatora_number": fatoraNumber,
       "daman": daman.toString(),
       "daman_date": damanDate,
+      "daman_reminder": damanReminder,
       "notes": notes,
       "price": price.toString(),
       "created_at": createdAt,
@@ -65,7 +69,6 @@ class FatoraModel {
     };
   }
 
-  @override
   List<Object> get props => [
         id,
         userId,
@@ -76,6 +79,7 @@ class FatoraModel {
         fatoraNumber,
         daman,
         damanDate,
+        damanReminder ??0,
         notes,
         price,
         createdAt,

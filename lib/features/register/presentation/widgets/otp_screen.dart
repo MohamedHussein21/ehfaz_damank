@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
 import 'package:ahfaz_damanak/features/register/presentation/cubit/register_screen_cubit.dart';

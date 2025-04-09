@@ -1,10 +1,14 @@
 import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart';
-import 'package:ahfaz_damanak/features/bills_screen/presentation/pages/bills_screen.dart';
+import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
 
-import '../../../../core/utils/constant.dart';
-import '../../../../core/utils/icons_assets.dart';
+import '../cubit/bills_screen_state.dart';
 
 class EditBillScreen extends StatefulWidget {
   final Bill bill;
@@ -29,6 +33,19 @@ class _EditBillScreenState extends State<EditBillScreen> {
   bool includesWarranty = false;
   String? selectedReminder;
   final List<String> reminderOptions = ["يوم", "أسبوع", "شهر", "ابدأ"];
+  XFile? selectedImage;
+  String? selectedFile;
+  final List<Map<String, dynamic>> categories = [
+    {"id": 1, "name": "إلكترونيات"},
+    {"id": 2, "name": "أجهزة منزلية"},
+    {"id": 3, "name": "ادوات صحية"},
+    {"id": 4, "name": "سيارات"},
+    {"id": 5, "name": "ادوات كهربائية"},
+    {"id": 6, "name": "اخري"},
+  ];
+
+  int dman = 0; // 1 for "نعم", 0 for "لا"
+  int? selectedReminderValue;
 
   @override
   void initState() {
@@ -48,6 +65,8 @@ class _EditBillScreenState extends State<EditBillScreen> {
         TextEditingController(text: widget.bill.damanDate);
     warrantyNoteController = TextEditingController(text: widget.bill.notes);
     includesWarranty = widget.bill.daman == 1;
+    dman = widget.bill.daman ?? 0;
+    selectedReminderValue = widget.bill.damanReminder;
   }
 
   void saveBill() {
@@ -56,82 +75,242 @@ class _EditBillScreenState extends State<EditBillScreen> {
       widget.bill.price = int.tryParse(amountController.text);
       widget.bill.purchaseDate = dateController.text;
       widget.bill.categoryId = int.tryParse(categoryController.text);
-      widget.bill.daman = includesWarranty ? 1 : 0;
+      widget.bill.daman = dman;
       widget.bill.storeName = merchantController.text;
       widget.bill.fatoraNumber = fatoraNumberController.text;
       widget.bill.damanDate = warrantyEndDateController.text;
       widget.bill.notes = warrantyNoteController.text;
+      widget.bill.damanReminder = selectedReminderValue;
+      widget.bill.image = selectedImage?.path;
     });
-    Navigator.pop(context, widget.bill);
+
+    context.read<BillsScreenCubit>().editBill(
+          categoryId: int.tryParse(categoryController.text) ?? 0,
+          price: int.tryParse(amountController.text) ?? 0,
+          name: titleController.text,
+          storeName: merchantController.text,
+          purchaseDate: dateController.text,
+          fatoraNumber: fatoraNumberController.text,
+          image: selectedImage ?? XFile(widget.bill.image ?? ""),
+          daman: dman,
+          damanReminder: selectedReminderValue ?? 0,
+          damanDate: warrantyEndDateController.text,
+          notes: warrantyNoteController.text,
+          orderId: widget.bill.id ?? 0,
+        );
+    Navigator.pop(context);
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+          source: source, imageQuality: 40, maxWidth: 1000);
+      if (image != null) {
+        setState(() {
+          selectedImage = image;
+          selectedFile = null;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("حدث خطأ أثناء اختيار الصورة: $e")),
+      );
+    }
+  }
+
+  Future<void> pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single.path != null) {
+        setState(() {
+          selectedFile = result.files.single.path!;
+          selectedImage = null;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("حدث خطأ أثناء اختيار الملف: $e")),
+      );
+    }
+  }
+
+  Future<void> pickDate(TextEditingController controller) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        controller.text = DateFormat('yyyy-MM-dd', 'en').format(pickedDate);
+      });
+    }
+  }
+
+  Widget buildUploadSection() {
+    return GestureDetector(
+      onTap: () => showImagePicker(),
+      child: Container(
+        height: 120,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: selectedImage != null || widget.bill.image != null
+            ? Image.file(
+                File(selectedImage?.path ?? widget.bill.image!),
+                fit: BoxFit.cover,
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.cloud_upload,
+                    size: 40,
+                    color: ColorManger.defaultColor,
+                  ),
+                  Text(
+                    "قم برفع صورة أو مستند الفاتورة",
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  void showImagePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.camera_alt),
+              title: Text("التقاط صورة"),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text("اختيار من المعرض"),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.insert_drive_file),
+              title: Text("اختيار ملف"),
+              onTap: () {
+                Navigator.pop(context);
+                pickFile();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-              )),
-          title: const Text(
-            "تعديل الفاتورة",
-            style: TextStyle(color: Colors.black),
-          )),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildTextField("اسم الفاتورة / المنتج", titleController),
-              buildTextField("المبلغ المدفوع", amountController),
-              buildTextField("تاريخ الشراء", dateController),
-              buildTextField("اسم المتجر", merchantController),
-              buildTextField("رقم الفاتورة", fatoraNumberController),
-              Text('فئة الفاتورة '),
-              const SizedBox(height: 8),
-              CategoryPicker(controller: categoryController),
-              const SizedBox(height: 20),
-              _buildWarrantySection(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Constants.defaultDialog(
-                        context: context,
-                        image: IconsAssets.done,
-                        title: "تم تعديل الفاتورة بنجاح",
-                        action: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorManger.defaultColor,
-                              side: BorderSide(color: ColorManger.defaultColor),
-                              foregroundColor: ColorManger.wightColor,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 12),
-                            ),
-                            onPressed: () {
-                              saveBill();
-                              Constants.navigateAndFinish(
-                                  context, BillsScreen());
-                            },
-                            child: const Text("العودة الي  الفاتورة"),
-                          ),
-                        ]);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorManger.defaultColor,
-                      foregroundColor: Colors.white),
-                  child: const Text("حفظ"),
+    return BlocProvider(
+      create: (context) => BillsScreenCubit(),
+      child: BlocConsumer<BillsScreenCubit, BillsScreenState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("تعديل الفاتورة"),
+            ),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTextField("اسم الفاتورة / المنتج", titleController),
+                    buildTextField("المبلغ المدفوع", amountController),
+                    GestureDetector(
+                      onTap: () => pickDate(dateController),
+                      child: AbsorbPointer(
+                        child: buildTextField("تاريخ الشراء", dateController),
+                      ),
+                    ),
+                    buildTextField("اسم المتجر", merchantController),
+                    buildTextField("رقم الفاتورة", fatoraNumberController),
+                    const Text("حدد الفئة"),
+                    const SizedBox(height: 10),
+                    CategoryPicker(
+                      controller: categoryController,
+                      categories: categories,
+                    ),
+                    GestureDetector(
+                      onTap: () => pickDate(warrantyEndDateController),
+                      child: AbsorbPointer(
+                        child: buildTextField(
+                            "تاريخ انتهاء الضمان", warrantyEndDateController),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("هل الفاتورة تشمل ضمان؟ (اختياري)"),
+                    Row(
+                      children: [
+                        Text("نعم"),
+                        Radio(
+                          value: 1,
+                          groupValue: dman,
+                          onChanged: (value) {
+                            setState(() => dman = value as int);
+                          },
+                        ),
+                        Text("لا"),
+                        Radio(
+                          value: 0,
+                          groupValue: dman,
+                          onChanged: (value) {
+                            setState(() => dman = value as int);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("تفعيل تذكير بانتهاء الضمان قبل..."),
+                    Wrap(
+                      spacing: 8.0,
+                      children: reminderOptions
+                          .map((option) => buildReminderChip(
+                              option, reminderOptions.indexOf(option)))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 10),
+                    buildTextField("إضافة ملاحظة عن الفاتورة (اختياري)",
+                        warrantyNoteController),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: saveBill,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorManger.defaultColor,
+                        minimumSize: Size(double.infinity, 50),
+                      ),
+                      child: const Text(
+                        "حفظ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -153,68 +332,20 @@ class _EditBillScreenState extends State<EditBillScreen> {
     );
   }
 
-  Widget _buildWarrantySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("هل الفاتورة تشمل ضمان؟"),
-        Row(
-          children: [
-            _buildChoiceChip("نعم", true),
-            const SizedBox(width: 10),
-            _buildChoiceChip("لا", false),
-          ],
-        ),
-        if (includesWarranty) ...[
-          const SizedBox(height: 10),
-          const Text("تفعيل تذكير بانتهاء الضمان قبل.."),
-          Wrap(
-            spacing: 8,
-            children: reminderOptions
-                .map((option) => _buildReminderChip(option))
-                .toList(),
-          ),
-          buildTextField("تاريخ انتهاء الضمان", warrantyEndDateController),
-          buildTextField(
-              "إضافة ملاحظة عن الضمان (اختياري)", warrantyNoteController),
-        ]
-      ],
-    );
-  }
-
-  Widget _buildChoiceChip(String label, bool value) {
+  Widget buildReminderChip(String label, int value) {
     return ChoiceChip(
       selectedColor: ColorManger.defaultColor,
       backgroundColor: ColorManger.wightColor,
       label: Text(label),
       labelStyle: TextStyle(
-        color: includesWarranty == value
+        color: selectedReminderValue == value
             ? ColorManger.wightColor
             : ColorManger.blackColor,
       ),
-      selected: includesWarranty == value,
+      selected: selectedReminderValue == value,
       onSelected: (selected) {
         setState(() {
-          includesWarranty = value;
-        });
-      },
-    );
-  }
-
-  Widget _buildReminderChip(String label) {
-    return ChoiceChip(
-      selectedColor: ColorManger.defaultColor,
-      backgroundColor: ColorManger.wightColor,
-      label: Text(label),
-      labelStyle: TextStyle(
-        color: label == selectedReminder
-            ? ColorManger.wightColor
-            : ColorManger.blackColor,
-      ),
-      selected: selectedReminder == label,
-      onSelected: (selected) {
-        setState(() {
-          selectedReminder = selected ? label : null;
+          selectedReminderValue = selected ? value : null;
         });
       },
     );
@@ -223,19 +354,36 @@ class _EditBillScreenState extends State<EditBillScreen> {
 
 class CategoryPicker extends StatelessWidget {
   final TextEditingController controller;
+  final List<Map<String, dynamic>> categories;
 
-  const CategoryPicker({super.key, required this.controller});
+  const CategoryPicker({
+    super.key,
+    required this.controller,
+    required this.categories,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      readOnly: true,
+    final currentValue = categories.firstWhere(
+      (category) => category['id'] == int.tryParse(controller.text),
+      orElse: () => {"name": "غير محدد"},
+    )['name'];
+
+    return DropdownButtonFormField<String>(
+      value: currentValue,
       decoration: const InputDecoration(
-        suffixIcon: Icon(Icons.arrow_drop_down),
+        labelText: "اختر الفئة",
         border: OutlineInputBorder(),
       ),
-      onTap: () {},
+      items: categories.map((category) {
+        return DropdownMenuItem<String>(
+          value: category['name'],
+          child: Text(category['name']),
+        );
+      }).toList(),
+      onChanged: (value) {
+        controller.text = value ?? '';
+      },
     );
   }
 }

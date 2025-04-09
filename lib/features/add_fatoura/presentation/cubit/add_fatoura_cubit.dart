@@ -1,20 +1,15 @@
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:ahfaz_damanak/core/network/api_constant.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/datasources/addFatoura_dataSource.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/repositories/add_fatoura_repository.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/domain/repositories/addFatoraRepo.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/domain/usecases/add_fatoura_userCase.dart';
-import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http_parser/http_parser.dart';
 
-import '../../../../core/utils/constant.dart';
 import '../../data/models/add_fatoura_model.dart';
+import '../../data/models/qr_model.dart';
 
 part 'add_fatoura_state.dart';
 
@@ -23,6 +18,7 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
 
   static AddFatouraCubit get(context) => BlocProvider.of(context);
   FatoraModel? fatoraModel;
+  QrModel? qrModel;
   Future<void> addFatoura({
     required int categoryd,
     required String name,
@@ -59,6 +55,19 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
     });
     log('addFatoura: $fatoraModel');
   }
+
+  void addFromQr(int receiverId , int orderId) async {
+    emit(AddFatouraQrLoading());
+    AddFatouraRemoteDataSource addFatouraRemoteDataSource =
+        AddFatouraRemoteDataSource();
+    Addfatorarepo addfatorarepo =
+        AddFatouraRepository(addFatouraRemoteDataSource);
+    final result = await AddFatouraUsercase(addfatorarepo).addFromQr( receiverId, orderId);
+    result.fold((l) => emit(AddFatouraQrError()), (r) {
+      emit(AddFatouraQrSuccess(r));
+      qrModel = r;
+    });
+    log('addFatoura: $fatoraModel');
 }
 
 
@@ -78,4 +87,4 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
   //   });
   //   log('RegisterCubit: userVerify: $userModel');
   // }
-
+}

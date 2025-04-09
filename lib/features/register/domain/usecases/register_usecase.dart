@@ -1,4 +1,3 @@
-import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
 import 'package:ahfaz_damanak/features/register/domain/repositories/register_repository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -15,9 +14,10 @@ class RegisterUsecase {
       {required String name,
       required String phone,
       required String password,
-      required String passwordConfirmation}) async {
+      required String passwordConfirmation,
+      required String googleToken}) async {
     return await baseRegisterRepository.userRegister(
-        name, phone, password, passwordConfirmation);
+        name, phone, password, passwordConfirmation, googleToken);
   }
 
   Future<Either<Failure, VerifyResponse>> verify(

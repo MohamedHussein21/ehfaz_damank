@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
-import 'package:dio/dio.dart';
+import 'package:ahfaz_damanak/features/add_fatoura/presentation/widgets/qr.dart';
+import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,6 +43,7 @@ class _AddNewBillState extends State<AddNewBill> {
   String? selectedReminder;
   XFile? selectedImage;
   String? selectedFile;
+
   Future<void> pickImage(ImageSource source) async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -168,8 +170,58 @@ class _AddNewBillState extends State<AddNewBill> {
       create: (context) => AddFatouraCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("إضافة فاتورة جديدة"),
-        ),
+            title: Text("إضافة فاتورة جديدة"),
+            leading: IconButton(
+                icon: Icon(Icons.qr_code_scanner, color: Colors.black),
+                onPressed: () async {
+                  String? scannedData = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QRScannerScreen()),
+                  );
+
+                  if (scannedData != null && scannedData.isNotEmpty) {
+                    try {
+                      var cubit = context.read<AddFatouraCubit>();
+
+                      if (userId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text("خطأ: لم يتم العثور على معرف المستخدم")),
+                        );
+                        return;
+                      }
+
+                      int? parsedOrderId = int.tryParse(scannedData);
+                      if (parsedOrderId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text("خطأ: بيانات QR Code غير صالحة")),
+                        );
+                        return;
+                      }
+
+                      cubit.addFromQr(userId!, parsedOrderId);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("تمت إضافة الفاتورة بنجاح!"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                                "خطأ في معالجة بيانات QR Code: ${e.toString()}")),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("لم يتم مسح أي QR Code")),
+                    );
+                  }
+                })),
         body: BlocConsumer<AddFatouraCubit, AddFatouraState>(
           listener: (context, state) {
             if (state is AddFatouraSuccess) {
@@ -187,7 +239,7 @@ class _AddNewBillState extends State<AddNewBill> {
                           horizontal: 30, vertical: 12),
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Constants.navigateAndFinish(context, MainScreen());
                     },
                     child: const Text("العودة إلى الرئيسية"),
                   ),
@@ -274,6 +326,9 @@ class _AddNewBillState extends State<AddNewBill> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'يرجى إدخال رقم الفاتورة';
+                        }
+                        if (!RegExp(r'^[a-zA-Z0-9]{1,10}$').hasMatch(value)) {
+                          return 'الرقم يجب أن يحتوي على 10 أحرف أو أرقام كحد أقصى';
                         }
                         return null;
                       },

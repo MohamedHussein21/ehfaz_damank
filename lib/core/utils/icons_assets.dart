@@ -22,4 +22,9 @@ class IconsAssets {
   static String mony = '$iconsPath/mony.png';
   static String allInvoice = '$iconsPath/all-invoice.png';
   static String allNote = '$iconsPath/notebook.png';
+
+  static String profileRemove = '$iconsPath/profile-remove.png';
+
+  static String transfer = '$iconsPath/transfer.png';
+  static String move = '$iconsPath/move.png';
 }

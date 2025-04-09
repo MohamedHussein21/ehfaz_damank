@@ -5,5 +5,5 @@ import '../../../../core/errors/Failure.dart';
 
 abstract class BaseLoginRepository {
   Future<Either<Failure, AuthResponse>> userLogin(
-      String phone, String password);
+      String phone, String password, String googleToken);
 }

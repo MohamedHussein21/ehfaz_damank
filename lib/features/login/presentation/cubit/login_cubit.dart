@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
 import 'package:ahfaz_damanak/features/login/data/repositories/login_repo.dart';
 import 'package:dio/dio.dart';
@@ -16,18 +18,34 @@ class LoginCubit extends Cubit<LoginState> {
   static LoginCubit get(context) => BlocProvider.of(context);
 
   UserData? userModel;
+
   void userLogin({
     required String phone,
     required String password,
+    required String googleToken,
   }) async {
     emit(LoginLoading());
-    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
-    BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
-    final result = await LoginUseCase(baseAuthRepository)
-        .execute(phone: phone, password: password);
-    result.fold((l) => emit(LoginError(l.msg)), (r) {
-      emit(LoginSuccess(r, r.apiToken));
-      userModel = r.data;
-    });
+
+    try {
+      BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
+      BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
+
+      final result = await LoginUseCase(baseAuthRepository)
+          .execute(phone: phone, password: password, googleToken: googleToken);
+
+      result.fold(
+        (failure) {
+          log("Login Error: ${failure.msg}");
+          emit(LoginError(failure.msg));
+        },
+        (authResponse) {
+          emit(LoginSuccess(authResponse, authResponse.apiToken));
+          userModel = authResponse.data;
+        },
+      );
+    } catch (e) {
+      log("Unexpected Login Error: $e");
+      emit(LoginError("حدث خطأ غير متوقع، حاول مرة أخرى."));
+    }
   }
 }

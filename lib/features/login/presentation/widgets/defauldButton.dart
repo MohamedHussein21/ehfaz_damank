@@ -18,13 +18,13 @@ class DefaultButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: submit,
         style: ButtonStyle(
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             )),
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
                 const EdgeInsets.fromLTRB(30, 10, 30, 10)),
             backgroundColor:
-                MaterialStateProperty.all(ColorManger.defaultColor)),
+                WidgetStateProperty.all(ColorManger.defaultColor)),
         child: Text(
           title!,
           style: const TextStyle(fontSize: 12, color: Colors.white),

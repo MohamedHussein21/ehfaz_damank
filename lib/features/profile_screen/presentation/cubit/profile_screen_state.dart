@@ -17,3 +17,21 @@ class ProfileScreenLoaded extends ProfileScreenState {
 }
 
 class ProfileScreenError extends ProfileScreenState {}
+
+class EditProfileLoading extends ProfileScreenState {}
+
+class EditProfileLoaded extends ProfileScreenState {
+  final EditProfileModel editProfileModel;
+  const EditProfileLoaded(this.editProfileModel);
+}
+class EditProfileError extends ProfileScreenState {}
+
+class DeleteUserLoading extends ProfileScreenState {}
+
+class DeleteUserLoaded extends ProfileScreenState {
+  final EditProfileModel editProfileModel;
+  const DeleteUserLoaded(this.editProfileModel);
+
+}
+
+class DeleteUserError extends ProfileScreenState {}

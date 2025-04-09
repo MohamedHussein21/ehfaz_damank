@@ -27,7 +27,7 @@ class BillsRepositry extends BillsRep {
   }
 
   @override
-  Future<Either<Failure, DeleteModel>> deleteBill(int billId) async {
+  Future<Either<Failure, DeleteModel>> deleteBill(String billId) async {
     try {
       final result = await billsDataSource.deleteBill(billId);
       return Right(result);
@@ -37,7 +37,7 @@ class BillsRepositry extends BillsRep {
   }
 
   @override
-  Future<Either<Failure, EditFatouraResponseModel>> editFatoura(
+  Future<Either<Failure, EditFatoraModel>> editFatoura(
       int categoryId,
       int price,
       String name,
@@ -64,6 +64,18 @@ class BillsRepositry extends BillsRep {
           damanDate,
           notes,
           orderId);
+      return Right(result);
+    } on ServerException catch (failure) {
+      return Left(FailureServer(msg: failure.errorModel.detail));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Bill>>> getFilter(
+      int? categoryId, String? orderBy, String? damanOrder) async {
+    try {
+      final result =
+          await billsDataSource.getFilter(categoryId, orderBy, damanOrder);
       return Right(result);
     } on ServerException catch (failure) {
       return Left(FailureServer(msg: failure.errorModel.detail));

@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeScreenCubit()..getData(),
       child: Scaffold(
-        endDrawer: BuiltDrawe(),
+        drawer: BuiltDrawe(),
         backgroundColor: Colors.white,
         body: BlocConsumer<HomeScreenCubit, HomeScreenState>(
           listener: (context, state) {
@@ -39,18 +39,23 @@ class HomeScreen extends StatelessWidget {
                 return LastBillsCard(
                   title: order.name ?? '',
                   amount: "${order.price} ريال",
-                  date: order.purchaseDate ?? '',
+                  date: order.damanDate ?? '',
                 );
               }).toList();
 
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    leading: const SizedBox(),
+                    leading: Builder(
+                      builder: (context) => IconButton(
+                        icon: const Icon(Icons.menu, color: Colors.white),
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                      ),
+                    ),
                     shape: const ContinuousRectangleBorder(
                       borderRadius: BorderRadiusDirectional.only(
-                        bottomStart: Radius.circular(100),
-                      ),
+                          bottomStart: Radius.circular(100),
+                          bottomEnd: Radius.circular(100)),
                     ),
                     backgroundColor: ColorManger.defaultColor,
                     pinned: true,
@@ -59,22 +64,27 @@ class HomeScreen extends StatelessWidget {
                       collapseMode: CollapseMode.pin,
                       titlePadding: EdgeInsets.zero,
                       title: Padding(
-                        padding: const EdgeInsets.only(bottom: 40.0, right: 20),
+                        padding: const EdgeInsets.only(bottom: 20.0, right: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'اهلا',
+                              'أهلاً 👋',
                               style: TextStyle(
-                                  fontSize: 12, color: ColorManger.wightColor),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: ColorManger.wightColor,
+                              ),
                             ),
                             SizedBox(
-                                height: MediaQueryValue(context).heigh * 0.01),
+                                height: MediaQueryValue(context).heigh * 0.005),
                             Text(
-                              "save your Bills and follow it!".tr(),
+                              'احفظ فواتيرك، تابع ضمانك!',
                               style: TextStyle(
-                                  fontSize: 12, color: ColorManger.wightColor),
+                                fontSize: 13,
+                                color: ColorManger.wightColor.withOpacity(0.9),
+                              ),
                             ),
                           ],
                         ),
@@ -168,7 +178,7 @@ class HomeScreen extends StatelessWidget {
                         }
                         return invoices[index];
                       },
-                      childCount: invoices.isNotEmpty ? 4 : 1,
+                      childCount: invoices.length,
                     ),
                   ),
                   SliverPadding(

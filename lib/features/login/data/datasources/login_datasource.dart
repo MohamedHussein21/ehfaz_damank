@@ -10,6 +10,7 @@ abstract class BaseRemoteDataSource {
   Future<AuthResponse> userLogin({
     required String phone,
     required String password,
+    required String googleToken,
   });
 }
 
@@ -22,6 +23,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
   Future<AuthResponse> userLogin({
     required String phone,
     required String password,
+    required String googleToken,
   }) async {
     try {
       final response = await dio.post(
@@ -33,30 +35,22 @@ class RemoteDataSource extends BaseRemoteDataSource {
         data: {
           'phone': phone,
           'password': password,
+          'google_token': googleToken,
         },
       );
 
       log('Response: ${response.data}');
 
-      if (response.statusCode == 200) {
+      if (response.data['msg'] == 'success') {
         return AuthResponse.fromJson(response.data);
       } else {
-        throw ServerException(errorModel: ErrorModel.fromJson(response.data));
-      }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        log('Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
         throw ServerException(
-            errorModel: ErrorModel.fromJson(e.response?.data));
-      } else {
-        log('Dio Error: ${e.message}');
-        throw ServerException(
-            errorModel: ErrorModel(detail: 'Unexpected error occurred'));
+          errorModel: ErrorModel(detail: response.data['data']),
+        );
       }
     } catch (e) {
-      log('Unexpected Error: $e');
-      throw ServerException(
-          errorModel: ErrorModel(detail: 'Something went wrong!'));
+      log('Login Error: $e');
+      rethrow;
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:ahfaz_damanak/features/login/presentation/widgets/defauldButton.
 import 'package:ahfaz_damanak/features/register/presentation/pages/register_screen.dart';
 import 'package:buildcondition/buildcondition.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
           if (state is LoginSuccess) {
             CashHelper.saveData(key: 'api_token', value: state.user.apiToken)
                 .then((value) {
+              CashHelper.saveData(key: 'user_id', value: state.user.data.id);
               Constants.navigateTo(context, MainScreen());
             });
           } else if (state is LoginError) {
@@ -113,20 +115,20 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _rememberMe,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _rememberMe = value!;
-                                  });
-                                },
-                              ),
-                              Text('remember me'.tr(),
-                                  style: Theme.of(context).textTheme.bodySmall),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Checkbox(
+                          //       value: _rememberMe,
+                          //       onChanged: (bool? value) {
+                          //         setState(() {
+                          //           _rememberMe = value!;
+                          //         });
+                          //       },
+                          //     ),
+                          //     Text('remember me'.tr(),
+                          //         style: Theme.of(context).textTheme.bodySmall),
+                          //   ],
+                          // ),
                         ],
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
@@ -135,11 +137,15 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                           builder: (context) {
                             return DefaultButton(
                                 title: 'Login'.tr(),
-                                submit: () {
+                                submit: () async {
                                   if (loginKey.currentState!.validate()) {
                                     cubit.userLogin(
                                         phone: phoneController.text,
-                                        password: passwordController.text);
+                                        password: passwordController.text,
+                                        googleToken: (await FirebaseMessaging
+                                                .instance
+                                                .getToken()) ??
+                                            '');
                                   }
                                 },
                                 width: MediaQueryValue(context).width * 0.9);

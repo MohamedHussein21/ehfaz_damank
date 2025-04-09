@@ -11,14 +11,16 @@ class ProfileUserCase {
   Future<Either<Failure, Profile>> getUser() async =>
       await profileRepo.getUser();
 
-  Future<Either<Failure, Profile>> editProfile({
-    required String phoneNumber,
+  Future<Either<Failure, EditProfileModel>> editProfile({
+    required String phone,
     required String userId,
     required String name,
   }) async =>
       await profileRepo.editProfile(
-        phoneNumber: phoneNumber,
-        userId: userId,
+        phone: phone,
         name: name,
       );
+
+  Future<Either<Failure, EditProfileModel>> deleteUser({required String userId}) async =>
+      await profileRepo.deleteUser(userId: userId);
 }

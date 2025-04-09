@@ -16,9 +16,10 @@ class _InvoiceCategorySelectorState extends State<InvoiceCategorySelector> {
   final List<Map<String, dynamic>> categories = [
     {"id": 1, "name": "إلكترونيات"},
     {"id": 2, "name": "أجهزة منزلية"},
-    {"id": 3, "name": "ملابس"},
+    {"id": 3, "name": "ادوات صحية"},
     {"id": 4, "name": "سيارات"},
-    {"id": 5, "name": "أخرى"},
+    {"id": 5, "name": "ادوات كهربائية"},
+     {"id": 6, "name": "اخري"},
   ];
 
   @override

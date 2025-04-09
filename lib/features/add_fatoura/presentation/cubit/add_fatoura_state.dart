@@ -20,3 +20,12 @@ class AddFatouraSuccess extends AddFatouraState {
   final FatoraModel addFatoraModel;
   const AddFatouraSuccess(this.addFatoraModel);
 }
+
+class AddFatouraQrSuccess extends AddFatouraState {
+  final QrModel addFatoraModel;
+  const AddFatouraQrSuccess(this.addFatoraModel);
+}
+
+class AddFatouraQrLoading extends AddFatouraState {}
+
+class AddFatouraQrError extends AddFatouraState {}

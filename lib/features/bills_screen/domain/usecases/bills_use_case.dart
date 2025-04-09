@@ -14,10 +14,10 @@ class BillsUseCase {
 
   Future<Either<Failure, List<Bill>>> execute() => repository.getMyFatoras();
 
-  Future<Either<Failure, DeleteModel>> deleteBill({required int id}) =>
+  Future<Either<Failure, DeleteModel>> deleteBill({required String id}) =>
       repository.deleteBill(id);
 
-  Future<Either<Failure, EditFatouraResponseModel>> editBill(
+  Future<Either<Failure, EditFatoraModel>> editBill(
           {required int categoryId,
           required int price,
           required String name,
@@ -32,4 +32,12 @@ class BillsUseCase {
           required int orderId}) =>
       repository.editFatoura(categoryId, price, name, storeName, purchaseDate,
           fatoraNumber, image, daman, damanReminder, damanDate, notes, orderId);
+
+  Future<Either<Failure, List<Bill>>> getFilter({
+    int? categoryId,
+    String? orderBy,
+    String? damanOrder,
+  }) {
+    return repository.getFilter(categoryId, orderBy, damanOrder);
+  }
 }

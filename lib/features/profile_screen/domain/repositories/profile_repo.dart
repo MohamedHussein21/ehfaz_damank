@@ -4,11 +4,12 @@ import '../../../../core/errors/Failure.dart';
 import '../../data/models/profile_model.dart';
 
 abstract class ProfileRepo {
-  Future<Either<Failure, Profile>> editProfile({
-    required String phoneNumber,
-    required String userId,
+  Future<Either<Failure, EditProfileModel>> editProfile({
+    required String phone,
     required String name,
   });
 
   Future<Either<Failure, Profile>> getUser();
+
+  Future<Either<Failure, EditProfileModel>> deleteUser({required String userId});
 }

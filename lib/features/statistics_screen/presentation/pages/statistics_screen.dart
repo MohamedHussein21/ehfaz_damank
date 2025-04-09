@@ -1,3 +1,4 @@
+import 'package:ahfaz_damanak/core/utils/images_mange.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/features/statistics_screen/presentation/cubit/statistics_screen_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -50,8 +51,7 @@ class StatisticsScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: MediaQueryValue(context).heigh * 0.05),
-            _buildPieChart(model.data.categories),
-            SizedBox(height: MediaQueryValue(context).heigh * 0.05),
+            if(model.data.categories.isEmpty) Center(child: Image(image: AssetImage(ImageAssets.frame), height: 200,fit: BoxFit.cover,),) else Center(child: _buildPieChart(model.data.categories,)),
             const Text(
               "اتجاه الإنفاق الشهري",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

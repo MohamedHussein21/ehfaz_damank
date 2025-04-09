@@ -14,6 +14,11 @@ class ApiConstant {
   static const String updateProfile = '$baseurl/edit_profile';
   static const String contactUs = '$baseurl/contact_us';
   static const String editFatora = '$baseurl/edit_fatora';
+  static const String filter = '$baseurl/filter';
+  static const String delUser = '$baseurl/del_user';
+  static const String sendRequest = '$baseurl/send_request';
+  static const String notes = '$baseurl/notes';
+  static const String notifications = '$baseurl/notifications';
 
   static const headers = {'Content-Type': 'application/json'};
 }

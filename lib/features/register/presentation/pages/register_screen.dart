@@ -6,6 +6,7 @@ import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/features/register/presentation/cubit/register_screen_cubit.dart';
 import 'package:buildcondition/buildcondition.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,6 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
           if (state is RegisterScreenSuccess) {
             CashHelper.saveData(key: 'api_token', value: state.user.apiToken)
                 .then((value) {
+              CashHelper.saveData(key: 'user_id', value: state.user.data.id);
               Constants.navigateTo(
                   context,
                   OtpScreen(
@@ -157,40 +159,24 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                         prefix: Image(image: AssetImage(ImageAssets.password)),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberMe,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberMe = value!;
-                                  });
-                                },
-                              ),
-                              Text('remember me'.tr(),
-                                  style: Theme.of(context).textTheme.bodySmall),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
+                      SizedBox(height: MediaQueryValue(context).heigh * 0.04),
                       BuildCondition(
                           condition: state is! RegisterScreenLoading,
                           builder: (context) {
                             return DefaultButton(
                               title: 'Login'.tr(),
-                              submit: () {
+                              submit: () async {
                                 if (formKey.currentState!.validate()) {
                                   cubit.userRegister(
                                       name: nameController.text,
                                       phone: phoneController.text,
                                       password: passwordController.text,
                                       passwordConfirmation:
-                                          confirmPasswordController.text);
+                                          confirmPasswordController.text,
+                                      googleToken: (await FirebaseMessaging
+                                              .instance
+                                              .getToken()) ??
+                                          '');
                                 }
                               },
                               width: MediaQueryValue(context).width * 0.9,

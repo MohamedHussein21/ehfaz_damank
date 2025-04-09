@@ -25,6 +25,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String phone,
     required String password,
     required String passwordConfirmation,
+    String googleToken = '',
   }) async {
     emit(RegisterScreenLoading());
     BaseRegisterRemoteDataSource baseRemoteDataSource =
@@ -35,7 +36,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         name: name,
         phone: phone,
         password: password,
-        passwordConfirmation: passwordConfirmation);
+        passwordConfirmation: passwordConfirmation,
+        googleToken: googleToken);
     result.fold((l) => emit(RegisterScreenError(l.msg)), (r) {
       emit(RegisterScreenSuccess(r));
       userModel = r.data;

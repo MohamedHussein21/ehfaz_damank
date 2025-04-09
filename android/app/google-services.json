@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "419127283736",
+    "project_id": "eldamn-9e018",
+    "storage_bucket": "eldamn-9e018.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419127283736:android:73dfcc511390d4a9b2f36d",
+        "android_client_info": {
+          "package_name": "com.khatab.ehfuzdmank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAcTUR3szXDS9XJy59HBH-18rrzhLFD6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

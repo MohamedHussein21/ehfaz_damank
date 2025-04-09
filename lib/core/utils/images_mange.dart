@@ -46,4 +46,7 @@ class ImageAssets {
   static String googleDrive = '$imgPath/google-drive.png';
 
   static String reminder = '$imgPath/reminder.png';
+
+static String frame = '$imgPath/frame.png';
+
 }

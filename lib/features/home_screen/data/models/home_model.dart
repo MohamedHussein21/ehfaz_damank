@@ -11,6 +11,7 @@ class Bill {
   int? daman;
   int? damanReminder;
   String? damanDate;
+  
   String? notes;
   String? createdAt;
   String? updatedAt;

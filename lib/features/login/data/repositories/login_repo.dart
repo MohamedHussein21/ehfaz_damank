@@ -11,10 +11,11 @@ class LoginRepo extends BaseLoginRepository {
 
   LoginRepo(this.baseRemoteDataSource);
 
+  @override
   Future<Either<Failure, AuthResponse>> userLogin(
-      String phone, String password) async {
-    final result =
-        await baseRemoteDataSource.userLogin(phone: phone, password: password);
+      String phone, String password, String googleToken) async {
+    final result = await baseRemoteDataSource.userLogin(
+        phone: phone, password: password, googleToken: googleToken);
 
     try {
       return Right(result);

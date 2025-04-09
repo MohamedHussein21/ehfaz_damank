@@ -17,7 +17,7 @@ class DefaultTextForm extends StatelessWidget {
   bool isClickable = true;
 
   DefaultTextForm({
-    Key? key,
+    super.key,
     this.controller,
     this.isPassword,
     required this.type,
@@ -30,7 +30,7 @@ class DefaultTextForm extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.suffixPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

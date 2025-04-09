@@ -1,11 +1,8 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../../../core/errors/server_excption.dart';
 import '../../../../core/network/api_constant.dart';
@@ -13,6 +10,7 @@ import '../../../../core/network/error_model.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/models/add_fatoura_model.dart';
 
 import '../../../../core/utils/constant.dart';
+import '../models/qr_model.dart';
 
 abstract class AddfatouraDatasource {
   Future<FatoraModel> addFatora({
@@ -29,9 +27,11 @@ abstract class AddfatouraDatasource {
     required XFile image,
   });
 
-  Future<FatoraModel> deleteFatoura({
-    required int id,
-  });
+  Future<QrModel> addFromQr(int receiverId , int orderId);
+
+  // Future<FatoraModel> deleteFatoura({
+  //   required int id,
+  // });
 }
 
 class AddFatouraRemoteDataSource extends AddfatouraDatasource {
@@ -59,13 +59,12 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
       "daman_date": damanDate,
       "notes": notes,
       "price": price.toString(),
-      "reminder": reminder.toString(),
-      if (image != null)
-        "image": await MultipartFile.fromFile(
-          image.path,
-          filename: image.path.split('/').last,
-          contentType: MediaType("image", "jpeg"),
-        ),
+      "daman_reminder": reminder.toString(),
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: image.path.split('/').last,
+        contentType: MediaType("image", "jpeg"),
+      ),
     });
 
     final response = await Dio().post(
@@ -89,17 +88,20 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
       throw ServerException(errorModel: ErrorModel.fromJson(response.data));
     }
   }
-
   @override
-  Future<FatoraModel> deleteFatoura({required int id}) async {
+  Future<QrModel> addFromQr(int receiverId , int orderId) async {
     try {
       final response = await Dio().post(
-        ApiConstant.delFatora,
+        ApiConstant.sendRequest,
         options: Options(
-          headers: ApiConstant.headers,
+          headers:{
+              'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
         ),
         data: {
-          'id': id,
+          'receiver_id': receiverId,
+          'order_id': orderId,
         },
       );
 
@@ -107,7 +109,7 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
       log(response.statusCode.toString());
 
       if (response.statusCode == 200) {
-        return FatoraModel.fromJson(response.data);
+        return QrModel.fromJson(response.data);
       } else {
         throw ServerException(errorModel: ErrorModel.fromJson(response.data));
       }
@@ -118,13 +120,47 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
             errorModel: ErrorModel.fromJson(e.response?.data));
       } else {
         log('Dio Error: ${e.message}');
-        throw ServerException(
-            errorModel: ErrorModel(detail: 'Unexpected error occurred'));
+        throw ServerException(errorModel: ErrorModel.fromJson(e.response?.data));
       }
-    } catch (e) {
-      log('Unexpected Error: $e');
-      throw ServerException(
-          errorModel: ErrorModel(detail: 'Something went wrong!'));
     }
   }
+
+
+  // @override
+  // Future<FatoraModel> deleteFatoura({required int id}) async {
+  //   try {
+  //     final response = await Dio().post(
+  //       ApiConstant.delFatora,
+  //       options: Options(
+  //         headers: ApiConstant.headers,
+  //       ),
+  //       data: {
+  //         'id': id,
+  //       },
+  //     );
+
+  //     log('Response: ${response.data}');
+  //     log(response.statusCode.toString());
+
+  //     if (response.statusCode == 200) {
+  //       return FatoraModel.fromJson(response.data);
+  //     } else {
+  //       throw ServerException(errorModel: ErrorModel.fromJson(response.data));
+  //     }
+  //   } on DioException catch (e) {
+  //     if (e.response != null) {
+  //       log('Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
+  //       throw ServerException(
+  //           errorModel: ErrorModel.fromJson(e.response?.data));
+  //     } else {
+  //       log('Dio Error: ${e.message}');
+  //       throw ServerException(
+  //           errorModel: ErrorModel(detail: 'Unexpected error occurred'));
+  //     }
+  //   } catch (e) {
+  //     log('Unexpected Error: $e');
+  //     throw ServerException(
+  //         errorModel: ErrorModel(detail: 'Something went wrong!'));
+  //   }
+  // }
 }

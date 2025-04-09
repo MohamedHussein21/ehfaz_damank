@@ -50,7 +50,7 @@ class BillDeletingError extends BillsScreenState {
 class EditFatouraLouding extends BillsScreenState {}
 
 class EditFatouraSuccus extends BillsScreenState {
-  final EditFatouraResponseModel editFatouraResponseModel;
+  final EditFatoraModel editFatouraResponseModel;
 
   const EditFatouraSuccus({required this.editFatouraResponseModel});
 }
@@ -59,4 +59,18 @@ class EditFatouraError extends BillsScreenState {
   final String message;
 
   const EditFatouraError(this.message);
+}
+
+class GetFilterLouding extends BillsScreenState {}
+
+class GetFilterSuccus extends BillsScreenState {
+  final List<Bill> filterModel;
+
+  const GetFilterSuccus({required this.filterModel});
+}
+
+class GetFilterError extends BillsScreenState {
+  final String message;
+
+  const GetFilterError(this.message);
 }

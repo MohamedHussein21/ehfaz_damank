@@ -1,4 +1,3 @@
-import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
 import 'package:ahfaz_damanak/features/register/data/datasources/register_data_source.dart';
 import 'package:dartz/dartz.dart';
 
@@ -15,12 +14,13 @@ class RegisterRepo extends BaseRegisterRepository {
 
   @override
   Future<Either<Failure, RegisterModel>> userRegister(String name, String phone,
-      String password, String passwordConfirmation) async {
+      String password, String passwordConfirmation, String googleToken) async {
     final result = await registerRemoteDataSource.userRegister(
         name: name,
         phone: phone,
         password: password,
-        passwordConfirmation: passwordConfirmation);
+        passwordConfirmation: passwordConfirmation,
+        googleToken: googleToken);
 
     try {
       return Right(result);

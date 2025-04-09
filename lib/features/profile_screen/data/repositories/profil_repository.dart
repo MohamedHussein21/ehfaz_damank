@@ -11,14 +11,12 @@ class ProfilRepository extends ProfileRepo {
 
   ProfilRepository(this.profileDatasource);
   @override
-  Future<Either<Failure, Profile>> editProfile({
-    required String phoneNumber,
-    required String userId,
+  Future<Either<Failure, EditProfileModel>> editProfile({
+    required String phone,
     required String name,
   }) async {
     final result = await profileDatasource.editProfile(
-      phoneNumber: phoneNumber,
-      userId: userId,
+      phone: phone,
       name: name,
     );
     try {
@@ -31,6 +29,16 @@ class ProfilRepository extends ProfileRepo {
   @override
   Future<Either<Failure, Profile>> getUser() async {
     final result = await profileDatasource.getUser();
+    try {
+      return Right(result);
+    } on ServerException catch (failure) {
+      return Left(FailureServer(msg: failure.errorModel.detail));
+    }
+  }
+
+  @override
+  Future<Either<Failure, EditProfileModel>> deleteUser({required String userId}) async {
+    final result = await profileDatasource.deleteUser(userId: userId);
     try {
       return Right(result);
     } on ServerException catch (failure) {

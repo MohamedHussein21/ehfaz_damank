@@ -1,14 +1,12 @@
 import 'package:ahfaz_damanak/features/add_fatoura/data/datasources/addFatoura_dataSource.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/models/add_fatoura_model.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/domain/repositories/addFatoraRepo.dart';
-import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
-import 'package:ahfaz_damanak/features/register/data/datasources/register_data_source.dart';
 import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/Failure.dart';
 import '../../../../core/errors/server_excption.dart';
-import '../../../login/data/models/verify_model.dart';
+import '../models/qr_model.dart';
 
 class AddFatouraRepository extends Addfatorarepo {
   final AddFatouraRemoteDataSource addFatouraRemoteDataSource;
@@ -50,12 +48,22 @@ class AddFatouraRepository extends Addfatorarepo {
   }
 
   @override
-  Future<Either<Failure, FatoraModel>> deletFatoura(int id) async {
-    final result = await addFatouraRemoteDataSource.deleteFatoura(id: id);
+  Future<Either<Failure, QrModel>> addFromQr(int receiverId , int orderId) async {
+    final result = await addFatouraRemoteDataSource.addFromQr( receiverId, orderId);
     try {
       return Right(result);
     } on ServerException catch (failure) {
       return Left(FailureServer(msg: failure.errorModel.detail));
     }
   }
+
+  // @override
+  // Future<Either<Failure, FatoraModel>> deletFatoura(int id) async {
+  //   final result = await addFatouraRemoteDataSource.deleteFatoura(id: id);
+  //   try {
+  //     return Right(result);
+  //   } on ServerException catch (failure) {
+  //     return Left(FailureServer(msg: failure.errorModel.detail));
+  //   }
+  // }
 }

@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import '../../../../core/errors/server_excption.dart';
 import '../../../../core/network/api_constant.dart';
 import '../../../../core/network/error_model.dart';
-import '../../../login/data/models/user_model.dart';
 import '../../../login/data/models/verify_model.dart';
 import '../models/register_model.dart';
 
@@ -14,6 +13,7 @@ abstract class BaseRegisterRemoteDataSource {
     required String phone,
     required String password,
     required String passwordConfirmation,
+    required String googleToken,
   });
 
   Future<VerifyResponse> userVerify({
@@ -29,6 +29,7 @@ class RegisterRemoteDataSource extends BaseRegisterRemoteDataSource {
     required String phone,
     required String password,
     required String passwordConfirmation,
+    required String googleToken,
   }) async {
     try {
       final response = await Dio().post(

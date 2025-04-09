@@ -1,4 +1,3 @@
-import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/features/profile_screen/data/datasources/profile_dataSource.dart';
 import 'package:ahfaz_damanak/features/profile_screen/data/models/profile_model.dart';
 import 'package:bloc/bloc.dart';
@@ -11,6 +10,7 @@ part 'profile_screen_state.dart';
 class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   ProfileScreenCubit() : super(ProfileScreenInitial());
   Profile? profile;
+  EditProfileModel? editProfileModel;
   void getProfile() {
     emit(ProfileScreenLoading());
     ProfileDatasource profileDatasource = ProfileDataSourceImpl();
@@ -24,22 +24,35 @@ class ProfileScreenCubit extends Cubit<ProfileScreenState> {
   }
 
   void editProfile({
-    required String phoneNumber,
-    required String userId,
+    required String phone,
     required String name,
   }) {
-    emit(ProfileScreenLoading());
+    emit(EditProfileLoading());
     ProfileDatasource profileDatasource = ProfileDataSourceImpl();
     ProfilRepository profilRepository = ProfilRepository(profileDatasource);
     profilRepository
         .editProfile(
-          phoneNumber: profile!.phone,
-          userId: token!,
-          name: profile!.name,
+          phone: phone,
+          name: name,
         )
-        .then((value) => value.fold((l) => emit(ProfileScreenError()), (r) {
-              profile = r;
-              emit(ProfileScreenLoaded(r));
+        .then((value) => value.fold((l) => emit(EditProfileError()), (r) {
+              editProfileModel = r;
+              emit(EditProfileLoaded(r));
             }));
+  }
+
+  void deleteUser({required String userId}) {
+    emit(DeleteUserLoading());
+    ProfileDatasource profileDatasource = ProfileDataSourceImpl();
+    ProfilRepository profilRepository = ProfilRepository(profileDatasource);
+    profilRepository
+        .deleteUser(userId: userId)
+        .then((value) => value.fold((l) => emit(DeleteUserError()), (r) {}));
+  }
+
+  void clear() {
+    profile = null;
+    editProfileModel = null;
+    emit(ProfileScreenInitial());
   }
 }

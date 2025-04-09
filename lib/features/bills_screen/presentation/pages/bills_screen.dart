@@ -22,8 +22,15 @@ class _BillsScreenState extends State<BillsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<BillsScreenCubit>().getBills();
     searchController.addListener(_filterBills);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BillsScreenCubit>().getFilter(
+            categoryId: null,
+            orderBy: null,
+            damanOrder: null,
+          );
+    });
   }
 
   void _filterBills() {
@@ -46,101 +53,144 @@ class _BillsScreenState extends State<BillsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BillsScreenCubit()..getBills(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "My bills".tr(),
-            style: TextStyle(color: ColorManger.blackColor),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  IconButton(
-                      onPressed: () => openFilterSheet(),
-                      icon: const Icon(Icons.filter_list)),
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: "search bill....".tr(),
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "My bills".tr(),
+          style: TextStyle(color: ColorManger.blackColor),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: () => openFilterSheet(),
+                    icon: const Icon(Icons.filter_list)),
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: "search bill....".tr(),
+                      filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-        body: BlocBuilder<BillsScreenCubit, BillsScreenState>(
-          builder: (context, state) {
-            if (state is BillsScreenLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is BillsScreenSuccess) {
-              final bills = (state.billsModel).where((bill) {
-                return (bill.name?.toLowerCase() ?? '')
-                    .contains(searchController.text.toLowerCase());
-              }).toList();
+      ),
+      body: BlocBuilder<BillsScreenCubit, BillsScreenState>(
+        builder: (context, state) {
+          if (state is GetFilterLouding) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is GetFilterSuccus) {
+            final bills = (state.filterModel).where((bill) {
+              return (bill.name?.toLowerCase() ?? '')
+                  .contains(searchController.text.toLowerCase());
+            }).toList();
 
-              if (bills.isEmpty) {
-                return Center(
-                  child: Text(
-                    'لا توجد فواتير متاحة'.tr(),
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }
+            if (bills.isEmpty) {
+              return Center(
+                child: Text(
+                  'لا توجد فواتير متاحة'.tr(),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              );
+            }
 
-              return ListView.builder(
+            return ListView.builder(
                 itemCount: bills.length,
                 itemBuilder: (context, index) {
                   final bill = bills[index];
+
+                  DateTime? damanDate = DateTime.tryParse(bill.damanDate ?? '');
+                  try {
+                    damanDate =
+                        DateFormat("yyyy-MM-dd").parse(bill.damanDate ?? '');
+                  } catch (e) {}
+
+                  DateTime now = DateTime.now();
+                  DateTime threeMonthsLater = now.add(const Duration(days: 90));
+
+                  bool isExpired =
+                      (damanDate != null && damanDate.isBefore(now));
+                  bool isLessThanThreeMonths = (damanDate != null &&
+                      damanDate.isBefore(threeMonthsLater) &&
+                      damanDate.isAfter(now));
+
+                  Color dateColor = isExpired || isLessThanThreeMonths
+                      ? Colors.red
+                      : Colors.green;
+                  TextDecoration textDecoration = isExpired
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none;
+
                   return Dismissible(
                     key: Key(bill.name ?? ''),
                     background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        child: const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Icon(Icons.delete, color: Colors.white))),
-                    onDismissed: (direction) => context
-                        .read<BillsScreenCubit>()
-                        .deleteBill(id: bill.id ?? 0),
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      child: const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Icon(Icons.delete, color: Colors.white),
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      context
+                          .read<BillsScreenCubit>()
+                          .deleteBill(id: bill.id.toString());
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('تم حذف الفاتورة بنجاح'.tr()),
+                          backgroundColor: Colors.green,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
                     child: ListTile(
-                      title: Text(bill.name ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text(bill.purchaseDate ?? ''),
+                      title: Text(
+                        bill.name ?? '',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        bill.damanDate ?? 'تاريخ غير متوفر',
+                        style: TextStyle(
+                          color: dateColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          decoration: textDecoration,
+                        ),
+                      ),
                       trailing: bill.price != null
-                          ? Text("${bill.price} ريال",
+                          ? Text(
+                              "${bill.price} ريال",
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold))
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            )
                           : const SizedBox(),
                       onTap: () => Constants.navigateTo(
                         context,
-                        BillDetailsScreen(bill: state.billsModel[index]),
+                        BillDetailsScreen(bill: state.filterModel[index]),
                       ),
                     ),
                   );
-                },
-              );
-            } else if (state is BillsScreenError) {
-              return Center(child: Text(state.message));
-            } else {
-              return Center(child: Text('No bills found'.tr()));
-            }
-          },
-        ),
+                });
+          } else if (state is BillsScreenError) {
+            return Center(child: Text(state.message));
+          } else {
+            return Center(child: Text('No bills found'.tr()));
+          }
+        },
       ),
     );
   }

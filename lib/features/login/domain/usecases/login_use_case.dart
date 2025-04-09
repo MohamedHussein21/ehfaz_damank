@@ -10,7 +10,9 @@ class LoginUseCase {
   LoginUseCase(this.baseAuthRepository);
 
   Future<Either<Failure, AuthResponse>> execute(
-      {required String phone, required String password}) async {
-    return await baseAuthRepository.userLogin(phone, password);
+      {required String phone,
+      required String password,
+      required String googleToken}) async {
+    return await baseAuthRepository.userLogin(phone, password, googleToken);
   }
 }

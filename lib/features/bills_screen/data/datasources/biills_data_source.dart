@@ -11,8 +11,8 @@ import '../models/del_model.dart';
 
 abstract class BillsDataSource {
   Future<List<Bill>> getMyFatoras();
-  Future<DeleteModel> deleteBill(int billId);
-  Future<EditFatouraResponseModel> editFatoura(
+  Future<DeleteModel> deleteBill(String billId);
+  Future<EditFatoraModel> editFatoura(
     int categoryId,
     int price,
     String name,
@@ -25,6 +25,11 @@ abstract class BillsDataSource {
     String damanDate,
     String notes,
     int orderId,
+  );
+  Future<List<Bill>> getFilter(
+    int? categoryId,
+    String? orderBy,
+    String? damanOrder,
   );
 }
 
@@ -58,33 +63,29 @@ class BillsDataSourceImpl implements BillsDataSource {
   }
 
   @override
-  Future<DeleteModel> deleteBill(int billId) async {
-    try {
-      final response = await dio.delete(
-        ApiConstant.delFatora,
-        options: Options(
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-          validateStatus: (status) => status! < 500,
-        ),
-        data: {"order_id": billId},
-      );
+  Future<DeleteModel> deleteBill(String billId) async {
+    final response = await dio.post(
+      ApiConstant.delFatora,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ),
+      data: {"order_id": billId},
+    );
 
-      if (response.statusCode == 200) {
-        final data = response.data['data'];
-        return DeleteModel.fromJson(data);
-      } else {
-        throw ServerException(errorModel: ErrorModel.fromJson(response.data));
-      }
-    } on DioException catch (e) {
-      throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+    if (response.statusCode == 200) {
+      return DeleteModel.fromJson(response.data);
+    } else {
+      Constants.showToast(
+          text: response.data['message'], state: ToastStates.error);
+      throw ServerException(errorModel: ErrorModel.fromJson(response.data));
     }
   }
 
-  Future<EditFatouraResponseModel> editFatoura(
+  @override
+  Future<EditFatoraModel> editFatoura(
       int categoryId,
       int price,
       String name,
@@ -98,7 +99,7 @@ class BillsDataSourceImpl implements BillsDataSource {
       String notes,
       int orderId) async {
     try {
-      final response = await dio.get(
+      final response = await dio.post(
         ApiConstant.editFatora,
         options: Options(
           headers: {
@@ -109,13 +110,46 @@ class BillsDataSourceImpl implements BillsDataSource {
       );
 
       if (response.statusCode == 200) {
-        final data = response.data['data'];
-        return EditFatouraResponseModel.fromJson(data);
+        final data = response.data;
+        return EditFatoraModel.fromJson(data);
       } else {
+        Constants.showToast(
+            text: response.data['msg'], state: ToastStates.error);
         throw ServerException(errorModel: ErrorModel.fromJson(response.data));
       }
     } on DioException catch (e) {
+      Constants.showToast(
+          text: e.response!.data['msg'], state: ToastStates.error);
       throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+    }
+  }
+
+  @override
+  Future<List<Bill>> getFilter(
+      int? categoryId, String? orderBy, String? damanOrder) async {
+    final response = await dio.post(
+      ApiConstant.filter,
+      options: Options(
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ),
+      data: {
+        "category_id": categoryId,
+        "order_by": orderBy,
+        "daman_order": damanOrder
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return List<Bill>.from(
+          response.data['data'].map((json) => Bill.fromJson(json)));
+    } else {
+      Constants.showToast(
+          text: response.data['message'], state: ToastStates.error);
+      throw ServerException(errorModel: ErrorModel.fromJson(response.data));
     }
   }
 }

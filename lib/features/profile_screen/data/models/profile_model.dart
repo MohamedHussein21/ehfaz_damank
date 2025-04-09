@@ -4,7 +4,7 @@ class Profile {
   final String? email;
   final String phone;
   final String? emailVerifiedAt;
-  final String googleToken;
+  final String? googleToken;
   final String type;
   final int confirmed;
   final String image;
@@ -18,7 +18,7 @@ class Profile {
     this.email,
     required this.phone,
     this.emailVerifiedAt,
-    required this.googleToken,
+     this.googleToken,
     required this.type,
     required this.confirmed,
     required this.image,
@@ -45,7 +45,7 @@ class Profile {
   }
 }
 
-class Card {
+class UserCard {
   final int id;
   final int userId;
   final String name;
@@ -54,7 +54,7 @@ class Card {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  Card({
+  UserCard({
     required this.id,
     required this.userId,
     required this.name,
@@ -64,8 +64,8 @@ class Card {
     required this.updatedAt,
   });
 
-  factory Card.fromJson(Map<String, dynamic> json) {
-    return Card(
+  factory UserCard.fromJson(Map<String, dynamic> json) {
+    return UserCard(
       id: json['id'],
       userId: json['user_id'],
       name: json['name'],
@@ -76,3 +76,26 @@ class Card {
     );
   }
 }
+
+
+class EditProfileModel {
+  final String msg;
+  final String data;
+
+  EditProfileModel({required this.msg, required this.data});
+
+  factory EditProfileModel.fromJson(Map<String, dynamic> json) {
+    return EditProfileModel(
+      msg: json['msg'] ?? '',
+      data: json['data'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'msg': msg,
+      'data': data,
+    };
+  }
+}
+

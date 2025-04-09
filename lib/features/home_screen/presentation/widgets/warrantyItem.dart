@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
@@ -8,10 +7,23 @@ import '../../data/models/home_model.dart';
 
 class WarrantySection extends StatelessWidget {
   final OrdersResponse? ordersResponse;
+
   const WarrantySection({super.key, required this.ordersResponse});
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    DateTime threeMonthsLater = now.add(const Duration(days: 90));
+
+    final filteredOrders = ordersResponse?.expireOrders.where((order) {
+      if (order.damanDate == null) return false;
+      
+      DateTime? expiryDate = DateTime.tryParse(order.damanDate!);
+      if (expiryDate == null) return false;
+
+      return expiryDate.isAfter(now) && expiryDate.isBefore(threeMonthsLater);
+    }).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,47 +36,40 @@ class WarrantySection extends StatelessWidget {
                 'Guarantees are about to expire'.tr(),
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                width: MediaQueryValue(context).width * 0.07,
-              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          WarrantyScreen(ordersResponse: ordersResponse),
+                      builder: (context) => WarrantyScreen(ordersResponse: ordersResponse),
                     ),
                   );
                 },
-                child: Text(
-                  'show more'.tr(),
-                  style: TextStyle(color: Colors.blue, fontSize: 12),
+                child: Row(
+                  children: [
+                    Text(
+                      'show more'.tr(),
+                      style: TextStyle(color: Colors.blue, fontSize: 12),
+                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.blue),
+                  ],
                 ),
               ),
-              const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 14,
-                color: Colors.blue,
-              )
             ],
           ),
         ),
-        if (ordersResponse?.expireOrders == null ||
-            ordersResponse!.expireOrders.isEmpty)
+        if (filteredOrders == null || filteredOrders.isEmpty)
           Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
                 "No guarantees expire soon".tr(),
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           )
         else
-          ...ordersResponse!.expireOrders.take(4).map(
+          ...filteredOrders.take(4).map(
                 (order) => WarrantyItem(
                   device: order.name ?? '',
                   dealer: order.storeName ?? '',
@@ -76,17 +81,18 @@ class WarrantySection extends StatelessWidget {
   }
 }
 
+
 class WarrantyItem extends StatelessWidget {
   final String device;
   final String dealer;
   final String expiry;
 
   const WarrantyItem({
-    Key? key,
+    super.key,
     required this.device,
     required this.dealer,
     required this.expiry,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -123,12 +129,24 @@ class WarrantyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    DateTime threeMonthsLater = now.add(const Duration(days: 90));
+
+    final filteredOrders = ordersResponse?.expireOrders.where((order) {
+      if (order.damanDate == null) return false;
+
+      DateTime? expiryDate = DateTime.tryParse(order.damanDate!);
+      if (expiryDate == null) return false;
+
+      return expiryDate.isAfter(now) && expiryDate.isBefore(threeMonthsLater);
+    }).toList();
+
     return Scaffold(
       appBar: Constants.defaultAppBar(
         context,
         txt: 'Guarantees are about to expire'.tr(),
       ),
-      body: ordersResponse!.expireOrders.isEmpty
+      body: filteredOrders == null || filteredOrders.isEmpty
           ? Center(
               child: Text(
                 'No guarantees expire soon'.tr(),
@@ -137,13 +155,13 @@ class WarrantyScreen extends StatelessWidget {
             )
           : ListView.builder(
               shrinkWrap: true,
-              itemCount: ordersResponse?.expireOrders.length,
+              itemCount: filteredOrders.length,
               itemBuilder: (context, index) {
-                final order = ordersResponse?.expireOrders[index];
+                final order = filteredOrders[index];
                 return WarrantyItem(
-                  device: order?.name ?? '',
-                  dealer: order?.storeName ?? '',
-                  expiry: order?.damanDate ?? '',
+                  device: order.name ?? '',
+                  dealer: order.storeName ?? '',
+                  expiry: order.damanDate ?? '',
                 );
               },
             ),
