@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.khatab.ehfuzdmank</string>
+	<string>com.bayain.ehfuzdmank</string>
 	<key>PROJECT_ID</key>
 	<string>eldamn-9e018</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:419127283736:ios:693916cca006149cb2f36d</string>
+	<string>1:419127283736:ios:38a615401664ac72b2f36d</string>
 </dict>
 </plist>
