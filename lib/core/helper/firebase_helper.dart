@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../firebase_options.dart';
+
 class FirebaseHelper {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
@@ -24,12 +26,7 @@ class FirebaseHelper {
 
   static Future<void> init() async {
     await Firebase.initializeApp(
-        options: FirebaseOptions(
-      apiKey: 'AIzaSyCAcTUR3szXDS9XJy59HBH-18rrzhLFD6s',
-      appId: '1:419127283736:android:73dfcc511390d4a9b2f36d',
-      messagingSenderId: '419127283736',
-      projectId: 'eldamn-9e018',
-    ));
+        options: DefaultFirebaseOptions.currentPlatform);
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     log("🔑 FCM Token: $fcmToken");
     await CashHelper.saveData(key: 'googleToken', value: fcmToken);
