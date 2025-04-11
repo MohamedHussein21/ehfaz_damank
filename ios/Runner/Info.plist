@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Ahfaz Damanak</string>
+	<string>الضامن</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -31,12 +31,19 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is necessary to review order and also for profile picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need this to provide voice communication.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Access to the Photos is required to review order as well as to set a profile picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to the Photos is required to review order as well as to set a profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
-		<string>processing</string>
 		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -56,14 +63,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera access is necessary to review order and also for profile picture.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>We need this to provide voice communication.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Access to the Photos is required to review order as well as to set a profile picture.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access to the Photos is required to review order as well as to set a profile picture.</string>
-		
 </dict>
 </plist>
