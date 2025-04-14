@@ -1,6 +1,7 @@
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/features/contactUs/presentation/cubit/contactus_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +22,7 @@ class ContactUsScreen extends StatelessWidget {
       create: (context) => ContactusCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('تواصل معنا', style: TextStyle(color: Colors.black)),
+          title: Text("contact us".tr(), style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
@@ -34,27 +35,28 @@ class ContactUsScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _buildContactOption(Icons.phone, 'تواصل معنا',
-                        'متاحًا على الخط من الاثنين إلى الجمعة 17-9'),
+                    _buildContactOption(Icons.phone, "contact us".tr(),
+                        "available from Tuesday to Friday 17-9".tr()),
                     SizedBox(width: 10),
-                    _buildContactOption(Icons.mail_outline, 'البريد الإلكتروني',
-                        'متاحًا على الخط من الاثنين إلى الجمعة 17-9'),
+                    _buildContactOption(Icons.mail_outline, "email".tr(),
+                        "available from Tuesday to Friday 17-9".tr()),
                   ],
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'اكتب تفاصيل استفسارك أو الشكوى، وسنقوم بالرد عليك في أقرب وقت ممكن.',
+                  "write your query or complain, we will respond to you as soon as possible"
+                      .tr(),
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
                 SizedBox(height: 20),
-                Constants.buildTextField(
-                    'رقم الجوال', phoneController, 'ادخل رقم الجوال'),
+                Constants.buildTextField("phone number".tr(), phoneController,
+                    "enter phone number".tr()),
                 SizedBox(height: 10),
                 Constants.buildTextField(
-                    'البريد الخاص بك', mailController, 'ادخل البريد الخاص بك'),
+                    "your email".tr(), mailController, "enter your email".tr()),
                 SizedBox(height: 10),
-                Constants.buildTextField(
-                    'تفاصيل الشكوى', massageontroller, 'ادخل تفاصيل الشكوى',
+                Constants.buildTextField("complain details".tr(),
+                    massageontroller, "enter your complain".tr(),
                     maxLine: 4),
                 SizedBox(height: 20),
                 BlocConsumer<ContactusCubit, ContactusState>(
@@ -62,7 +64,7 @@ class ContactUsScreen extends StatelessWidget {
                     if (state is ContactusSuccess) {
                       Constants.defaultDialog(
                           context: context,
-                          title: 'تم  ارسال الشكوي ',
+                          title: "complain sent".tr(),
                           image: IconsAssets.done,
                           action: [
                             ElevatedButton(
@@ -78,7 +80,7 @@ class ContactUsScreen extends StatelessWidget {
                                 Constants.navigateAndFinish(
                                     context, MainScreen());
                               },
-                              child: const Text("العودة الي  الصفحة الرئيسية"),
+                              child: Text("back to home".tr()),
                             ),
                           ]);
                     }
@@ -98,7 +100,7 @@ class ContactUsScreen extends StatelessWidget {
                               phone: phoneController.text,
                               content: massageontroller.text);
                         },
-                        child: Text('إرسال',
+                        child: Text("sent".tr(),
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white)),
                       ),

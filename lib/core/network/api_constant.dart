@@ -19,6 +19,7 @@ class ApiConstant {
   static const String sendRequest = '$baseurl/send_request';
   static const String notes = '$baseurl/notes';
   static const String notifications = '$baseurl/notifications';
+  static const String categories = '$baseurl/categories';
 
   static const headers = {'Content-Type': 'application/json'};
 }

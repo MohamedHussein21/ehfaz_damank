@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ahfaz_damanak/features/bills_screen/data/models/edit_fatora.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
@@ -142,7 +144,11 @@ class BillsDataSourceImpl implements BillsDataSource {
         "daman_order": damanOrder
       },
     );
-
+    print("response: ${{
+      "category_id": categoryId,
+      "order_by": orderBy,
+      "daman_order": damanOrder
+    }} ${response.data}");
     if (response.statusCode == 200) {
       return List<Bill>.from(
           response.data['data'].map((json) => Bill.fromJson(json)));

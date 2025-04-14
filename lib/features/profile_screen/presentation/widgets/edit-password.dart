@@ -1,4 +1,5 @@
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';
@@ -14,7 +15,8 @@ class EditPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("إعدادات الحساب"),
+      appBar: AppBar(
+        title: Text("account settings".tr()),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: ColorManger.blackColor),
           onPressed: () {
@@ -27,9 +29,9 @@ class EditPasswordScreen extends StatelessWidget {
         child: Column(
           children: [
             Constants.buildTextField(
-                'كلمة السر ', passwordController, '******  '),
+                "Password".tr(), passwordController, '******  '),
             Constants.buildTextField(
-                ' تأكيد كلمة السر ', confirmPasswordController, '******  '),
+                "Confirm Password".tr(), confirmPasswordController, '******  '),
             SizedBox(height: MediaQueryValue(context).heigh * 0.07),
             SizedBox(
               width: MediaQueryValue(context).width,
@@ -44,7 +46,7 @@ class EditPasswordScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("تحديث"),
+                child: Text("update".tr()),
               ),
             ),
           ],

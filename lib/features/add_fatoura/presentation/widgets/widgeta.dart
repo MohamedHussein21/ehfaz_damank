@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';
@@ -23,7 +24,7 @@ Widget buildInvoiceNumberField() {
     padding: EdgeInsets.only(bottom: 12.0),
     child: TextFormField(
       decoration: InputDecoration(
-        labelText: "رقم الفاتورة",
+        labelText: "fatura number".tr(),
         suffixIcon: IconButton(
           icon: Icon(Icons.camera_alt),
           onPressed: () => showTimePicker,
@@ -52,7 +53,7 @@ Widget buildUploadSection() {
             size: 40,
             color: ColorManger.defaultColor,
           ),
-          Text("قم برفع صورة أو مستند الفاتورة"),
+          Text("Upload an image or invoice document".tr()),
         ],
       ),
     ),

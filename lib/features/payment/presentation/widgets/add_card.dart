@@ -1,5 +1,6 @@
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/features/plans/presentation/widgets/payment_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';
@@ -20,7 +21,8 @@ class AddBankCardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('إضافة بطاقة بنكية', style: TextStyle(color: Colors.black)),
+        title:
+            Text("add bank card".tr(), style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -30,21 +32,21 @@ class AddBankCardScreen extends StatelessWidget {
         child: ListView(
           children: [
             Constants.buildTextField(
-                'اسم حامل البطاقة', nameController, 'ادخل اسم حامل البطاقة'),
+                "name on card".tr(), nameController, "enter name on card".tr()),
             SizedBox(height: 12),
-            Constants.buildTextField(
-                'رقم البطاقة', cardNumberController, 'ادخل رقم البطاقة'),
+            Constants.buildTextField("card number".tr(), cardNumberController,
+                "enter card number".tr()),
             SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: Constants.buildTextField(
-                      'CVV', cvvController, 'ادخل CVV'),
+                      'CVV', cvvController, "enter cvv".tr()),
                 ),
                 SizedBox(width: 12),
                 Expanded(
-                    child: Constants.buildTextField(
-                        'تاريخ الانتهاء', dateController, 'شهر / سنة'))
+                    child: Constants.buildTextField("enter expiration date",
+                        dateController, "month / year".tr())),
               ],
             ),
             SizedBox(height: 24),
@@ -61,7 +63,7 @@ class AddBankCardScreen extends StatelessWidget {
                 onPressed: () {
                   Constants.defaultDialog(
                       context: context,
-                      title: 'تم اضافة الكارت بنجاح  ',
+                      title: "add card successfully".tr(),
                       image: IconsAssets.done,
                       action: [
                         ElevatedButton(
@@ -76,11 +78,11 @@ class AddBankCardScreen extends StatelessWidget {
                             Constants.navigateAndFinish(
                                 context, PaymentScreen());
                           },
-                          child: const Text("العودة الي  البطاقات المحفوظة  "),
+                          child: Text("back to saved cards".tr()),
                         ),
                       ]);
                 },
-                child: const Text('اضافة '),
+                child: Text("add".tr()),
               ),
             ),
           ],
@@ -101,11 +103,12 @@ class AddBankCardScreen extends StatelessWidget {
             children: [
               Icon(Icons.check_circle, color: Colors.purple, size: 50),
               SizedBox(height: 16),
-              Text('تم إضافة البطاقة بنجاح!',
+              Text("add card successfully".tr(),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Text(
-                  'يمكنك الآن استخدام بطاقتك لإتمام عمليات الدفع بسهولة وأمان.',
+                  "you can now use your cards to make payments easily and safely"
+                      .tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14)),
               SizedBox(height: 16),
@@ -119,7 +122,7 @@ class AddBankCardScreen extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: Text('العودة إلى البطاقات المحفوظة',
+                child: Text("back to saved cards".tr(),
                     style: TextStyle(color: Colors.white)),
               ),
             ],

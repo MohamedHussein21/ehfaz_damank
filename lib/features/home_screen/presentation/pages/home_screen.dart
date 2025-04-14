@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
               final invoices = ordersResponse.orders.map((order) {
                 return LastBillsCard(
                   title: order.name ?? '',
-                  amount: "${order.price} ريال",
+                  amount: "${order.price} ${"riyal".tr()}",
                   date: order.damanDate ?? '',
                 );
               }).toList();
@@ -64,13 +64,14 @@ class HomeScreen extends StatelessWidget {
                       collapseMode: CollapseMode.pin,
                       titlePadding: EdgeInsets.zero,
                       title: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0, right: 20),
+                        padding: const EdgeInsets.only(
+                            bottom: 20.0, right: 25, left: 25),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'أهلاً 👋',
+                              '${"hallo".tr()} 👋',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -80,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                                 height: MediaQueryValue(context).heigh * 0.005),
                             Text(
-                              'احفظ فواتيرك، تابع ضمانك!',
+                              "save your bills, follow your warranties".tr(),
                               style: TextStyle(
                                 fontSize: 13,
                                 color: ColorManger.wightColor.withOpacity(0.9),

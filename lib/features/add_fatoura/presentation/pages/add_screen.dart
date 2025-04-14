@@ -4,6 +4,7 @@ import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/presentation/widgets/qr.dart';
 import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -101,7 +102,7 @@ class _AddNewBillState extends State<AddNewBill> {
           children: [
             ListTile(
               leading: Icon(Icons.camera_alt),
-              title: Text("التقاط صورة"),
+              title: Text("take photo".tr()),
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.camera);
@@ -109,7 +110,7 @@ class _AddNewBillState extends State<AddNewBill> {
             ),
             ListTile(
               leading: Icon(Icons.photo_library),
-              title: Text("اختيار من المعرض"),
+              title: Text("choose from gallery".tr()),
               onTap: () {
                 Navigator.pop(context);
                 pickImage(ImageSource.gallery);
@@ -117,7 +118,7 @@ class _AddNewBillState extends State<AddNewBill> {
             ),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
-              title: Text("اختيار ملف"),
+              title: Text("choose file".tr()),
               onTap: () {
                 Navigator.pop(context);
                 pickFile();
@@ -154,8 +155,8 @@ class _AddNewBillState extends State<AddNewBill> {
                   ),
                   Text(
                     selectedFile != null
-                        ? "تم اختيار ملف: ${selectedFile!.split('/').last}"
-                        : "قم برفع صورة أو مستند الفاتورة",
+                        ? "${"selected file".tr()} ${selectedFile!.split('/').last}"
+                        : "Upload an image or invoice document".tr(),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -170,7 +171,7 @@ class _AddNewBillState extends State<AddNewBill> {
       create: (context) => AddFatouraCubit(),
       child: Scaffold(
         appBar: AppBar(
-            title: Text("إضافة فاتورة جديدة"),
+            title: Text("add new bill".tr()),
             leading: IconButton(
                 icon: Icon(Icons.qr_code_scanner, color: Colors.black),
                 onPressed: () async {
@@ -186,8 +187,7 @@ class _AddNewBillState extends State<AddNewBill> {
                       if (userId == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content:
-                                  Text("خطأ: لم يتم العثور على معرف المستخدم")),
+                              content: Text("error : user id not found".tr())),
                         );
                         return;
                       }
@@ -195,8 +195,7 @@ class _AddNewBillState extends State<AddNewBill> {
                       int? parsedOrderId = int.tryParse(scannedData);
                       if (parsedOrderId == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text("خطأ: بيانات QR Code غير صالحة")),
+                          SnackBar(content: Text("qr code not valid".tr())),
                         );
                         return;
                       }
@@ -205,7 +204,9 @@ class _AddNewBillState extends State<AddNewBill> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("تمت إضافة الفاتورة بنجاح!"),
+                          content: Text(
+                              "please wait until the transfer request is accepted"
+                                  .tr()),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -213,12 +214,12 @@ class _AddNewBillState extends State<AddNewBill> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text(
-                                "خطأ في معالجة بيانات QR Code: ${e.toString()}")),
+                                "${"qr code not valid".tr()} ${e.toString()}")),
                       );
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("لم يتم مسح أي QR Code")),
+                      SnackBar(content: Text("no qr code".tr())),
                     );
                   }
                 })),
@@ -228,7 +229,7 @@ class _AddNewBillState extends State<AddNewBill> {
               Constants.defaultDialog(
                 context: context,
                 image: IconsAssets.done,
-                title: "تم حفظ الفاتورة بنجاح",
+                title: "bill saved successfully".tr(),
                 action: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -241,7 +242,7 @@ class _AddNewBillState extends State<AddNewBill> {
                     onPressed: () {
                       Constants.navigateAndFinish(context, MainScreen());
                     },
-                    child: const Text("العودة إلى الرئيسية"),
+                    child: Text("back to home screen".tr()),
                   ),
                 ],
               );
@@ -264,30 +265,30 @@ class _AddNewBillState extends State<AddNewBill> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Constants.buildTextFormField(
-                      "اسم الفاتورة / المنتج",
+                      "bill name / product name".tr(),
                       titleController,
                       'iPhone 15 Pro',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'يرجى إدخال اسم الفاتورة / المنتج';
+                          return "please enter bill name / product name".tr();
                         }
                         return null;
                       },
                     ),
                     Constants.buildTextFormField(
-                      "المبلغ المدفوع",
+                      "price paid".tr(),
                       amountController,
                       "3500",
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'يرجى إدخال المبلغ المدفوع';
+                          return "please enter price paid".tr();
                         }
                         String numericValue =
                             value.replaceAll(RegExp(r'[^0-9]'), '');
                         if (numericValue.isEmpty ||
                             int.tryParse(numericValue) == null) {
-                          return 'يرجى إدخال مبلغ صالح';
+                          return "please enter valid price".tr();
                         }
                         return null;
                       },
@@ -296,12 +297,12 @@ class _AddNewBillState extends State<AddNewBill> {
                       onTap: () => pickDate(purchaseDateController),
                       child: AbsorbPointer(
                         child: Constants.buildTextFormField(
-                          "تاريخ الشراء",
+                          "date of purchase".tr(),
                           purchaseDateController,
                           "YYYY-MM-DD",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'يرجى إدخال تاريخ الشراء';
+                              return "please enter date of purchase".tr();
                             }
                             return null;
                           },
@@ -309,47 +310,49 @@ class _AddNewBillState extends State<AddNewBill> {
                       ),
                     ),
                     Constants.buildTextFormField(
-                      "اسم المتجر",
+                      "store name".tr(),
                       merchantController,
                       "جرير",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'يرجى إدخال اسم المتجر';
+                          return "please enter store name".tr();
                         }
                         return null;
                       },
                     ),
                     Constants.buildTextFormField(
-                      "رقم الفاتورة",
+                      "bill number".tr(),
                       invoiceNumberController,
                       "123456",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'يرجى إدخال رقم الفاتورة';
+                          return "please enter bill number".tr();
                         }
                         if (!RegExp(r'^[a-zA-Z0-9]{1,10}$').hasMatch(value)) {
-                          return 'الرقم يجب أن يحتوي على 10 أحرف أو أرقام كحد أقصى';
+                          return "number must be 10 characters or numbers".tr();
                         }
                         return null;
                       },
                     ),
-                    const Text("حدد الفئة"),
+                    Text("select category".tr()),
                     const SizedBox(height: 10),
                     InvoiceCategorySelector(
-                      onCategorySelected: (category) {
-                        setState(() => selectedCategoryId = category);
+                      categories:
+                          context.read<AddFatouraCubit>().categoryModel ?? [],
+                      onCategorySelected: (categoryId) {
+                        setState(() => selectedCategoryId = categoryId);
                       },
                     ),
                     GestureDetector(
                       onTap: () => pickDate(warrantyEndDateController),
                       child: AbsorbPointer(
                         child: Constants.buildTextFormField(
-                          "تاريخ انتهاء الضمان",
+                          "date of expiration".tr(),
                           warrantyEndDateController,
                           "YYYY-MM-DD",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'يرجى إدخال تاريخ انتهاء الضمان';
+                              return "please enter date of expiration".tr();
                             }
                             return null;
                           },
@@ -358,10 +361,10 @@ class _AddNewBillState extends State<AddNewBill> {
                     ),
                     buildUploadSection(),
                     SizedBox(height: 16),
-                    Text("هل الفاتورة تشمل ضمان؟ (اختياري)"),
+                    Text("warranty included(optional)".tr()),
                     Row(
                       children: [
-                        Text("نعم"),
+                        Text("yes".tr()),
                         Radio(
                           value: 1,
                           groupValue: dman,
@@ -369,7 +372,7 @@ class _AddNewBillState extends State<AddNewBill> {
                             setState(() => dman = value as int);
                           },
                         ),
-                        Text("لا"),
+                        Text("no".tr()),
                         Radio(
                           value: 0,
                           groupValue: dman,
@@ -380,23 +383,23 @@ class _AddNewBillState extends State<AddNewBill> {
                       ],
                     ),
                     SizedBox(height: 16),
-                    Text("تفعيل تذكير بانتهاء الضمان قبل..."),
+                    Text("enable reminder before expiration".tr()),
                     Wrap(
                       spacing: 8.0,
                       children: [
-                        buildReminderChip("يوم", 1),
-                        buildReminderChip("أسبوع", 7),
-                        buildReminderChip("شهر", 30),
-                        buildReminderChip("لا تذكير", 0),
+                        buildReminderChip("day".tr(), 1),
+                        buildReminderChip("week".tr(), 7),
+                        buildReminderChip("month".tr(), 30),
+                        buildReminderChip("no reminder".tr(), 0),
                       ],
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Constants.buildTextFormField(
-                      "إضافة ملاحظة عن الفاتورة (اختياري)",
+                      "add bill note(optional)".tr(),
                       warrantyNoteController,
-                      "الضمان لمدة سنة يغطي الأعطال فقط",
+                      "warranty for a year only".tr(),
                     ),
                     SizedBox(
                       height: 20,
@@ -406,7 +409,8 @@ class _AddNewBillState extends State<AddNewBill> {
                         if (_formKey.currentState!.validate()) {
                           if (selectedCategoryId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('يرجى اختيار الفئة')),
+                              SnackBar(
+                                  content: Text("please select category".tr())),
                             );
                             return;
                           }
@@ -429,8 +433,8 @@ class _AddNewBillState extends State<AddNewBill> {
                         backgroundColor: ColorManger.defaultColor,
                         minimumSize: Size(double.infinity, 50),
                       ),
-                      child: const Text(
-                        "حفظ",
+                      child: Text(
+                        "save".tr(),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

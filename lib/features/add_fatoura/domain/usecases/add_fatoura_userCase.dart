@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/Failure.dart';
+import '../../data/models/categoris_model.dart';
 import '../../data/models/qr_model.dart';
 
 class AddFatouraUsercase {
@@ -36,12 +37,18 @@ class AddFatouraUsercase {
         reminder,
         image);
   }
-Future<Either<Failure, QrModel>> addFromQr(int receiverId , int orderId) async {
-    return await addfatorarepo.addFromQr(receiverId , orderId);
-}
+
+  Future<Either<Failure, QrModel>> addFromQr(
+      int receiverId, int orderId) async {
+    return await addfatorarepo.addFromQr(receiverId, orderId);
+  }
   // Future<Either<Failure, FatoraModel>> deleteFatoura({
   //   required int id,
   // }) async {
   //   return await addfatorarepo.deletFatoura(id);
   // }
+
+  Future<Either<Failure, List<CategoryModel>>> getCategoris() async {
+    return await addfatorarepo.getCategoris();
+  }
 }

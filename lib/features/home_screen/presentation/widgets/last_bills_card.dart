@@ -19,15 +19,15 @@ class LastBillsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-DateTime? damanDate = DateTime.tryParse(date);
-try {
-  damanDate = DateFormat("yyyy-MM-dd").parse(date.split(' ')[0]);
-} catch (e) {
-  print("⚠️ خطأ في تحويل التاريخ: $date - $e");
-}
+    DateTime? damanDate = DateTime.tryParse(date);
+    try {
+      damanDate = DateFormat("yyyy-MM-dd").parse(date.split(' ')[0]);
+    } catch (e) {
+      print("⚠️ خطأ في تحويل التاريخ: $date - $e");
+    }
 
     DateTime now = DateTime.now();
-    DateTime threeMonthsFromNow = now.add(const Duration(days: 90)); 
+    DateTime threeMonthsFromNow = now.add(const Duration(days: 90));
 
     Color dateColor = Colors.grey;
     TextDecoration textDecoration = TextDecoration.none;
@@ -40,7 +40,6 @@ try {
     } else if (damanDate.isBefore(threeMonthsFromNow)) {
       dateColor = Colors.red;
     } else {
-    
       dateColor = Colors.green;
     }
 
@@ -59,7 +58,7 @@ try {
               style: TextStyle(
                 fontSize: 15,
                 color: dateColor,
-                decoration: textDecoration, 
+                decoration: textDecoration,
               ),
             ),
             trailing: Text(
@@ -83,7 +82,7 @@ class LastBillsAdded extends StatelessWidget {
     final invoices = ordersResponse!.orders.map((order) {
       return LastBillsCard(
         title: order.name ?? '',
-        amount: "${order.price} ريال",
+        amount: "${order.price} ${"riyal".tr()}",
         date: order.damanDate ?? '',
       );
     }).toList();
@@ -94,7 +93,7 @@ class LastBillsAdded extends StatelessWidget {
         txt: "last bills Added".tr(),
       ),
       body: invoices.isEmpty
-          ? Center(child: Text("لا يوجد فواتير متاحة".tr()))
+          ? Center(child: Text("No current bills".tr()))
           : ListView.builder(
               shrinkWrap: true,
               itemCount: invoices.length,
@@ -105,4 +104,3 @@ class LastBillsAdded extends StatelessWidget {
     );
   }
 }
-

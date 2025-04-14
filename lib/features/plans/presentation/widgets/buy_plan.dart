@@ -1,6 +1,8 @@
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:ahfaz_damanak/features/contactUs/presentation/pages/contact_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'payment_screen.dart';
@@ -20,54 +22,54 @@ class _BuyPlanScreenState extends State<BuyPlanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ترقية الحساب', style: TextStyle(color: Colors.black)),
+        title:
+            Text("upgrade account".tr(), style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('اختر الباقة المناسبة لاحتياجاتك',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                          'تمتع بمزايا إضافية مثل تخزين غير محدود للفواتير، إشعارات مخصصة، وتقارير متقدمة عند الاشتراك في إحدى باقاتنا المميزة.',
-                          style: TextStyle(
-                            fontSize: 16,
-                          )),
-                    ]),
-              ),
-              _buildPlanDetails(),
-              SizedBox(
-                width: MediaQueryValue(context).width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManger.defaultColor,
-                    side: BorderSide(color: ColorManger.defaultColor),
-                    foregroundColor: ColorManger.wightColor,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 12),
-                  ),
-                  onPressed: () {
-                    Constants.navigateTo(context, PaymentScreen());
-                  },
-                  child: Text("  اتمام الشراء   "),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("choose a plan that meets your needs".tr(),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                        "you can enjoy additional features like unlimited invoice storage, customized notifications, and advanced reports upon subscribing to one of our premium plans."
+                            .tr(),
+                        style: TextStyle(
+                          fontSize: 16,
+                        )),
+                  ]),
+            ),
+            _buildPlanDetails(),
+            SizedBox(
+              width: MediaQueryValue(context).width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorManger.defaultColor,
+                  side: BorderSide(color: ColorManger.defaultColor),
+                  foregroundColor: ColorManger.wightColor,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                 ),
+                onPressed: () {
+                  Constants.navigateTo(context, ContactUsScreen());
+                },
+                child: Text("contact us".tr()),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -84,30 +86,28 @@ class _BuyPlanScreenState extends State<BuyPlanScreen> {
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text('الباقة الأساسية',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Text('300 ريال /شهر ')
-                ],
-              ),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('تخزين حتى 100 فاتورة', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('إشعارات انتهاء الضمان ', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('تصدير الفواتير PDF', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-              _buildPlanFeature('دعم الأولوية', true),
-              SizedBox(height: MediaQueryValue(context).heigh * 0.02),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text("basic plan".tr(),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Spacer(),
+                Text("300 SAR per month".tr())
+              ],
+            ),
+            SizedBox(height: MediaQueryValue(context).heigh * 0.01),
+            _buildPlanFeature("store up to 100 invoices".tr(), true),
+            SizedBox(height: MediaQueryValue(context).heigh * 0.01),
+            _buildPlanFeature("notifications expiration".tr(), true),
+            SizedBox(height: MediaQueryValue(context).heigh * 0.01),
+            _buildPlanFeature("export pdf".tr(), true),
+            SizedBox(height: MediaQueryValue(context).heigh * 0.01),
+            _buildPlanFeature("priority support".tr(), true),
+            SizedBox(height: MediaQueryValue(context).heigh * 0.02),
+          ],
         ),
       ),
     );

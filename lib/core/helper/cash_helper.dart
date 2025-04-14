@@ -36,7 +36,9 @@ class CashHelper {
     return await sharedPreferences!.remove(key);
   }
 
-  static Future<bool> clearData() async {
-    return await sharedPreferences!.clear();
+  static Future<void> clearData() async {
+    removeData(key: 'api_token');
+    removeData(key: 'user_id');
+    await sharedPreferences!.clear();
   }
 }

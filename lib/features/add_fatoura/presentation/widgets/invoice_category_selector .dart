@@ -1,8 +1,18 @@
+import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/models/categoris_model.dart';
 
 class InvoiceCategorySelector extends StatefulWidget {
   final Function(int) onCategorySelected;
-  const InvoiceCategorySelector({super.key, required this.onCategorySelected});
+  final List<CategoryModel> categories;
+
+  const InvoiceCategorySelector({
+    super.key,
+    required this.onCategorySelected,
+    required this.categories,
+  });
 
   @override
   _InvoiceCategorySelectorState createState() =>
@@ -13,36 +23,40 @@ class _InvoiceCategorySelectorState extends State<InvoiceCategorySelector> {
   int? categoryId;
   String? selectedCategory;
 
-  final List<Map<String, dynamic>> categories = [
-    {"id": 1, "name": "إلكترونيات"},
-    {"id": 2, "name": "أجهزة منزلية"},
-    {"id": 3, "name": "ادوات صحية"},
-    {"id": 4, "name": "سيارات"},
-    {"id": 5, "name": "ادوات كهربائية"},
-     {"id": 6, "name": "اخري"},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.categories.isEmpty) {
+      context.read<AddFatouraCubit>().getCategoris();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.categories.isEmpty) {
+      return const CircularProgressIndicator();
+    }
+
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
-        labelText: "حدد الفئة",
+        labelText: "select category".tr(),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
       value: selectedCategory,
-      items: categories.map((category) {
+      items: widget.categories.map((category) {
         return DropdownMenuItem<String>(
-          value: category["name"],
-          child: Text(category["name"]),
+          value: category.name,
+          child: Text(category.name),
         );
       }).toList(),
       onChanged: (value) {
         setState(() {
           selectedCategory = value;
-          categoryId = categories
-              .firstWhere((category) => category["name"] == value)["id"];
+          categoryId = widget.categories
+              .firstWhere((category) => category.name == value)
+              .id;
         });
-        widget.onCategorySelected(categoryId!);
+        if (categoryId != null) widget.onCategorySelected(categoryId!);
       },
     );
   }

@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/models/add_fatoura_model.dart';
+import '../../data/models/categoris_model.dart';
 import '../../data/models/qr_model.dart';
 
 part 'add_fatoura_state.dart';
@@ -19,6 +20,7 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
   static AddFatouraCubit get(context) => BlocProvider.of(context);
   FatoraModel? fatoraModel;
   QrModel? qrModel;
+  List<CategoryModel>? categoryModel;
   Future<void> addFatoura({
     required int categoryd,
     required String name,
@@ -56,20 +58,20 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
     log('addFatoura: $fatoraModel');
   }
 
-  void addFromQr(int receiverId , int orderId) async {
+  void addFromQr(int receiverId, int orderId) async {
     emit(AddFatouraQrLoading());
     AddFatouraRemoteDataSource addFatouraRemoteDataSource =
         AddFatouraRemoteDataSource();
     Addfatorarepo addfatorarepo =
         AddFatouraRepository(addFatouraRemoteDataSource);
-    final result = await AddFatouraUsercase(addfatorarepo).addFromQr( receiverId, orderId);
+    final result =
+        await AddFatouraUsercase(addfatorarepo).addFromQr(receiverId, orderId);
     result.fold((l) => emit(AddFatouraQrError()), (r) {
       emit(AddFatouraQrSuccess(r));
       qrModel = r;
     });
     log('addFatoura: $fatoraModel');
-}
-
+  }
 
   // void deletFatoura({ required int id}) async {
   //   emit(RegisterScreenVerifyLoading());
@@ -87,4 +89,16 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
   //   });
   //   log('RegisterCubit: userVerify: $userModel');
   // }
+  void getCategoris() async {
+    emit(GetCategoriesLoading());
+    AddFatouraRemoteDataSource addFatouraRemoteDataSource =
+        AddFatouraRemoteDataSource();
+    Addfatorarepo addfatorarepo =
+        AddFatouraRepository(addFatouraRemoteDataSource);
+    final result = await AddFatouraUsercase(addfatorarepo).getCategoris();
+    result.fold((l) => emit(GetCategoriesError()), (r) {
+      emit(GetCategoriesSuccess(r));
+      categoryModel = r;
+    });
+  }
 }

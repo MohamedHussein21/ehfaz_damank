@@ -1,14 +1,18 @@
-import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart';
-import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:ahfaz_damanak/core/utils/color_mange.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../cubit/bills_screen_state.dart';
+import 'package:ahfaz_damanak/core/utils/color_mange.dart';
+import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart';
+import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
+import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_state.dart';
+import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
+
+import '../../../add_fatoura/data/models/categoris_model.dart';
 
 class EditBillScreen extends StatefulWidget {
   final Bill bill;
@@ -32,19 +36,15 @@ class _EditBillScreenState extends State<EditBillScreen> {
 
   bool includesWarranty = false;
   String? selectedReminder;
-  final List<String> reminderOptions = ["يوم", "أسبوع", "شهر", "ابدأ"];
+  final List<String> reminderOptions = [
+    "day".tr(),
+    "week".tr(),
+    "month".tr(),
+    "no reminder".tr(),
+  ];
   XFile? selectedImage;
   String? selectedFile;
-  final List<Map<String, dynamic>> categories = [
-    {"id": 1, "name": "إلكترونيات"},
-    {"id": 2, "name": "أجهزة منزلية"},
-    {"id": 3, "name": "ادوات صحية"},
-    {"id": 4, "name": "سيارات"},
-    {"id": 5, "name": "ادوات كهربائية"},
-    {"id": 6, "name": "اخري"},
-  ];
-
-  int dman = 0; // 1 for "نعم", 0 for "لا"
+  int dman = 0;
   int? selectedReminderValue;
 
   @override
@@ -103,9 +103,12 @@ class _EditBillScreenState extends State<EditBillScreen> {
 
   Future<void> pickImage(ImageSource source) async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-          source: source, imageQuality: 40, maxWidth: 1000);
+      final picker = ImagePicker();
+      final image = await picker.pickImage(
+        source: source,
+        imageQuality: 40,
+        maxWidth: 1000,
+      );
       if (image != null) {
         setState(() {
           selectedImage = image;
@@ -114,14 +117,14 @@ class _EditBillScreenState extends State<EditBillScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ أثناء اختيار الصورة: $e")),
+        SnackBar(content: Text("${"error select image".tr()} $e")),
       );
     }
   }
 
   Future<void> pickFile() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      final result = await FilePicker.platform.pickFiles();
       if (result != null && result.files.single.path != null) {
         setState(() {
           selectedFile = result.files.single.path!;
@@ -142,7 +145,6 @@ class _EditBillScreenState extends State<EditBillScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-
     if (pickedDate != null) {
       setState(() {
         controller.text = DateFormat('yyyy-MM-dd', 'en').format(pickedDate);
@@ -168,15 +170,10 @@ class _EditBillScreenState extends State<EditBillScreen> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.cloud_upload,
-                    size: 40,
-                    color: ColorManger.defaultColor,
-                  ),
-                  Text(
-                    "قم برفع صورة أو مستند الفاتورة",
-                    textAlign: TextAlign.center,
-                  ),
+                  Icon(Icons.cloud_upload,
+                      size: 40, color: ColorManger.defaultColor),
+                  Text("Upload an image or invoice document".tr(),
+                      textAlign: TextAlign.center),
                 ],
               ),
       ),
@@ -186,129 +183,144 @@ class _EditBillScreenState extends State<EditBillScreen> {
   void showImagePicker() {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: Icon(Icons.camera_alt),
-              title: Text("التقاط صورة"),
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text("اختيار من المعرض"),
-              onTap: () {
-                Navigator.pop(context);
-                pickImage(ImageSource.gallery);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.insert_drive_file),
-              title: Text("اختيار ملف"),
-              onTap: () {
-                Navigator.pop(context);
-                pickFile();
-              },
-            ),
-          ],
-        );
-      },
+      builder: (_) => Wrap(
+        children: [
+          ListTile(
+            leading: Icon(Icons.camera_alt),
+            title: Text("take photo".tr()),
+            onTap: () {
+              Navigator.pop(context);
+              pickImage(ImageSource.camera);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.photo_library),
+            title: Text("choose from gallery".tr()),
+            onTap: () {
+              Navigator.pop(context);
+              pickImage(ImageSource.gallery);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.insert_drive_file),
+            title: Text("choose file".tr()),
+            onTap: () {
+              Navigator.pop(context);
+              pickFile();
+            },
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => BillsScreenCubit(),
-      child: BlocConsumer<BillsScreenCubit, BillsScreenState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("تعديل الفاتورة"),
-            ),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
-              child: Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildTextField("اسم الفاتورة / المنتج", titleController),
-                    buildTextField("المبلغ المدفوع", amountController),
-                    GestureDetector(
-                      onTap: () => pickDate(dateController),
-                      child: AbsorbPointer(
-                        child: buildTextField("تاريخ الشراء", dateController),
-                      ),
-                    ),
-                    buildTextField("اسم المتجر", merchantController),
-                    buildTextField("رقم الفاتورة", fatoraNumberController),
-                    const Text("حدد الفئة"),
-                    const SizedBox(height: 10),
-                    CategoryPicker(
-                      controller: categoryController,
-                      categories: categories,
-                    ),
-                    GestureDetector(
-                      onTap: () => pickDate(warrantyEndDateController),
-                      child: AbsorbPointer(
-                        child: buildTextField(
-                            "تاريخ انتهاء الضمان", warrantyEndDateController),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text("هل الفاتورة تشمل ضمان؟ (اختياري)"),
-                    Row(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => BillsScreenCubit()),
+        BlocProvider(create: (_) => AddFatouraCubit()..getCategoris()),
+      ],
+      child: BlocBuilder<AddFatouraCubit, AddFatouraState>(
+        builder: (context, addFatouraState) {
+          final addCubit = AddFatouraCubit.get(context);
+          final categories = addCubit.categoryModel ?? [];
+
+          return BlocConsumer<BillsScreenCubit, BillsScreenState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    "edit bill".tr(),
+                    style: TextStyle(color: ColorManger.blackColor),
+                  ),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: ColorManger.blackColor,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.0),
+                  child: Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("نعم"),
-                        Radio(
-                          value: 1,
-                          groupValue: dman,
-                          onChanged: (value) {
-                            setState(() => dman = value as int);
-                          },
+                        buildTextField(
+                            "bill name / product name".tr(), titleController),
+                        buildTextField("price paid".tr(), amountController),
+                        GestureDetector(
+                          onTap: () => pickDate(dateController),
+                          child: AbsorbPointer(
+                            child: buildTextField(
+                                "date of purchase".tr(), dateController),
+                          ),
                         ),
-                        Text("لا"),
-                        Radio(
-                          value: 0,
-                          groupValue: dman,
-                          onChanged: (value) {
-                            setState(() => dman = value as int);
-                          },
+                        buildTextField("store name".tr(), merchantController),
+                        buildTextField(
+                            "fatora number".tr(), fatoraNumberController),
+                        Text("category".tr()),
+                        const SizedBox(height: 10),
+                        CategoryPicker(
+                          controller: categoryController,
+                          categories: categories,
+                        ),
+                        GestureDetector(
+                          onTap: () => pickDate(warrantyEndDateController),
+                          child: AbsorbPointer(
+                            child: buildTextField("warranty end date".tr(),
+                                warrantyEndDateController),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text("warranty included(optional)".tr()),
+                        Row(
+                          children: [
+                            Text("yes".tr()),
+                            Radio(
+                                value: 1,
+                                groupValue: dman,
+                                onChanged: (value) {
+                                  setState(() => dman = value as int);
+                                }),
+                            Text("no".tr()),
+                            Radio(
+                                value: 0,
+                                groupValue: dman,
+                                onChanged: (value) {
+                                  setState(() => dman = value as int);
+                                }),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text("enable reminder before expiration".tr()),
+                        Wrap(
+                          spacing: 8.0,
+                          children: reminderOptions
+                              .map((option) => buildReminderChip(
+                                  option, reminderOptions.indexOf(option)))
+                              .toList(),
+                        ),
+                        const SizedBox(height: 10),
+                        buildTextField("add bill note(optional)".tr(),
+                            warrantyNoteController),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: saveBill,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManger.defaultColor,
+                            minimumSize: Size(double.infinity, 50),
+                          ),
+                          child: Text("save".tr(),
+                              style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Text("تفعيل تذكير بانتهاء الضمان قبل..."),
-                    Wrap(
-                      spacing: 8.0,
-                      children: reminderOptions
-                          .map((option) => buildReminderChip(
-                              option, reminderOptions.indexOf(option)))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 10),
-                    buildTextField("إضافة ملاحظة عن الفاتورة (اختياري)",
-                        warrantyNoteController),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: saveBill,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorManger.defaultColor,
-                        minimumSize: Size(double.infinity, 50),
-                      ),
-                      child: const Text(
-                        "حفظ",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
@@ -354,7 +366,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
 
 class CategoryPicker extends StatelessWidget {
   final TextEditingController controller;
-  final List<Map<String, dynamic>> categories;
+  final List<CategoryModel> categories;
 
   const CategoryPicker({
     super.key,
@@ -364,25 +376,35 @@ class CategoryPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = categories.firstWhere(
-      (category) => category['id'] == int.tryParse(controller.text),
-      orElse: () => {"name": "غير محدد"},
-    )['name'];
+    final selectedCategoryId = int.tryParse(controller.text);
+    final currentCategory = categories.firstWhere(
+      (cat) => cat.id == selectedCategoryId,
+      orElse: () => CategoryModel(
+        id: 0,
+        name: "غير محدد",
+        image: "",
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        totalOrdersAmount: 0,
+      ),
+    );
 
-    return DropdownButtonFormField<String>(
-      value: currentValue,
-      decoration: const InputDecoration(
-        labelText: "اختر الفئة",
+    return DropdownButtonFormField<CategoryModel>(
+      value: currentCategory,
+      decoration: InputDecoration(
+        labelText: "choose category".tr(),
         border: OutlineInputBorder(),
       ),
       items: categories.map((category) {
-        return DropdownMenuItem<String>(
-          value: category['name'],
-          child: Text(category['name']),
+        return DropdownMenuItem<CategoryModel>(
+          value: category,
+          child: Text(category.name),
         );
       }).toList(),
       onChanged: (value) {
-        controller.text = value ?? '';
+        if (value != null) {
+          controller.text = value.id.toString();
+        }
       },
     );
   }

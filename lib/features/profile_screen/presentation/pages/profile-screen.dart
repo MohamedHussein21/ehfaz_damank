@@ -1,5 +1,6 @@
 import 'package:ahfaz_damanak/core/utils/icons_assets.dart';
 import 'package:ahfaz_damanak/features/profile_screen/presentation/cubit/profile_screen_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +35,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context, state) {
           if (state is ProfileScreenLoading) {
             return Scaffold(
-              appBar: AppBar(title: Text("إعدادات الحساب")),
+              appBar: AppBar(
+                title: Text("account settings".tr()),
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+                ),
+              ),
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (state is ProfileScreenLoaded) {
@@ -42,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text("إعدادات الحساب"),
+                title: Text("account settings".tr()),
                 leading: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -53,34 +62,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               body: ListView(
                 padding: EdgeInsets.all(16.0),
                 children: [
-                  Text("المعلومات الشخصية",
+                  Text("personal information".tr(),
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  _buildProfileTile("الاسم", profile.name,
-                      () => _navigateToScreen(EditNameScreen(profile: profile))),
-                  _buildProfileTile("رقم الجوال", profile.phone,
-                      () => _navigateToScreen(EditNameScreen(profile: profile))),
-                  Text("الأمان والخصوصية",
+                  _buildProfileTile(
+                      "name".tr(),
+                      profile.name,
+                      () =>
+                          _navigateToScreen(EditNameScreen(profile: profile))),
+                  _buildProfileTile(
+                      "Phone Number".tr(),
+                      profile.phone,
+                      () =>
+                          _navigateToScreen(EditNameScreen(profile: profile))),
+                  Text("privacy and security".tr(),
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  _buildProfileTile("كلمة المرور", "**********",
+                  _buildProfileTile("Password".tr(), "**********",
                       () => _navigateToScreen(EditPasswordScreen())),
-
                   SizedBox(height: 20),
-
                   _buildDeleteAccountButton(),
                 ],
               ),
             );
           } else if (state is ProfileScreenError) {
             return Scaffold(
-              appBar: AppBar(title: Text("إعدادات الحساب")),
-              body: Center(child: Text("حدث خطأ أثناء تحميل البيانات!")),
+              appBar: AppBar(title: Text("account settings".tr())),
+              body: Center(child: Text("something went wrong".tr())),
             );
           }
 
           return Scaffold(
-            appBar: AppBar(title: Text("إعدادات الحساب")),
+            appBar: AppBar(title: Text("account settings".tr())),
             body: Center(child: CircularProgressIndicator()),
           );
         },
@@ -100,11 +113,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildDeleteAccountButton() {
     return Row(
       children: [
-        Image(image: AssetImage(IconsAssets.profileRemove),),
+        Image(
+          image: AssetImage(IconsAssets.profileRemove),
+        ),
         TextButton(
           onPressed: () => _showDeleteAccountDialog(),
           child: Text(
-            "حذف الحساب",
+            "delete account".tr(),
             style: TextStyle(color: Colors.red, fontSize: 16),
           ),
         ),
@@ -116,31 +131,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("حذف الحساب"),
-        content: Text("هل أنت متأكد أنك تريد حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء."),
+        title: Text("delete account".tr()),
+        content: Text(
+            "are you sure you want to delete your account? this action cannot be undone"
+                .tr()),
         actions: [
           TextButton(
             onPressed: () {
               var Cubit = BlocProvider.of<ProfileScreenCubit>(context);
               Cubit.deleteUser(userId: Cubit.profile?.id.toString() ?? '');
               Navigator.pop(context);
-              
             },
-            child: Text("إلغاء", style: TextStyle(color: Colors.grey)),
+            child: Text("cancel".tr(), style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () {
-               var Cubit = BlocProvider.of<ProfileScreenCubit>(context);
+              var Cubit = BlocProvider.of<ProfileScreenCubit>(context);
               Cubit.deleteUser(userId: Cubit.profile?.id.toString() ?? '');
               Constants.navigateAndFinish(context, LoginScreen());
-              
             },
-            child: Text("حذف", style: TextStyle(color: Colors.red)),
+            child: Text("delete".tr(), style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
   }
-
-
 }

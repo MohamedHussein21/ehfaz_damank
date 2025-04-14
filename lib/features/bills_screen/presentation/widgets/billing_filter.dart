@@ -1,39 +1,35 @@
+import 'package:ahfaz_damanak/features/add_fatoura/data/models/categoris_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
+import '../../../add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
 import '../cubit/bills_screen_state.dart';
 
 class BillsFilterSheet extends StatefulWidget {
-  const BillsFilterSheet({super.key});
-
+  const BillsFilterSheet({super.key, required this.cubit});
+  final BillsScreenCubit cubit;
   @override
   _BillsFilterSheetState createState() => _BillsFilterSheetState();
 }
 
 class _BillsFilterSheetState extends State<BillsFilterSheet> {
   Map<String, bool> selectedFilters = {
-    "إلكترونيات": false,
-    "أجهزة منزلية": false,
-    "ادوات صحية": false,
-    "سيارات": false,
-    "ادوات كهربائية": false,
-    "اخري": false,
-    "التقدم أول": false,
-    "الأحدث أول": false,
-    "الضمان الأطول مدة": false,
-    "الضمان الأقرب للانتهاء": false,
+    "oldest".tr(): false,
+    "newest".tr(): false,
+    "longest Warranty".tr(): false,
+    "shortest Warranty".tr(): false,
   };
+
+  String? order;
+  List<CategoryModel> selectedCategories = <CategoryModel>[];
+  String? warranty;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BillsScreenCubit, BillsScreenState>(
-      listener: (context, state) {
-        if (state is GetFilterSuccus) {
-          Navigator.pop(context);
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return DraggableScrollableSheet(
           initialChildSize: 0.55,
@@ -65,7 +61,7 @@ class _BillsFilterSheetState extends State<BillsFilterSheet> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("فلترة الفواتير",
+                        Text("Filter Bills".tr(),
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         IconButton(
@@ -75,77 +71,132 @@ class _BillsFilterSheetState extends State<BillsFilterSheet> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    const Text("الفئة",
+                    Text("Category".tr(),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: [
-                        "إلكترونيات",
-                        "أجهزة منزلية",
-                        "ادوات صحية",
-                        "سيارات",
-                        "ادوات كهربائية",
-                        "اخري"
-                      ].map(_buildFilterButton).toList(),
+                    BlocProvider(
+                      create: (context) => AddFatouraCubit()..getCategoris(),
+                      child: BlocBuilder<AddFatouraCubit, AddFatouraState>(
+                        builder: (context, state) {
+                          var cubit = AddFatouraCubit.get(context);
+                          var categories = cubit.categoryModel ?? [];
+                          // for (var category in categories) {
+                          //   selectedFilters.putIfAbsent(
+                          //       category.name, () => false);
+                          // }
+                          if (categories.isEmpty) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: categories
+                                .map((category) => _buildFilterButton(
+                                    name: category.name,
+                                    onpress: () {
+                                      if (selectedCategories
+                                          .where(
+                                              (item) => item.id == category.id)
+                                          .isEmpty) {
+                                        setState(() {
+                                          selectedCategories.add(category);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selectedCategories.remove(category);
+                                        });
+                                      }
+                                    },
+                                    isSelected: selectedCategories
+                                        .where((item) => item.id == category.id)
+                                        .isNotEmpty))
+                                .toList(),
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(height: 24),
-                    const Text("الترتيب الزمني",
+                    Text("Sort by time".tr(),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      children: ["التقدم أول", "الأحدث أول"]
-                          .map(_buildFilterButton)
-                          .toList(),
-                    ),
+                    Wrap(spacing: 10, children: [
+                      _buildFilterButton(
+                          name: "oldest".tr(),
+                          onpress: () {
+                            setState(() {
+                              order = "oldest";
+                            });
+                          },
+                          isSelected: order == 'oldest'),
+                      _buildFilterButton(
+                          name: "newest".tr(),
+                          onpress: () {
+                            setState(() {
+                              order = "newest";
+                            });
+                          },
+                          isSelected: order == 'newest'),
+                    ]),
                     const SizedBox(height: 24),
-                    const Text("الضمان",
+                    Text("warranty".tr(),
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      children: ["الضمان الأطول مدة", "الضمان الأقرب للانتهاء"]
-                          .map(_buildFilterButton)
-                          .toList(),
-                    ),
+                    Wrap(spacing: 10, children: [
+                      _buildFilterButton(
+                          name: "longest Warranty".tr(),
+                          onpress: () {
+                            setState(() {
+                              warranty = "longest";
+                            });
+                          },
+                          isSelected: warranty == 'longest'),
+                      _buildFilterButton(
+                          name: "shortest Warranty".tr(),
+                          onpress: () {
+                            setState(() {
+                              warranty = "shortest";
+                            });
+                          },
+                          isSelected: warranty == 'shortest')
+                    ]),
                     const SizedBox(height: 30),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          int? categoryId;
-                          String? orderBy;
-                          String? damanOrder;
+                          // int? categoryId;
+                          // String? orderBy;
+                          // String? damanOrder;
 
-                          selectedFilters.forEach((key, value) {
-                            if (value) {
-                              if (key == "إلكترونيات") categoryId = 1;
-                              if (key == "أجهزة منزلية") categoryId = 2;
-                              if (key == "ادوات صحية") categoryId = 3;
-                              if (key == "سيارات") categoryId = 4;
-                              if (key == "ادوات كهربائية") categoryId = 5;
-                              if (key == "اخري") categoryId = 6;
-                              if (key == "التقدم أول") orderBy = "oldest";
-                              if (key == "الأحدث أول") orderBy = "newest";
-                              if (key == "الضمان الأطول مدة") {
-                                damanOrder = "longest";
-                              }
-                              if (key == "الضمان الأقرب للانتهاء") {
-                                damanOrder = "closest";
-                              }
-                            }
-                          });
+                          // selectedFilters.forEach((key, value) {
+                          //   if (value) {
+                          //     if (key == "oldest") orderBy = "oldest";
+                          //     if (key == "newest") orderBy = "newest";
+                          //     if (key == "longest") damanOrder = "longest";
+                          //     if (key == "shortest") damanOrder = "closest";
+                          //   }
+                          // });
 
-                          context.read<BillsScreenCubit>().getFilter(
-                                categoryId: categoryId ?? 0,
-                                orderBy: orderBy ?? '',
-                                damanOrder: damanOrder ?? '',
-                              );
+                          // final categories =
+                          //     AddFatouraCubit.get(context).categoryModel ?? [];
+                          // for (var category in categories) {
+                          //   if (selectedFilters[category.name] == true) {
+                          //     categoryId = category.id;
+                          //     break;
+                          //   }
+                          // }
+
+                          widget.cubit.getFilter(
+                            categoryId: selectedCategories.last.id,
+                            orderBy: order,
+                            damanOrder: warranty,
+                          );
+                          Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManger.defaultColor,
@@ -154,11 +205,11 @@ class _BillsFilterSheetState extends State<BillsFilterSheet> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text("تطبيق",
+                        child: Text("confirm".tr(),
                             style:
                                 TextStyle(fontSize: 16, color: Colors.white)),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -169,13 +220,14 @@ class _BillsFilterSheetState extends State<BillsFilterSheet> {
     );
   }
 
-  Widget _buildFilterButton(String title) {
-    bool isSelected = selectedFilters[title] ?? false;
-
+  Widget _buildFilterButton(
+      {required String name,
+      required Function() onpress,
+      required bool isSelected}) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedFilters[title] = !isSelected;
+          onpress();
         });
       },
       child: Container(
@@ -197,7 +249,7 @@ class _BillsFilterSheetState extends State<BillsFilterSheet> {
               : [],
         ),
         child: Text(
-          title,
+          name,
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.black87,
             fontWeight: FontWeight.w500,

@@ -1,4 +1,5 @@
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +15,7 @@ class NotificationScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'الاشعارات',
+            "notification".tr(),
             style: TextStyle(color: ColorManger.blackColor),
           ),
         ),
@@ -25,9 +26,9 @@ class NotificationScreen extends StatelessWidget {
             } else if (state is NotificationLoaded) {
               final notifications = state.notificationModel;
               if (notifications.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'لا يوجد إشعارات',
+                    "no notifications found".tr(),
                     style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 );
@@ -80,7 +81,7 @@ class NotificationScreen extends StatelessWidget {
             } else if (state is NotificationError) {
               return Center(
                 child: Text(
-                  'حدث خطأ أثناء تحميل الإشعارات',
+                  "some error occurred while loading notifications".tr(),
                   style: TextStyle(fontSize: 18, color: Colors.red),
                 ),
               );

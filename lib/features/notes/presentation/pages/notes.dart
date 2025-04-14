@@ -1,5 +1,6 @@
 import 'package:ahfaz_damanak/core/utils/images_mange.dart';
 import 'package:ahfaz_damanak/features/notes/presentation/cubit/notes_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +13,8 @@ class RemindersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "التذكيرات",
+        title: Text(
+          "notes".tr(),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -58,8 +59,8 @@ class RemindersScreen extends StatelessWidget {
           child: Image(image: AssetImage(ImageAssets.reminder)),
         ),
         const SizedBox(height: 20),
-        const Text(
-          "ليس لديك أي تذكيرات مضافة بعد! أضف تذكيراً الآن لتنظيم مشترياتك.",
+        Text(
+          "you have no reminders yet add one now to manage your bills".tr(),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -85,12 +86,12 @@ class RemindersScreen extends StatelessWidget {
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                Text("المتجر: ${note.storeName}"),
+                Text("${"store :".tr()} ${note.storeName}"),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     Text(
-                      "تاريخ الانتهاء: ",
+                      "date of expiration".tr(),
                     ),
                     const SizedBox(width: 8),
                     Text(

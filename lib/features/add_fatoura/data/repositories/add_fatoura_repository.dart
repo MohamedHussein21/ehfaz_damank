@@ -1,5 +1,6 @@
 import 'package:ahfaz_damanak/features/add_fatoura/data/datasources/addFatoura_dataSource.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/models/add_fatoura_model.dart';
+import 'package:ahfaz_damanak/features/add_fatoura/data/models/categoris_model.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/domain/repositories/addFatoraRepo.dart';
 import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,9 +49,21 @@ class AddFatouraRepository extends Addfatorarepo {
   }
 
   @override
-  Future<Either<Failure, QrModel>> addFromQr(int receiverId , int orderId) async {
-    final result = await addFatouraRemoteDataSource.addFromQr( receiverId, orderId);
+  Future<Either<Failure, QrModel>> addFromQr(
+      int receiverId, int orderId) async {
+    final result =
+        await addFatouraRemoteDataSource.addFromQr(receiverId, orderId);
     try {
+      return Right(result);
+    } on ServerException catch (failure) {
+      return Left(FailureServer(msg: failure.errorModel.detail));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CategoryModel>>> getCategoris() async {
+    try {
+      final result = await addFatouraRemoteDataSource.getCategoris();
       return Right(result);
     } on ServerException catch (failure) {
       return Left(FailureServer(msg: failure.errorModel.detail));

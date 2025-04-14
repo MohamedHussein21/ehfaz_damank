@@ -1,6 +1,7 @@
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/buy_plan.dart';
@@ -20,7 +21,8 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ترقية الحساب', style: TextStyle(color: Colors.black)),
+        title:
+            Text("upgrade account".tr(), style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -34,14 +36,15 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('اختر الباقة المناسبة لاحتياجاتك',
+                    Text("choose a plan that meets your needs".tr(),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                        'تمتع بمزايا إضافية مثل تخزين غير محدود للفواتير، إشعارات مخصصة، وتقارير متقدمة عند الاشتراك في إحدى باقاتنا المميزة.',
+                        "you can enjoy additional features like unlimited invoice storage, customized notifications, and advanced reports upon subscribing to one of our premium plans."
+                            .tr(),
                         style: TextStyle(
                           fontSize: 16,
                         )),
@@ -57,18 +60,18 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
                   children: [
                     _buildPlanDetails(
                         context: context,
-                        planName: 'الباقة المجانية',
-                        planPrice: 'free',
+                        planName: "free plan".tr(),
+                        planPrice: "free".tr(),
                         buttonColor: Colors.green,
                         featureStatus: [true, true, false, false],
-                        plantype: 'الباقة الاساسية'),
+                        plantype: "basic plan".tr()),
                     _buildPlanDetails(
                         context: context,
-                        planName: 'الباقة المدفوعة',
+                        planName: "paid plan".tr(),
                         planPrice: '300 ريال ',
                         buttonColor: ColorManger.defaultColor,
                         featureStatus: [true, true, true, true],
-                        plantype: 'شراء الباقة'),
+                        plantype: "buy plan".tr()),
                   ],
                 ),
               ),
@@ -83,9 +86,9 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildPlanOption('شهري', 0),
+        _buildPlanOption("monthly".tr(), 0),
         SizedBox(width: 16),
-        _buildPlanOption('سنوي', 1),
+        _buildPlanOption("yearly".tr(), 1),
       ],
     );
   }
@@ -139,13 +142,14 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            _buildPlanFeature('تخزين حتى 10 فاتورة', featureStatus[0]),
+            _buildPlanFeature("store up to 10 invoices".tr(), featureStatus[0]),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            _buildPlanFeature('إشعارات انتهاء الضمان ', featureStatus[1]),
+            _buildPlanFeature(
+                "notifications expiration".tr(), featureStatus[1]),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            _buildPlanFeature('تصدير الفواتير PDF', featureStatus[2]),
+            _buildPlanFeature("export pdf".tr(), featureStatus[2]),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            _buildPlanFeature('دعم الأولوية', featureStatus[3]),
+            _buildPlanFeature("priority support".tr(), featureStatus[3]),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.6,
@@ -186,7 +190,7 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text('حدد البطاقة',
+          child: Text("select card".tr(),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         RadioListTile(

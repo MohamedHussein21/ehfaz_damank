@@ -27,4 +27,6 @@ class IconsAssets {
 
   static String transfer = '$iconsPath/transfer.png';
   static String move = '$iconsPath/move.png';
+
+  static String language = '$iconsPath/language.png';
 }

@@ -1,8 +1,11 @@
+import 'dart:developer';
+
+import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
 import 'package:ahfaz_damanak/features/bills_screen/data/models/edit_fatora.dart';
-import 'package:ahfaz_damanak/features/bills_screen/data/models/filter_model.dart';
 import 'package:ahfaz_damanak/features/bills_screen/domain/repositories/Bills_rep.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/datasources/biills_data_source.dart';
@@ -15,10 +18,12 @@ import 'bills_screen_state.dart';
 class BillsScreenCubit extends Cubit<BillsScreenState> {
   BillsScreenCubit() : super(BillsScreenInitial());
 
+  static BillsScreenCubit get(context) => BlocProvider.of(context);
   List<Bill> billsModel = [];
   DeleteModel? deleteModel;
-  FilterModel? filterModel;
+  List<Bill>? filterModel;
   EditFatoraModel? editModel;
+
   void getBills() async {
     emit(BillsScreenLoading());
     BillsDataSource billsDataSource = BillsDataSourceImpl(Dio());
@@ -97,6 +102,7 @@ class BillsScreenCubit extends Cubit<BillsScreenState> {
 
     BillsDataSource billsDataSource = BillsDataSourceImpl(Dio());
     BillsRep billsRep = BillsRepositry(billsDataSource);
+
     final result = await BillsUseCase(billsRep).getFilter(
       categoryId: categoryId,
       orderBy: orderBy,
@@ -104,10 +110,15 @@ class BillsScreenCubit extends Cubit<BillsScreenState> {
     );
 
     result.fold(
-      (l) => emit(GetFilterError(l.msg)),
+      (l) {
+        emit(GetFilterError(l.msg));
+        print("Error: ${l.msg}");
+      },
       (r) {
-        billsModel = r;
-        emit(GetFilterSuccus(filterModel: r));
+        filterModel = r;
+        log("reloaded filter model: $r");
+        emit(GetFilterSuccuss(filterModel: r));
+        log("Fetched bills: ${filterModel?.length}");
       },
     );
   }

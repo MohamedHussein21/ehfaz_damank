@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
@@ -111,15 +112,29 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         textAlign: TextAlign.start,
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
-                      DefaultTextForm(
+                      IntlPhoneField(
                         controller: phoneController,
-                        isPassword: false,
-                        type: TextInputType.text,
-                        validate: (value) => phoneValidation(value),
-                        hint: 'Enter Phone Number'.tr(),
-                        hintStyle: TextStyle(color: ColorManger.grayColor),
-                        prefix:
-                            Image(image: AssetImage(ImageAssets.smartPhone)),
+                        initialCountryCode: 'SA',
+                        decoration: InputDecoration(
+                          hintText: 'Enter Phone Number'.tr(),
+                          hintStyle: TextStyle(color: ColorManger.grayColor),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Image(
+                                image: AssetImage(ImageAssets.smartPhone),
+                                height: 24,
+                                width: 24),
+                          ),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        onChanged: (phone) {
+                          print(phone.completeNumber);
+                        },
+                        validator: (value) => phoneValidation(value?.number),
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       Text(

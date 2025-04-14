@@ -1,4 +1,4 @@
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CountryCodeScreen extends StatelessWidget {
@@ -10,7 +10,7 @@ class CountryCodeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("اختر كود الدولة")),
+      appBar: AppBar(title: Text("choose country code".tr())),
       body: ListView.builder(
         itemCount: countryCodes.length,
         itemBuilder: (context, index) {

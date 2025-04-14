@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,37 +24,32 @@ class _BillsScreenState extends State<BillsScreen> {
   @override
   void initState() {
     super.initState();
-    searchController.addListener(_filterBills);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BillsScreenCubit>().getFilter(
-            categoryId: null,
-            orderBy: null,
-            damanOrder: null,
-          );
-    });
-  }
-
-  void _filterBills() {
-    if (mounted) {
+    searchController.addListener(() {
       setState(() {});
-    }
-  }
+    });
 
-  void openFilterSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => const BillsFilterSheet(),
-    );
+    context.read<BillsScreenCubit>().getFilter();
   }
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<BillsScreenCubit>();
+    void openFilterSheet() {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return BlocProvider.value(
+              value: cubit, child: BillsFilterSheet(cubit: cubit));
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -87,26 +84,43 @@ class _BillsScreenState extends State<BillsScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<BillsScreenCubit, BillsScreenState>(
+      body: BlocConsumer<BillsScreenCubit, BillsScreenState>(
+        buildWhen: (previous, current) {
+          return current is GetFilterLouding ||
+              current is GetFilterSuccuss ||
+              current is GetFilterError;
+        },
+        listener: (context, state) {
+          if (state is GetFilterError) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('error get bills'.tr()),
+              backgroundColor: Colors.red,
+            ));
+          }
+        },
         builder: (context, state) {
+          final fi = context.read<BillsScreenCubit>().filterModel;
+          print("fi: $fi");
           if (state is GetFilterLouding) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is GetFilterSuccus) {
-            final bills = (state.filterModel).where((bill) {
-              return (bill.name?.toLowerCase() ?? '')
-                  .contains(searchController.text.toLowerCase());
-            }).toList();
+          }
+          if (state is GetFilterSuccuss) {
+            log("Current State: $state");
+
+            final bills = (searchController.text.isNotEmpty)
+                ? state.filterModel.where((bill) {
+                    final query = searchController.text.toLowerCase();
+                    final name = bill.name?.toLowerCase() ?? '';
+                    final number = bill.fatoraNumber?.toLowerCase() ?? '';
+                    return name.contains(query) || number.contains(query);
+                  }).toList()
+                : state.filterModel;
 
             if (bills.isEmpty) {
               return Center(
-                child: Text(
-                  'لا توجد فواتير متاحة'.tr(),
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                child: Text('No bills found'.tr()),
               );
             }
-
             return ListView.builder(
                 itemCount: bills.length,
                 itemBuilder: (context, index) {
@@ -151,7 +165,7 @@ class _BillsScreenState extends State<BillsScreen> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('تم حذف الفاتورة بنجاح'.tr()),
+                          content: Text('success delete bill'.tr()),
                           backgroundColor: Colors.green,
                           duration: const Duration(seconds: 2),
                         ),
@@ -159,11 +173,11 @@ class _BillsScreenState extends State<BillsScreen> {
                     },
                     child: ListTile(
                       title: Text(
-                        bill.name ?? '',
+                        '${bill.name ?? ''}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        bill.damanDate ?? 'تاريخ غير متوفر',
+                        bill.damanDate ?? 'date not available'.tr(),
                         style: TextStyle(
                           color: dateColor,
                           fontSize: 16,
@@ -173,19 +187,19 @@ class _BillsScreenState extends State<BillsScreen> {
                       ),
                       trailing: bill.price != null
                           ? Text(
-                              "${bill.price} ريال",
+                              "${bill.price} ${"riyal".tr()}",
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             )
                           : const SizedBox(),
                       onTap: () => Constants.navigateTo(
                         context,
-                        BillDetailsScreen(bill: state.filterModel[index]),
+                        BillDetailsScreen(bill: bills[index]),
                       ),
                     ),
                   );
                 });
-          } else if (state is BillsScreenError) {
+          } else if (state is GetFilterError) {
             return Center(child: Text(state.message));
           } else {
             return Center(child: Text('No bills found'.tr()));

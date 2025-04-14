@@ -19,7 +19,7 @@ class MainCubit extends Cubit<MainStates> {
   final pages = [
     HomeScreen(),
     BlocProvider(
-      create: (context) => BillsScreenCubit()..getBills(),
+      create: (context) => BillsScreenCubit()..getFilter(),
       child: const BillsScreen(),
     ),
     const AddNewBill(),
@@ -31,5 +31,10 @@ class MainCubit extends Cubit<MainStates> {
     log('$index');
     pageIndex = index;
     emit(MainChangButtonNavStates());
+  }
+
+  void clear() {
+    pageIndex = 0;
+    emit(MainInitialStates());
   }
 }

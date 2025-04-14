@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
@@ -18,7 +19,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     double scanArea = MediaQuery.of(context).size.width < 400 ? 250.0 : 300.0;
 
     return Scaffold(
-      appBar: AppBar(title: Text("مسح QR Code")),
+      appBar: AppBar(title: Text("scan QR Code".tr())),
       body: Stack(
         children: [
           QRView(
@@ -35,8 +36,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           ),
           Center(
             child: scannedData != null
-                ? Text('تم المسح: $scannedData', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-                : Text('قم بمسح QR Code', style: TextStyle(fontSize: 18)),
+                ? Text('${"code was scanned".tr()} $scannedData',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+                : Text("Scan QR Code".tr(), style: TextStyle(fontSize: 18)),
           )
         ],
       ),
@@ -49,7 +51,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       if (mounted) {
         setState(() => scannedData = scanData.code);
         controller.pauseCamera();
-        Navigator.pop(context, scannedData); 
+        Navigator.pop(context, scannedData);
       }
     });
   }

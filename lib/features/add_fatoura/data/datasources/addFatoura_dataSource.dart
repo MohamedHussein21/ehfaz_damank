@@ -10,6 +10,7 @@ import '../../../../core/network/error_model.dart';
 import 'package:ahfaz_damanak/features/add_fatoura/data/models/add_fatoura_model.dart';
 
 import '../../../../core/utils/constant.dart';
+import '../models/categoris_model.dart';
 import '../models/qr_model.dart';
 
 abstract class AddfatouraDatasource {
@@ -27,7 +28,9 @@ abstract class AddfatouraDatasource {
     required XFile image,
   });
 
-  Future<QrModel> addFromQr(int receiverId , int orderId);
+  Future<QrModel> addFromQr(int receiverId, int orderId);
+
+  Future<List<CategoryModel>> getCategoris();
 
   // Future<FatoraModel> deleteFatoura({
   //   required int id,
@@ -88,14 +91,15 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
       throw ServerException(errorModel: ErrorModel.fromJson(response.data));
     }
   }
+
   @override
-  Future<QrModel> addFromQr(int receiverId , int orderId) async {
+  Future<QrModel> addFromQr(int receiverId, int orderId) async {
     try {
       final response = await Dio().post(
         ApiConstant.sendRequest,
         options: Options(
-          headers:{
-              'Content-Type': 'application/json',
+          headers: {
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
           },
         ),
@@ -120,10 +124,46 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
             errorModel: ErrorModel.fromJson(e.response?.data));
       } else {
         log('Dio Error: ${e.message}');
-        throw ServerException(errorModel: ErrorModel.fromJson(e.response?.data));
+        throw ServerException(
+            errorModel: ErrorModel.fromJson(e.response?.data));
       }
     }
   }
+
+  @override
+  Future<List<CategoryModel>> getCategoris() async {
+    try {
+      final response = await Dio().get(ApiConstant.categories,
+          options: Options(
+            headers: ApiConstant.headers,
+          ));
+
+      if (response.statusCode == 200) {
+        return (response.data['data'] as List)
+            .map((category) => CategoryModel.fromJson(category))
+            .toList();
+      } else {
+        throw ServerException(errorModel: ErrorModel.fromJson(response.data));
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        log('Dio Error: ${e.response?.statusCode} - ${e.response?.data}');
+        throw ServerException(
+            errorModel: ErrorModel.fromJson(e.response?.data));
+      } else {
+        log('Dio Error: ${e.message}');
+        throw ServerException(
+            errorModel: ErrorModel(detail: 'Unexpected error occurred'));
+      }
+    } catch (e) {
+      log('Unexpected Error: $e');
+      throw ServerException(
+          errorModel: ErrorModel(detail: 'Something went wrong!'));
+    }
+  }
+}
+
+
 
 
   // @override
@@ -163,4 +203,4 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
   //         errorModel: ErrorModel(detail: 'Something went wrong!'));
   //   }
   // }
-}
+

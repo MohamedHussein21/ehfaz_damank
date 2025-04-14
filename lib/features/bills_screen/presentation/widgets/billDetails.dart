@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_cubit.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/cubit/bills_screen_state.dart';
 import 'package:ahfaz_damanak/features/bills_screen/presentation/widgets/edit_bills.dart';
@@ -16,46 +17,40 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/utils/icons_assets.dart';
+import '../../../add_fatoura/data/models/categoris_model.dart';
 import '../../data/models/bills_model.dart';
 
 class BillDetailsScreen extends StatelessWidget {
   final Bill bill;
 
-   BillDetailsScreen({super.key, required this.bill});
-
-final List<Map<String, dynamic>> categories = [
-    {"id": 1, "name": "إلكترونيات"},
-    {"id": 2, "name": "أجهزة منزلية"},
-    {"id": 3, "name": "ادوات صحية"},
-    {"id": 4, "name": "سيارات"},
-    {"id": 5, "name": "ادوات كهربائية"},
-     {"id": 6, "name": "اخري"},
-  ];
+  BillDetailsScreen({super.key, required this.bill});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BillsScreenCubit, BillsScreenState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         DateTime? damanDate = DateTime.tryParse(bill.damanDate ?? '');
-  try {
-    damanDate = DateFormat("yyyy-MM-dd").parse(bill.damanDate ?? '');
-  } catch (e) {
-  }
+        try {
+          damanDate = DateFormat("yyyy-MM-dd").parse(bill.damanDate ?? '');
+        } catch (e) {}
 
-  DateTime now = DateTime.now();
-  DateTime threeMonthsLater = now.add(const Duration(days: 90)); 
+        DateTime now = DateTime.now();
+        DateTime threeMonthsLater = now.add(const Duration(days: 90));
 
-  bool isExpired = (damanDate != null && damanDate.isBefore(now)); 
-  bool isLessThanThreeMonths = (damanDate != null && damanDate.isBefore(threeMonthsLater) && damanDate.isAfter(now)); 
+        bool isExpired = (damanDate != null && damanDate.isBefore(now));
+        bool isLessThanThreeMonths = (damanDate != null &&
+            damanDate.isBefore(threeMonthsLater) &&
+            damanDate.isAfter(now));
 
-  Color dateColor = isExpired || isLessThanThreeMonths ? Colors.red : Colors.green;
-  TextDecoration textDecoration = isExpired ? TextDecoration.lineThrough : TextDecoration.none;
- 
+        Color dateColor =
+            isExpired || isLessThanThreeMonths ? Colors.red : Colors.green;
+        TextDecoration textDecoration =
+            isExpired ? TextDecoration.lineThrough : TextDecoration.none;
+
         return Scaffold(
           appBar: AppBar(
-            title: Text("تفاصيل الفاتورة",
+            title: Text("bill details".tr(),
                 style: TextStyle(color: ColorManger.blackColor)),
             leading: IconButton(
               icon: Icon(
@@ -73,7 +68,7 @@ final List<Map<String, dynamic>> categories = [
                   Constants.defaultDialog(
                       context: context,
                       image: IconsAssets.delet,
-                      title: "هل تريد حذف الفاتورة؟",
+                      title: "do you want to delete the invoice".tr(),
                       action: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -83,7 +78,7 @@ final List<Map<String, dynamic>> categories = [
                                 horizontal: 30, vertical: 12),
                           ),
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("إلغاء"),
+                          child: Text("cancel".tr()),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -96,21 +91,21 @@ final List<Map<String, dynamic>> categories = [
                           onPressed: () {
                             final cubit = context.read<BillsScreenCubit>();
                             cubit.deleteBill(id: bill.id.toString());
-     
-                            if(state is GetFilterSuccus){
-                         ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('تم حذف الفاتورة بنجاح'),
-      backgroundColor: Colors.green,
-      duration: const Duration(seconds: 2),
-    ),
-  );
-                               Constants.navigateAndFinish(context, MainScreen());
 
+                            if (state is GetFilterSuccuss) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("invoice deleted successfully".tr()),
+                                  backgroundColor: Colors.green,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                              Constants.navigateAndFinish(
+                                  context, MainScreen());
                             }
-
                           },
-                          child: const Text("حذف"),
+                          child: Text("delete".tr()),
                         ),
                       ]);
                 },
@@ -123,7 +118,7 @@ final List<Map<String, dynamic>> categories = [
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'كود الفاتورة',
+                  "qr code".tr(),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
@@ -136,29 +131,48 @@ final List<Map<String, dynamic>> categories = [
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildSectionTitle("بيانات الفاتورة"),
-                _buildDetailRow("اسم الفاتورة /المنتج", bill.name ?? ''),
-                _buildDetailRow("تاريخ الشراء", bill.purchaseDate ?? ''),
-                _buildDetailRow("المبلغ المدفوع", "${bill.price} ريال"),
-                _buildDetailRow("جهة الشراء", bill.storeName ?? ''),
+                _buildSectionTitle("bill details".tr()),
                 _buildDetailRow(
-                  "الفئة",
-                  categories.firstWhere(
-                    (category) => category['id'] == bill.categoryId,
-                    orElse: () => {"name": "غير محدد"},
-                  )['name'],
+                    "bill name / product name".tr(), bill.name ?? ''),
+                _buildDetailRow(
+                    "date of purchase".tr(), bill.purchaseDate ?? ''),
+                _buildDetailRow("price paid".tr(), "${bill.price} ريال"),
+                _buildDetailRow("store name".tr(), bill.storeName ?? ''),
+                BlocProvider(
+                  create: (context) => AddFatouraCubit()..getCategoris(),
+                  child: BlocBuilder<AddFatouraCubit, AddFatouraState>(
+                    builder: (context, state) {
+                      final addCubit = AddFatouraCubit.get(context);
+                      final categories = addCubit.categoryModel ?? [];
+
+                      return _buildDetailRow(
+                        "category".tr(),
+                        categories
+                            .firstWhere(
+                              (category) => category.id == bill.categoryId,
+                              orElse: () => CategoryModel(
+                                id: 0,
+                                name: "غير محدد",
+                                image: "",
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                                totalOrdersAmount: 0,
+                              ),
+                            )
+                            .name,
+                      );
+                    },
+                  ),
                 ),
-                _buildDetailRow("رقم الفاتورة", bill.fatoraNumber ?? ''),
+                _buildDetailRow("fatura number".tr(), bill.fatoraNumber ?? ''),
                 const SizedBox(height: 20),
-                _buildSectionTitle("تفاصيل الضمان والصيانة"),
-                _buildDetailRow(
-                    "هل الفاتورة تشمل ضمان؟", bill.daman ==0 ?'لا':'نعم'),
-                _buildDetailRow("نهاية الضمان", bill.damanDate ?? '',
+                _buildSectionTitle("warranty and maintenance details".tr()),
+                _buildDetailRow("is the invoice covered by warranty?".tr(),
+                    bill.daman == 0 ? "no".tr() : "yes".tr()),
+                _buildDetailRow("warranty end".tr(), bill.damanDate ?? '',
                     valueColor: dateColor, textDecoration: textDecoration),
-                _buildDetailRow("تنبيه بانتهاء الضمان",
-                    bill.damanReminder?.toString() ?? ''),
                 const SizedBox(height: 20),
-                _buildSectionTitle("المرفقات والمستندات"),
+                _buildSectionTitle("attachments and documents".tr()),
                 Row(
                   children: [
                     if (bill.image != null) ...[
@@ -168,12 +182,12 @@ final List<Map<String, dynamic>> categories = [
                             label: "PDF",
                             filePath: bill.image!,
                             context: context),
-                      if (bill.image!.toLowerCase().endsWith('.png') || bill.image!.toLowerCase().endsWith('.jpg'))
+                      if (bill.image!.toLowerCase().endsWith('.png') ||
+                          bill.image!.toLowerCase().endsWith('.jpg'))
                         _buildAttachment(
                             icon: Icons.image,
-                            label: "صورة",
-                            filePath: bill.image!
-                            ,
+                            label: "image".tr(),
+                            filePath: bill.image!,
                             context: context),
                       if (!bill.image!.toLowerCase().endsWith('.pdf') &&
                           !bill.image!.toLowerCase().endsWith('.png') &&
@@ -181,7 +195,7 @@ final List<Map<String, dynamic>> categories = [
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: Text(
-                            "صيغة الملف غير مدعومة",
+                            "file format not supported".tr(),
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
@@ -189,7 +203,7 @@ final List<Map<String, dynamic>> categories = [
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          "لا يوجد مرفقات",
+                          "no attachments".tr(),
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
@@ -208,7 +222,7 @@ final List<Map<String, dynamic>> categories = [
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         icon: const Icon(Icons.share, color: Colors.white),
-                        label: const Text("مشاركة",
+                        label: Text("share".tr(),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16)),
                       ),
@@ -230,7 +244,7 @@ final List<Map<String, dynamic>> categories = [
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         icon: Icon(Icons.edit, color: ColorManger.defaultColor),
-                        label: Text("تعديل",
+                        label: Text("edit".tr(),
                             style: TextStyle(
                                 color: ColorManger.defaultColor, fontSize: 16)),
                       ),
@@ -253,20 +267,21 @@ final List<Map<String, dynamic>> categories = [
         build: (pw.Context context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text("تفاصيل الفاتورة",
+            pw.Text("bill details".tr(),
                 style:
-                    pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                    pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 10),
-            pw.Text("اسم الفاتورة /المنتج: ${bill.name ?? ''}"),
-            pw.Text("تاريخ الشراء: ${bill.purchaseDate ?? ''}"),
-            pw.Text("المبلغ المدفوع: ${bill.price} ريال"),
-            pw.Text("جهة الشراء: ${bill.storeName ?? ''}"),
-            pw.Text("الفئة: ${bill.categoryId?.toString() ?? ''}"),
-            pw.Text("رقم الفاتورة: ${bill.fatoraNumber ?? ''}"),
-            pw.Text("هل الفاتورة تشمل ضمان؟: ${bill.daman?.toString() ?? ''}"),
-            pw.Text("نهاية الضمان: ${bill.damanDate ?? ''}"),
+            pw.Text("${"bill name / product name".tr()} : ${bill.name ?? ''}"),
+            pw.Text("${"purchase date".tr()} : ${bill.purchaseDate ?? ''}"),
+            pw.Text("${"price paid".tr()} : ${bill.price} ريال"),
+            pw.Text("${"store name".tr()} : ${bill.storeName ?? ''}"),
+            pw.Text("${"category".tr()} ${bill.categoryId?.toString() ?? ''}"),
+            pw.Text(" ${"fatura number".tr()} ${bill.fatoraNumber ?? ''}"),
             pw.Text(
-                "تنبيه بانتهاء الضمان: ${bill.damanReminder?.toString() ?? ''}"),
+                " ${"is the invoice covered by warranty?".tr()} ${bill.daman?.toString() ?? ''}"),
+            pw.Text(" ${"warranty end".tr()} ${bill.damanDate ?? ''}"),
+            pw.Text(
+                " ${"enable reminder before expiration".tr()} ${bill.damanReminder?.toString() ?? ''}"),
           ],
         ),
       ),
@@ -276,7 +291,7 @@ final List<Map<String, dynamic>> categories = [
     final file = File("${output.path}/bill.pdf");
     await file.writeAsBytes(await pdf.save());
 
-    Share.shareXFiles([XFile(file.path)], text: "تفاصيل الفاتورة");
+    Share.shareXFiles([XFile(file.path)], text: "bill details".tr());
   }
 
   Widget _buildSectionTitle(String title) {
@@ -286,7 +301,8 @@ final List<Map<String, dynamic>> categories = [
     );
   }
 
-  Widget _buildDetailRow(String title, String value, {Color? valueColor,  TextDecoration? textDecoration}) {
+  Widget _buildDetailRow(String title, String value,
+      {Color? valueColor, TextDecoration? textDecoration}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -294,10 +310,10 @@ final List<Map<String, dynamic>> categories = [
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           Text(value,
               style:
-                  TextStyle(fontSize: 16, color: valueColor ?? Colors.black)),
+                  TextStyle(fontSize: 14, color: valueColor ?? Colors.black)),
         ],
       ),
     );
@@ -316,7 +332,7 @@ final List<Map<String, dynamic>> categories = [
             if (filePath.toLowerCase().endsWith('.pdf')) {
               // Display PDF in a popup
               return AlertDialog(
-                content: Text("عرض ملفات PDF غير مدعوم حالياً."),
+                content: Text("PDF file: $filePath"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -333,7 +349,7 @@ final List<Map<String, dynamic>> categories = [
                     Image.file(File(filePath)),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("إغلاق"),
+                      child: Text("close".tr()),
                     ),
                   ],
                 ),
@@ -359,7 +375,3 @@ final List<Map<String, dynamic>> categories = [
     );
   }
 }
-
-
-
-

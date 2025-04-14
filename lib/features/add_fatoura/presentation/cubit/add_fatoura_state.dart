@@ -29,3 +29,14 @@ class AddFatouraQrSuccess extends AddFatouraState {
 class AddFatouraQrLoading extends AddFatouraState {}
 
 class AddFatouraQrError extends AddFatouraState {}
+
+class GetCategoriesLoading extends AddFatouraState {}
+
+class GetCategoriesSuccess extends AddFatouraState {
+  final List<CategoryModel> categoriesModel;
+  const GetCategoriesSuccess(this.categoriesModel);
+  @override
+  List<Object> get props => [categoriesModel];
+}
+
+class GetCategoriesError extends AddFatouraState {}

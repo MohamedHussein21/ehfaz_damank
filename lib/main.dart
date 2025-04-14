@@ -50,7 +50,7 @@ Future<void> main() async {
       Locale('ar'),
     ],
     fallbackLocale: const Locale('ar'),
-    startLocale: const Locale('ar'),
+    startLocale: Locale(CashHelper.getData(key: 'locale') ?? 'ar'),
     child: MyApp(startWidget: widget),
   ));
 }
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => MainCubit(),
         ),
-        BlocProvider(create: (context) => BillsScreenCubit()..getBills()),
+        BlocProvider(create: (context) => BillsScreenCubit()..getFilter()),
         BlocProvider(create: (context) => ProfileScreenCubit()..getProfile()),
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => AddFatouraCubit()),

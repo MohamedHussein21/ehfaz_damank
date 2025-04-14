@@ -2,6 +2,7 @@ import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/icons_assets.dart';
 import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -24,7 +25,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('حدد البطاقة', style: TextStyle(color: Colors.black)),
+        title: Text("choose a payment method".tr(),
+            style: TextStyle(color: Colors.black)),
         centerTitle: true,
       ),
       body: Padding(
@@ -39,7 +41,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             SizedBox(height: 16),
             Center(
               child: Text(
-                'إضافة بطاقة جديدة',
+                "add new card".tr(),
                 style: TextStyle(color: Colors.lightBlue, fontSize: 16),
               ),
             ),
@@ -48,7 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               onPressed: () {
                 Constants.defaultDialog(
                     context: context,
-                    title: 'تم الدفع بنجاح ',
+                    title: "payment successfully".tr(),
                     image: IconsAssets.done,
                     action: [
                       ElevatedButton(
@@ -62,7 +64,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         onPressed: () {
                           Constants.navigateAndFinish(context, MainScreen());
                         },
-                        child: const Text("العودة الي  الصفحة الرئيسية"),
+                        child: Text("back to home".tr(),
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white)),
                       ),
                     ]);
               },
@@ -72,7 +76,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text('إتمام الدفع',
+              child: Text("buy".tr(),
                   style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/features/profile_screen/presentation/cubit/profile_screen_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,10 +33,11 @@ class _EditNameScreenState extends State<EditNameScreen> {
               })),
     );
   }
+
   @override
   void initState() {
-    nameController.text = widget.profile.name ;
-    phoneController.text = widget.profile.phone ;
+    nameController.text = widget.profile.name;
+    phoneController.text = widget.profile.phone;
     super.initState();
   }
 
@@ -51,22 +53,28 @@ class _EditNameScreenState extends State<EditNameScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(title: Text("إعدادات الحساب"),leading: IconButton(onPressed: (){
-                Navigator.pop(context);
-              }, icon: Icon(Icons.arrow_back_ios_new,color: Colors.black,)),),
+            appBar: AppBar(
+              title: Text("account settings".tr()),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.black,
+                  )),
+            ),
             body: Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Constants.buildTextField(
-                      'الاسم  ', nameController, 'mohamed'),
-                  
+                  Constants.buildTextField("name", nameController, 'mohamed'),
                   SizedBox(height: MediaQueryValue(context).heigh * 0.03),
                   Row(
                     children: [
                       Expanded(
-                        child: Constants.buildTextField(
-                            'رقم الجوال ', phoneController, 'رقم الجوال '),
+                        child: Constants.buildTextField("Phone Number".tr(),
+                            phoneController, "Phone Number".tr()),
                       ),
                       SizedBox(width: 10),
                       GestureDetector(
@@ -101,10 +109,11 @@ class _EditNameScreenState extends State<EditNameScreen> {
                       ),
                       onPressed: () {
                         context.read<ProfileScreenCubit>().editProfile(
-                          name: nameController.text,
-                          phone: phoneController.text,
-                        );},
-                      child: Text("تحديث"),
+                              name: nameController.text,
+                              phone: phoneController.text,
+                            );
+                      },
+                      child: Text("upgrade".tr()),
                     ),
                   ),
                 ],

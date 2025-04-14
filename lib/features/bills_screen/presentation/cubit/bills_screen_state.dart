@@ -63,10 +63,13 @@ class EditFatouraError extends BillsScreenState {
 
 class GetFilterLouding extends BillsScreenState {}
 
-class GetFilterSuccus extends BillsScreenState {
+class GetFilterSuccuss extends BillsScreenState {
   final List<Bill> filterModel;
 
-  const GetFilterSuccus({required this.filterModel});
+  const GetFilterSuccuss({required this.filterModel});
+
+  @override
+  List<Object> get props => [filterModel];
 }
 
 class GetFilterError extends BillsScreenState {

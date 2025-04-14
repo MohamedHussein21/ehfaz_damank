@@ -16,7 +16,7 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: 160,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(
@@ -26,7 +26,7 @@ class SummaryCard extends StatelessWidget {
         color: ColorManger.wightColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      width: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery.of(context).size.width * 0.29,
       child: Column(
         children: [
           Image(image: AssetImage(image), height: 30),

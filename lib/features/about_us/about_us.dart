@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AboutDamanakScreen extends StatelessWidget {
@@ -7,9 +8,10 @@ class AboutDamanakScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("عن احفظ ضمانك"),
+        title: Text('about us'.tr()),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
+          color: Colors.black,
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -18,24 +20,25 @@ class AboutDamanakScreen extends StatelessWidget {
         child: ListView(
           children: [
             SectionTitle("نبذة عامة"),
-            SectionSubtitle("احفظ ضمانك – حافظ على فواتيرك بأمان!")
-            ,
-            SectionText("\"احفظ ضمانك\" هو تطبيق ذكي، مصمم لحفظ وإدارة فواتير مشترياتك إلكترونيًا مما يساعدك في تتبع فواتيرك وتنظيم مشترياتك بكل سهولة.")
-            ,
-            SectionText("توجّه إلى إيصال بياناتك من خلال أدوات رقمية تساعدك في:")
-            ,
+            SectionSubtitle("احفظ ضمانك – حافظ على فواتيرك بأمان!"),
+            SectionText(
+                "\"احفظ ضمانك\" هو تطبيق ذكي، مصمم لحفظ وإدارة فواتير مشترياتك إلكترونيًا مما يساعدك في تتبع فواتيرك وتنظيم مشترياتك بكل سهولة."),
+            SectionText(
+                "توجّه إلى إيصال بياناتك من خلال أدوات رقمية تساعدك في:"),
             BulletPoint("تخزين فواتيرك في مكان واحد."),
             BulletPoint("تنظيم الفواتير حسب الفئة."),
             BulletPoint("تذكيرك بإنتهاء الضمانات للمنتجات الخاصة بك."),
-            BulletPoint("إنشاء التقارير المالية لمساعدتك على متابعة نفقاتك الشهرية."),
+            BulletPoint(
+                "إنشاء التقارير المالية لمساعدتك على متابعة نفقاتك الشهرية."),
             SizedBox(height: 20),
             SectionTitle("الخصوصية والأمان"),
             SectionSubtitle("خصوصيتك أولويتنا... بياناتك في أيدٍ آمنة"),
-            SectionText("نلتزم في \"احفظ ضمانك\" بحماية خصوصية بياناتك أثناء جمع معلوماتك الشخصية.")
-            ,
-            SectionText("نستخدم تقنيات أمان متقدمة لحماية بياناتك من الوصول غير المصرح به.")
-            ,
-            SectionText("لمزيد من التفاصيل، يرجى مراجعة \"الشروط والأحكام\" و\"سياسة الخصوصية\"."),
+            SectionText(
+                "نلتزم في \"احفظ ضمانك\" بحماية خصوصية بياناتك أثناء جمع معلوماتك الشخصية."),
+            SectionText(
+                "نستخدم تقنيات أمان متقدمة لحماية بياناتك من الوصول غير المصرح به."),
+            SectionText(
+                "لمزيد من التفاصيل، يرجى مراجعة \"الشروط والأحكام\" و\"سياسة الخصوصية\"."),
           ],
         ),
       ),
@@ -46,7 +49,7 @@ class AboutDamanakScreen extends StatelessWidget {
 class SectionTitle extends StatelessWidget {
   final String text;
   const SectionTitle(this.text, {super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,7 +65,7 @@ class SectionTitle extends StatelessWidget {
 class SectionSubtitle extends StatelessWidget {
   final String text;
   const SectionSubtitle(this.text, {super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -78,7 +81,7 @@ class SectionSubtitle extends StatelessWidget {
 class SectionText extends StatelessWidget {
   final String text;
   const SectionText(this.text, {super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -94,7 +97,7 @@ class SectionText extends StatelessWidget {
 class BulletPoint extends StatelessWidget {
   final String text;
   const BulletPoint(this.text, {super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(

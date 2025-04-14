@@ -31,28 +31,33 @@ class _OnBoardingState extends State<OnBoarding> {
   List<BoardingModel> boarding = [
     BoardingModel(
       image: ImageAssets.onboarding1,
-      title: 'وداعًا لفقدان الفواتير!',
-      body: '''احفظ فواتيرك إلكترونيًا، ونظّمها بسهولة في مكان
-           آمن، للوصول إليها وقتما تحتاج.''',
+      title: "bye bye lost bills".tr(),
+      body:
+          '''Save your invoices electronically and easily change them in a secure location,
+       so you can access them whenever you need them.'''
+              .tr(),
     ),
     BoardingModel(
       image: ImageAssets.onboarding2,
-      title: 'إشعارات ذكية تُبقيك على اطلاع دائم!',
-      body: ''' سنذكّرك بمواعيد انتهاء الضمان، تواريخ السداد،
-       وجدولة الصيانة حتى لا تفوتك أي تفاصيل مهمة..
- ''',
+      title: "Smart notifications keep you informed!".tr(),
+      body: '''We'll remind you of warranty expiration dates, payment dates,
+       and maintenance schedules so you don't miss any important details.'''
+          .tr(),
     ),
     BoardingModel(
       image: ImageAssets.onboarding3,
-      title: 'تحليلات وتقارير مالية دقيقة!',
-      body: '''استعرض ملخصات شهرية، وتتبّع إنفاقك من خلال 
-          تقارير ذكية تساعدك على إدارة ميزانيتك بفعالية..''',
+      title: "Accurate financial analysis and reports!".tr(),
+      body:
+          '''"View monthly summaries and track your spending with smart reports that
+       help you manage your budget effectively.'''
+              .tr(),
     ),
     BoardingModel(
       image: ImageAssets.onboarding3,
-      title: 'بياناتك بأمان دائمًا!',
-      body: '''نحفظ فواتيرك بتشفير قوي، مع مزامنة سحابية
-           تتيح لك الوصول إليها من أي جهاز بكل أمان..''',
+      title: '"Your data is always safe!".tr(),',
+      body: '''We store your invoices with strong encryption, with cloud sync, 
+      allowing you to access them securely from any device.'''
+          .tr(),
     ),
   ];
 
@@ -111,10 +116,14 @@ class _OnBoardingState extends State<OnBoarding> {
               children: [
                 TextButton(
                   onPressed: () {
-                    submit();
-                    boardingController.nextPage(
+                    if (isLast) {
+                      submit();
+                    } else {
+                      boardingController.nextPage(
                         duration: const Duration(milliseconds: 720),
-                        curve: Curves.fastLinearToSlowEaseIn);
+                        curve: Curves.fastLinearToSlowEaseIn,
+                      );
+                    }
                   },
                   child: isLast ? Text('Start'.tr()) : Text('Next'.tr()),
                 ),
