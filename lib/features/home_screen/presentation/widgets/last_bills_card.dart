@@ -46,25 +46,22 @@ class LastBillsCard extends StatelessWidget {
     return SizedBox(
       child: GestureDetector(
         onTap: () {},
-        child: Card(
-          color: ColorManger.wightColor,
-          child: ListTile(
-            title: Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        child: ListTile(
+          title: Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            date,
+            style: TextStyle(
+              fontSize: 15,
+              color: dateColor,
+              decoration: textDecoration,
             ),
-            subtitle: Text(
-              date,
-              style: TextStyle(
-                fontSize: 15,
-                color: dateColor,
-                decoration: textDecoration,
-              ),
-            ),
-            trailing: Text(
-              amount,
-              style: const TextStyle(fontSize: 16),
-            ),
+          ),
+          trailing: Text(
+            amount,
+            style: const TextStyle(fontSize: 16),
           ),
         ),
       ),
@@ -94,12 +91,15 @@ class LastBillsAdded extends StatelessWidget {
       ),
       body: invoices.isEmpty
           ? Center(child: Text("No current bills".tr()))
-          : ListView.builder(
+          : ListView.separated(
               shrinkWrap: true,
               itemCount: invoices.length,
               itemBuilder: (context, index) {
                 return invoices[index];
               },
+              separatorBuilder: (context, index) => const Divider(
+                color: Color(0xFFf5f5f5),
+              ),
             ),
     );
   }

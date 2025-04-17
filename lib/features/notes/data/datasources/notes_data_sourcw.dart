@@ -26,7 +26,7 @@ class NotesDataSourceImpl implements NotesDataSource {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${Constants.token}',
           },
           validateStatus: (status) => status != null && status < 500,
         ),

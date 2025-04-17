@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/home_screen_cubit.dart';
-import '../widgets/built_drawe.dart';
+import '../widgets/build_drawer.dart';
 import '../widgets/last_bills_card.dart';
 import '../widgets/sammery_card.dart';
 
@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeScreenCubit()..getData(),
       child: Scaffold(
-        drawer: BuiltDrawe(),
+        drawer: BuildDrawer(),
         backgroundColor: Colors.white,
         body: BlocConsumer<HomeScreenCubit, HomeScreenState>(
           listener: (context, state) {
@@ -112,9 +112,9 @@ class HomeScreen extends StatelessWidget {
                                         MediaQueryValue(context).width * 0.04),
                                 SummaryCard(
                                   image: IconsAssets.mony,
-                                  title: "total price".tr(),
+                                  title: "total price ",
                                   value:
-                                      ordersResponse.pricesInMonth.toString(),
+                                      "${ordersResponse.pricesInMonth.toString()} ${"riyal".tr()}",
                                 ),
                                 SizedBox(
                                     width:

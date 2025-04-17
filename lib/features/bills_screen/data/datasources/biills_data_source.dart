@@ -1,8 +1,7 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:ahfaz_damanak/features/bills_screen/data/models/edit_fatora.dart';
 import 'package:dio/dio.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/server_excption.dart';
 import '../../../../core/network/api_constant.dart';
@@ -21,7 +20,6 @@ abstract class BillsDataSource {
     String storeName,
     String purchaseDate,
     String fatoraNumber,
-    XFile image,
     int daman,
     int damanReminder,
     String damanDate,
@@ -47,7 +45,7 @@ class BillsDataSourceImpl implements BillsDataSource {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${Constants.token}',
           },
           validateStatus: (status) => status! < 500,
         ),
@@ -71,7 +69,7 @@ class BillsDataSourceImpl implements BillsDataSource {
       options: Options(
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Constants.token}',
         },
       ),
       data: {"order_id": billId},
@@ -88,40 +86,51 @@ class BillsDataSourceImpl implements BillsDataSource {
 
   @override
   Future<EditFatoraModel> editFatoura(
-      int categoryId,
-      int price,
-      String name,
-      String storeName,
-      String purchaseDate,
-      String fatoraNumber,
-      XFile image,
-      int daman,
-      int damanReminder,
-      String damanDate,
-      String notes,
-      int orderId) async {
+    int categoryId,
+    int price,
+    String name,
+    String storeName,
+    String purchaseDate,
+    String fatoraNumber,
+    int daman,
+    int damanReminder,
+    String damanDate,
+    String notes,
+    int orderId,
+  ) async {
     try {
+      FormData formData = FormData.fromMap({
+        "category_id": categoryId.toString(),
+        "name": name,
+        "store_name": storeName,
+        "purchase_date": purchaseDate,
+        "fatora_number": fatoraNumber,
+        "daman": daman.toString(),
+        "daman_date": damanDate,
+        "notes": notes,
+        "price": price.toString(),
+        "daman_reminder": damanReminder.toString(),
+        "order_id": orderId.toString(),
+      });
+
       final response = await dio.post(
         ApiConstant.editFatora,
+        data: formData,
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${Constants.token}',
           },
         ),
       );
 
       if (response.statusCode == 200) {
-        final data = response.data;
-        return EditFatoraModel.fromJson(data);
+        log("response: ${response.data}");
+        return EditFatoraModel.fromJson(response.data['data']);
       } else {
-        Constants.showToast(
-            text: response.data['msg'], state: ToastStates.error);
         throw ServerException(errorModel: ErrorModel.fromJson(response.data));
       }
     } on DioException catch (e) {
-      Constants.showToast(
-          text: e.response!.data['msg'], state: ToastStates.error);
       throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
     }
   }
@@ -135,7 +144,7 @@ class BillsDataSourceImpl implements BillsDataSource {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${Constants.token}',
         },
       ),
       data: {

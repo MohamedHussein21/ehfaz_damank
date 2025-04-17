@@ -35,3 +35,16 @@ class DeleteUserLoaded extends ProfileScreenState {
 }
 
 class DeleteUserError extends ProfileScreenState {}
+
+class LogoutLoading extends ProfileScreenState {}
+
+class LogoutSuccess extends ProfileScreenState {}
+
+class LogoutError extends ProfileScreenState {
+  final String message;
+
+  const LogoutError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

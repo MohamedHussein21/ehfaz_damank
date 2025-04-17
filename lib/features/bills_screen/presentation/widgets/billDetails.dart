@@ -124,55 +124,89 @@ class BillDetailsScreen extends StatelessWidget {
                       .bodyLarge
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 10),
                 Center(
                   child: QrImageView(
                     data: bill.id.toString(),
                     size: 150,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 _buildSectionTitle("bill details".tr()),
-                _buildDetailRow(
-                    "bill name / product name".tr(), bill.name ?? ''),
-                _buildDetailRow(
-                    "date of purchase".tr(), bill.purchaseDate ?? ''),
-                _buildDetailRow("price paid".tr(), "${bill.price} ريال"),
-                _buildDetailRow("store name".tr(), bill.storeName ?? ''),
-                BlocProvider(
-                  create: (context) => AddFatouraCubit()..getCategoris(),
-                  child: BlocBuilder<AddFatouraCubit, AddFatouraState>(
-                    builder: (context, state) {
-                      final addCubit = AddFatouraCubit.get(context);
-                      final categories = addCubit.categoryModel ?? [];
+                const SizedBox(height: 10),
+                Card(
+                  elevation: 0,
+                  color: Color(0xFFFAFAFA),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(children: [
+                      _buildDetailRow(
+                          "bill name / product name".tr(), bill.name ?? ''),
+                      SizedBox(height: 5),
+                      _buildDetailRow(
+                          "date of purchase".tr(), bill.purchaseDate ?? ''),
+                      SizedBox(height: 5),
+                      _buildDetailRow("price paid".tr(), "${bill.price} ريال"),
+                      SizedBox(height: 5),
+                      _buildDetailRow("store name".tr(), bill.storeName ?? ''),
+                      SizedBox(height: 5),
+                      BlocProvider(
+                        create: (context) => AddFatouraCubit()..getCategoris(),
+                        child: BlocBuilder<AddFatouraCubit, AddFatouraState>(
+                          builder: (context, state) {
+                            final addCubit = AddFatouraCubit.get(context);
+                            final categories = addCubit.categoryModel ?? [];
 
-                      return _buildDetailRow(
-                        "category".tr(),
-                        categories
-                            .firstWhere(
-                              (category) => category.id == bill.categoryId,
-                              orElse: () => CategoryModel(
-                                id: 0,
-                                name: "غير محدد",
-                                image: "",
-                                createdAt: DateTime.now(),
-                                updatedAt: DateTime.now(),
-                                totalOrdersAmount: 0,
-                              ),
-                            )
-                            .name,
-                      );
-                    },
+                            return _buildDetailRow(
+                              "category".tr(),
+                              categories
+                                  .firstWhere(
+                                    (category) =>
+                                        category.id == bill.categoryId,
+                                    orElse: () => CategoryModel(
+                                      id: 0,
+                                      name: "غير محدد",
+                                      image: "",
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                      totalOrdersAmount: 0,
+                                    ),
+                                  )
+                                  .name,
+                            );
+                          },
+                        ),
+                      ),
+                      _buildDetailRow(
+                          "fatura number".tr(), bill.fatoraNumber ?? ''),
+                    ]),
                   ),
                 ),
-                _buildDetailRow("fatura number".tr(), bill.fatoraNumber ?? ''),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 _buildSectionTitle("warranty and maintenance details".tr()),
-                _buildDetailRow("is the invoice covered by warranty?".tr(),
-                    bill.daman == 0 ? "no".tr() : "yes".tr()),
-                _buildDetailRow("warranty end".tr(), bill.damanDate ?? '',
-                    valueColor: dateColor, textDecoration: textDecoration),
+                const SizedBox(height: 10),
+                Card(
+                  elevation: 0,
+                  color: Color(0xFFf5f5f5),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildDetailRow(
+                            "is the invoice covered by warranty?".tr(),
+                            bill.daman == 0 ? "no".tr() : "yes".tr()),
+                        SizedBox(height: 5),
+                        _buildDetailRow(
+                            "warranty end".tr(), bill.damanDate ?? '',
+                            valueColor: dateColor,
+                            textDecoration: textDecoration),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 _buildSectionTitle("attachments and documents".tr()),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     if (bill.image != null) ...[
@@ -220,6 +254,9 @@ class BillDetailsScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManger.defaultColor,
                           padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                         icon: const Icon(Icons.share, color: Colors.white),
                         label: Text("share".tr(),
@@ -242,8 +279,12 @@ class BillDetailsScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManger.wightColor,
                           padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: ColorManger.defaultColor),
+                          ),
                         ),
-                        icon: Icon(Icons.edit, color: ColorManger.defaultColor),
+                        icon: Icon(Icons.edit, color: ColorManger.blackColor),
                         label: Text("edit".tr(),
                             style: TextStyle(
                                 color: ColorManger.defaultColor, fontSize: 16)),
@@ -251,6 +292,7 @@ class BillDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -310,10 +352,12 @@ class BillDetailsScreen extends StatelessWidget {
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           Text(value,
-              style:
-                  TextStyle(fontSize: 14, color: valueColor ?? Colors.black)),
+              style: TextStyle(
+                  fontSize: 16,
+                  color: valueColor ?? Colors.black,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );

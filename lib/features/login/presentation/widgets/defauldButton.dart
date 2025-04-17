@@ -4,30 +4,72 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/color_mange.dart';
 
 class DefaultButton extends StatelessWidget {
-  final String? title;
-  final Function()? submit;
+  final String title;
+  final VoidCallback? submit;
   final double width;
-  const DefaultButton(
-      {super.key, this.title, this.submit, required this.width});
+  final Color? color;
+  final bool isLoading;
+
+  const DefaultButton({
+    super.key,
+    required this.title,
+    required this.submit,
+    required this.width,
+    this.color,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width * 1.08,
-      height: context.heigh * 0.06,
-      child: ElevatedButton(
-        onPressed: submit,
-        style: ButtonStyle(
-            shape: WidgetStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            )),
-            padding: WidgetStateProperty.all(
-                const EdgeInsets.fromLTRB(30, 10, 30, 10)),
-            backgroundColor:
-                WidgetStateProperty.all(ColorManger.defaultColor)),
-        child: Text(
-          title!,
-          style: const TextStyle(fontSize: 12, color: Colors.white),
+    final isDisabled = submit == null;
+    final buttonColor = color ?? ColorManger.defaultColor;
+    final disabledColor = buttonColor.withOpacity(0.5);
+
+    return Container(
+      width: width,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: isDisabled ? disabledColor : buttonColor,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isDisabled ? null : submit,
+          borderRadius: BorderRadius.circular(15),
+          child: Center(
+            child: isLoading
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Please wait...",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+          ),
         ),
       ),
     );

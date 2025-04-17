@@ -121,7 +121,10 @@ class _BillsScreenState extends State<BillsScreen> {
                 child: Text('No bills found'.tr()),
               );
             }
-            return ListView.builder(
+            return ListView.separated(
+                separatorBuilder: (context, index) => const Divider(
+                      color: Color(0xFFf5f5f5),
+                    ),
                 itemCount: bills.length,
                 itemBuilder: (context, index) {
                   final bill = bills[index];

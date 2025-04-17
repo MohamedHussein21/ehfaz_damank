@@ -76,7 +76,7 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
       options: Options(
         headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": "Bearer $token",
+          "Authorization": 'Bearer ${Constants.token}',
         },
       ),
     );
@@ -100,7 +100,7 @@ class AddFatouraRemoteDataSource extends AddfatouraDatasource {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${Constants.token}',
           },
         ),
         data: {

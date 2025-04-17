@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQueryValue(context).toPadding * 0.9,
-                  vertical: MediaQueryValue(context).toPadding * 3,
+                  vertical: MediaQueryValue(context).toPadding * 1.5,
                 ),
                 child: Form(
                   key: formKey,
@@ -75,19 +75,25 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                     children: [
                       Center(
                         child: Image(
-                          height: MediaQueryValue(context).heigh * 0.1,
+                          height: MediaQueryValue(context).heigh * 0.15,
                           image: AssetImage(ImageAssets.logo),
                           color: ColorManger.defaultColor,
                         ),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       Center(
                         child: Text(
-                          'Confirm Number Phone'.tr(),
-                          style: Theme.of(context).textTheme.headlineSmall,
+                          'Sign Up'.tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ),
-                      Text('Login Discription'.tr(),
+                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
+                      Text('Register Discription'.tr(),
                           style: Theme.of(context).textTheme.bodyMedium,
                           textAlign: TextAlign.center),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
@@ -105,7 +111,6 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         hint: 'Enter Your name'.tr(),
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       Text(
                         'Phone Number'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
@@ -136,7 +141,6 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         },
                         validator: (value) => phoneValidation(value?.number),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       Text(
                         'Password'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
@@ -152,7 +156,6 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                         prefix: Image(image: AssetImage(ImageAssets.password)),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       Text(
                         'Confirm Password'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
@@ -174,12 +177,12 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                         prefix: Image(image: AssetImage(ImageAssets.password)),
                       ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.04),
+                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       BuildCondition(
                           condition: state is! RegisterScreenLoading,
                           builder: (context) {
                             return DefaultButton(
-                              title: 'Login'.tr(),
+                              title: 'Sign Up'.tr(),
                               submit: () async {
                                 if (formKey.currentState!.validate()) {
                                   cubit.userRegister(
@@ -215,7 +218,9 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                               },
                               child: Text(
                                 'Login'.tr(),
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ))
                         ],
                       ),

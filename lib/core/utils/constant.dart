@@ -1,3 +1,4 @@
+import 'package:ahfaz_damanak/core/storage/hive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -7,6 +8,15 @@ import 'color_mange.dart';
 enum ToastStates { success, error, warning }
 
 class Constants {
+  static const defaultImage =
+      'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1650642518~exp=1650643118~hmac=0b7b8e50b2226fc9d468e5746126dab422b68123c63261be18e8cf420ebc2725&w=740';
+
+  static String? token = HiveHelper.getData(key: 'api_token');
+
+  static int? userId = HiveHelper.getData(key: 'user_id');
+
+  static String? googleToken = HiveHelper.getData(key: 'googleToken');
+
   static void navigateTo(context, widget) => Navigator.push(
         context,
         MaterialPageRoute(
@@ -200,12 +210,3 @@ class Constants {
 
   static const String baseUrl = '';
 }
-
-const defaultImage =
-    'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1650642518~exp=1650643118~hmac=0b7b8e50b2226fc9d468e5746126dab422b68123c63261be18e8cf420ebc2725&w=740';
-
-String? token = CashHelper.getData(key: 'api_token');
-
-int? userId = CashHelper.getData(key: 'user_id');
-
-String? googleToken = CashHelper.getData(key: 'googleToken');

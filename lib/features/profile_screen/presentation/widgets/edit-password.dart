@@ -46,7 +46,7 @@ class EditPasswordScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("update".tr()),
+                child: Text("upgrade".tr()),
               ),
             ),
           ],

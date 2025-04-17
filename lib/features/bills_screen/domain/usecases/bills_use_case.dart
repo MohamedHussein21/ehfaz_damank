@@ -24,14 +24,13 @@ class BillsUseCase {
           required String storeName,
           required String purchaseDate,
           required String fatoraNumber,
-          required XFile image,
           required int daman,
           required int damanReminder,
           required String damanDate,
           required String notes,
           required int orderId}) =>
       repository.editFatoura(categoryId, price, name, storeName, purchaseDate,
-          fatoraNumber, image, daman, damanReminder, damanDate, notes, orderId);
+          fatoraNumber, daman, damanReminder, damanDate, notes, orderId);
 
   Future<Either<Failure, List<Bill>>> getFilter({
     int? categoryId,

@@ -24,11 +24,12 @@ class ProfileDataSourceImpl implements ProfileDatasource {
   Future<Profile> getUser() async {
     try {
       final response = await Dio().get(ApiConstant.profile,
-          options: Options(
-            headers: { 'Accept': 'application/json',
+          options: Options(headers: {
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': 'Bearer $token',}
-            ));
+            if (Constants.token != null)
+              'Authorization': 'Bearer ${Constants.token}',
+          }));
       if (response.statusCode == 200) {
         log(response.data.toString());
         return Profile.fromJson(response.data['data']['profile']);
@@ -58,13 +59,12 @@ class ProfileDataSourceImpl implements ProfileDatasource {
   }) async {
     try {
       final response = await Dio().post(ApiConstant.updateProfile,
-          options: Options(
-            headers:{
-               'Accept': 'application/json',
+          options: Options(headers: {
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': 'Bearer $token',
-            }
-            ),
+            if (Constants.token != null)
+              'Authorization': 'Bearer ${Constants.token}',
+          }),
           data: {
             'phone': phone,
             'name': name,
@@ -92,7 +92,8 @@ class ProfileDataSourceImpl implements ProfileDatasource {
           options: Options(
             headers: {
               'Content-Type': 'application/json',
-              if (token != null) 'Authorization': 'Bearer $token',
+              if (Constants.token != null)
+                'Authorization': 'Bearer ${Constants.token}',
             },
           ),
           data: {
@@ -114,7 +115,4 @@ class ProfileDataSourceImpl implements ProfileDatasource {
       }
     }
   }
-      
-      
-
 }

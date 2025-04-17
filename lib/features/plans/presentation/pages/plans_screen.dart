@@ -4,6 +4,7 @@ import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../contactUs/presentation/pages/contact_screen.dart';
 import '../widgets/buy_plan.dart';
 
 class UpgradeAccountScreen extends StatefulWidget {
@@ -71,7 +72,7 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
                         planPrice: '300 ريال ',
                         buttonColor: ColorManger.defaultColor,
                         featureStatus: [true, true, true, true],
-                        plantype: "buy plan".tr()),
+                        plantype: "contact us".tr()),
                   ],
                 ),
               ),
@@ -162,7 +163,7 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                 ),
                 onPressed: () {
-                  Constants.navigateTo(context, BuyPlanScreen());
+                  Constants.navigateTo(context, ContactUsScreen());
                 },
                 child: Text(plantype),
               ),

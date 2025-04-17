@@ -17,7 +17,7 @@ class WarrantySection extends StatelessWidget {
 
     final filteredOrders = ordersResponse?.expireOrders.where((order) {
       if (order.damanDate == null) return false;
-      
+
       DateTime? expiryDate = DateTime.tryParse(order.damanDate!);
       if (expiryDate == null) return false;
 
@@ -41,7 +41,8 @@ class WarrantySection extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WarrantyScreen(ordersResponse: ordersResponse),
+                      builder: (context) =>
+                          WarrantyScreen(ordersResponse: ordersResponse),
                     ),
                   );
                 },
@@ -51,7 +52,8 @@ class WarrantySection extends StatelessWidget {
                       'show more'.tr(),
                       style: TextStyle(color: Colors.blue, fontSize: 12),
                     ),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.blue),
+                    const Icon(Icons.arrow_forward_ios_rounded,
+                        size: 14, color: Colors.blue),
                   ],
                 ),
               ),
@@ -81,7 +83,6 @@ class WarrantySection extends StatelessWidget {
   }
 }
 
-
 class WarrantyItem extends StatelessWidget {
   final String device;
   final String dealer;
@@ -98,24 +99,21 @@ class WarrantyItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
-      child: Card(
-        color: ColorManger.wightColor,
-        child: ListTile(
-          title: Text(
-            device,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text('Agent: $dealer'.tr()),
-          trailing: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('end in'.tr()),
-              Text(
-                expiry,
-                style: TextStyle(fontSize: 15, color: ColorManger.redColor),
-              ),
-            ],
-          ),
+      child: ListTile(
+        title: Text(
+          device,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text('Agent: $dealer'.tr()),
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('end in'.tr()),
+            Text(
+              expiry,
+              style: TextStyle(fontSize: 15, color: ColorManger.redColor),
+            ),
+          ],
         ),
       ),
     );
@@ -153,7 +151,10 @@ class WarrantyScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             )
-          : ListView.builder(
+          : ListView.separated(
+              separatorBuilder: (context, index) => const Divider(
+                color: Color(0xFFf5f5f5),
+              ),
               shrinkWrap: true,
               itemCount: filteredOrders.length,
               itemBuilder: (context, index) {

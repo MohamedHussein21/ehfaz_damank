@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:ahfaz_damanak/core/helper/cash_helper.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:dio/dio.dart';
 
@@ -25,7 +26,8 @@ class HomeDataSourceImpl extends HomeDataSource {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': 'Bearer $token',
+            if (Constants.token != null)
+              'Authorization': 'Bearer ${Constants.token}',
           },
           validateStatus: (status) => status != null && status < 500,
         ),

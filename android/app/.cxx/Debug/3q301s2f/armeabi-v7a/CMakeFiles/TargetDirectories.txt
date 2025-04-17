@@ -1,0 +1,2 @@
+D:/khatab/ehfuzDmank/android/app/.cxx/Debug/3q301s2f/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/khatab/ehfuzDmank/android/app/.cxx/Debug/3q301s2f/armeabi-v7a/CMakeFiles/rebuild_cache.dir

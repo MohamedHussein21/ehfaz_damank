@@ -28,4 +28,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       },
     );
   }
+
+  void clearData() {
+    ordersResponse = null;
+    emit(HomeScreenInitial());
+  }
 }

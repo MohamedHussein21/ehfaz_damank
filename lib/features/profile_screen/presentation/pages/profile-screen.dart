@@ -1,4 +1,6 @@
+import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/core/utils/icons_assets.dart';
+import 'package:ahfaz_damanak/features/login/presentation/cubit/login_cubit.dart';
 import 'package:ahfaz_damanak/features/profile_screen/presentation/cubit/profile_screen_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +30,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileScreenCubit()..getProfile(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ProfileScreenCubit()..getProfile()),
+        BlocProvider(create: (context) => LoginCubit()),
+      ],
       child: BlocConsumer<ProfileScreenCubit, ProfileScreenState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LogoutSuccess) {
+            Constants.navigateAndFinish(context, LoginScreen());
+          } else if (state is LogoutError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is ProfileScreenLoading) {
             return Scaffold(
@@ -80,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   _buildProfileTile("Password".tr(), "**********",
                       () => _navigateToScreen(EditPasswordScreen())),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   _buildDeleteAccountButton(),
                 ],
               ),
@@ -151,6 +167,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Constants.navigateAndFinish(context, LoginScreen());
             },
             child: Text("delete".tr(), style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(BuildContext context) {
+    final cubit = BlocProvider.of<ProfileScreenCubit>(context);
+
+    return BlocBuilder<ProfileScreenCubit, ProfileScreenState>(
+      builder: (context, state) {
+        return Row(
+          children: [
+            Image(
+              image: AssetImage(IconsAssets.elements),
+              color: ColorManger.grayColor,
+            ),
+            SizedBox(width: 8),
+            TextButton(
+              onPressed: state is LogoutLoading
+                  ? null
+                  : () => _showLogoutDialog(context),
+              child: state is LogoutLoading
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "signing out".tr(),
+                          style: TextStyle(
+                              color: ColorManger.grayColor, fontSize: 16),
+                        ),
+                        SizedBox(width: 8),
+                        SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      "sign out".tr(),
+                      style: TextStyle(
+                          color: ColorManger.defaultColor, fontSize: 16),
+                    ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("sign out".tr()),
+        content: Text("are you sure you want to sign out?".tr()),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("cancel".tr(),
+                style: TextStyle(color: ColorManger.grayColor)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              var cubit = BlocProvider.of<ProfileScreenCubit>(context);
+              cubit.logout(context);
+            },
+            child: Text("sign out".tr(),
+                style: TextStyle(color: ColorManger.defaultColor)),
           ),
         ],
       ),

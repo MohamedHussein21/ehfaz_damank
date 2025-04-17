@@ -42,6 +42,8 @@
     "Reminder Name":"Reminder Name",
     "Reminder Date":"Reminder Date",
     "Reminder Image":"Reminder Image",
+    "fatora number":"fatora number",
+        "choose category":"choose category",
     "Save":"Save",
     "Cancel":"Cancel",
     "Add":"Add",
@@ -223,7 +225,19 @@
 "no attachments":"no attachments",
 "share":"share",
 "edit":"edit",
-"close":"close"
+"close":"close",
+
+  "onboarding_title_1": "Smart notifications keep you informed!",
+  "onboarding_body_1": "We'll remind you of warranty expiration dates, payment dates, and maintenance schedules so you don't miss any important details.",
+
+  "onboarding_title_2": "Accurate financial analysis and reports!",
+  "onboarding_body_2": "View monthly summaries and track your spending with smart reports that help you manage your budget effectively.",
+
+  "onboarding_title_3": "Your data is always safe!",
+  "onboarding_body_3": "We store your invoices with strong encryption, with cloud sync, allowing you to access them securely from any device.",
+"warranty end date":"warranty end date",
+"Bill updated successfully":"Bill updated successfully"
+
 
     
 

@@ -16,7 +16,6 @@ abstract class BillsRep {
       String storeName,
       String purchaseDate,
       String fatoraNumber,
-      XFile image,
       int daman,
       int damanReminder,
       String damanDate,

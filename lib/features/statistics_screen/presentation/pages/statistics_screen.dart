@@ -121,7 +121,7 @@ class StatisticsScreen extends StatelessWidget {
     }).toList();
 
     return SizedBox(
-      height: 200,
+      height: 230,
       child: BarChart(
         BarChartData(
           gridData: FlGridData(show: false),
@@ -138,7 +138,7 @@ class StatisticsScreen extends StatelessWidget {
                     return Text(
                       categories[index].categoryName,
                       style: const TextStyle(
-                          fontSize: 9,
+                          fontSize: 8,
                           color: Colors.black,
                           fontWeight: FontWeight.bold),
                     );

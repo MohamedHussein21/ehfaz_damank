@@ -68,7 +68,8 @@ class _EditNameScreenState extends State<EditNameScreen> {
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Constants.buildTextField("name", nameController, 'mohamed'),
+                  Constants.buildTextField(
+                      "name".tr(), nameController, 'mohamed'),
                   SizedBox(height: MediaQueryValue(context).heigh * 0.03),
                   Row(
                     children: [

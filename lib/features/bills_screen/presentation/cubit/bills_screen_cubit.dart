@@ -1,12 +1,9 @@
 import 'dart:developer';
 
-import 'package:ahfaz_damanak/features/add_fatoura/presentation/cubit/add_fatoura_cubit.dart';
 import 'package:ahfaz_damanak/features/bills_screen/data/models/edit_fatora.dart';
 import 'package:ahfaz_damanak/features/bills_screen/domain/repositories/Bills_rep.dart';
-import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../data/datasources/biills_data_source.dart';
 import '../../data/models/bills_model.dart';
@@ -62,13 +59,14 @@ class BillsScreenCubit extends Cubit<BillsScreenState> {
       required String storeName,
       required String purchaseDate,
       required String fatoraNumber,
-      required XFile image,
       required int daman,
       required int damanReminder,
       required String damanDate,
       required String notes,
       required int orderId}) async {
+    log('Starting to edit bill: orderId=$orderId, name=$name, price=$price');
     emit(EditFatouraLouding());
+
     BillsDataSource billsDataSource = BillsDataSourceImpl(Dio());
     BillsRep billsRep = BillsRepositry(billsDataSource);
     final result = await BillsUseCase(billsRep).editBill(
@@ -78,17 +76,26 @@ class BillsScreenCubit extends Cubit<BillsScreenState> {
         storeName: storeName,
         purchaseDate: purchaseDate,
         fatoraNumber: fatoraNumber,
-        image: image,
         daman: daman,
         damanReminder: damanReminder,
         damanDate: damanDate,
         notes: notes,
         orderId: orderId);
+    log('Attempting to edit bill with values: categoryId=$categoryId, price=$price, storeName=$storeName, purchaseDate=$purchaseDate, fatoraNumber=$fatoraNumber, daman=$daman, damanReminder=$damanReminder, damanDate=$damanDate, notes=$notes, orderId=$orderId');
+    log('Result of edit bill: $result');
+
     result.fold(
-      (l) => emit(EditFatouraError(l.msg)),
+      (l) {
+        log('Error editing bill: ${l.msg}');
+        emit(EditFatouraError(l.msg));
+      },
       (r) {
+        emit(EditFatouraSuccus(editFatouraResponseModel: r));
+        log('Successfully edited bill: ${r.toString()}');
         editModel = r;
         emit(EditFatouraSuccus(editFatouraResponseModel: r));
+
+        getFilter();
       },
     );
   }

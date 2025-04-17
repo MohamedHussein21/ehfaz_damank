@@ -184,7 +184,7 @@ class _AddNewBillState extends State<AddNewBill> {
                     try {
                       var cubit = context.read<AddFatouraCubit>();
 
-                      if (userId == null) {
+                      if (Constants.userId == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text("error : user id not found".tr())),
@@ -200,7 +200,7 @@ class _AddNewBillState extends State<AddNewBill> {
                         return;
                       }
 
-                      cubit.addFromQr(userId!, parsedOrderId);
+                      cubit.addFromQr(Constants.userId!, parsedOrderId);
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

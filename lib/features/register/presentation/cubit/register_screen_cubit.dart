@@ -28,21 +28,32 @@ class RegisterCubit extends Cubit<RegisterState> {
     String googleToken = '',
   }) async {
     emit(RegisterScreenLoading());
-    BaseRegisterRemoteDataSource baseRemoteDataSource =
-        RegisterRemoteDataSource();
-    BaseRegisterRepository baseAuthRepository =
-        RegisterRepo(baseRemoteDataSource);
-    final result = await RegisterUsecase(baseAuthRepository).execute(
+    try {
+      BaseRegisterRemoteDataSource baseRemoteDataSource =
+          RegisterRemoteDataSource();
+      BaseRegisterRepository baseAuthRepository =
+          RegisterRepo(baseRemoteDataSource);
+
+      final result = await RegisterUsecase(baseAuthRepository).execute(
         name: name,
         phone: phone,
         password: password,
         passwordConfirmation: passwordConfirmation,
-        googleToken: googleToken);
-    result.fold((l) => emit(RegisterScreenError(l.msg)), (r) {
-      emit(RegisterScreenSuccess(r));
-      userModel = r.data;
-    });
-    log('RegisterCubit: userRegister: $userModel');
+        googleToken: googleToken,
+      );
+
+      result.fold(
+        (l) => emit(RegisterScreenError(l.msg)),
+        (r) {
+          emit(RegisterScreenSuccess(r));
+          userModel = r.data;
+          log('RegisterCubit: userRegister: $userModel');
+        },
+      );
+    } catch (e) {
+      emit(RegisterScreenError('حدث خطأ غير متوقع، حاول مرة أخرى.'));
+      log('RegisterCubit: userRegister error: $e');
+    }
   }
 
   bool rememberMe = false;

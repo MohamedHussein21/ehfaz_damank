@@ -30,34 +30,19 @@ class OnBoarding extends StatefulWidget {
 class _OnBoardingState extends State<OnBoarding> {
   List<BoardingModel> boarding = [
     BoardingModel(
-      image: ImageAssets.onboarding1,
-      title: "bye bye lost bills".tr(),
-      body:
-          '''Save your invoices electronically and easily change them in a secure location,
-       so you can access them whenever you need them.'''
-              .tr(),
-    ),
-    BoardingModel(
       image: ImageAssets.onboarding2,
-      title: "Smart notifications keep you informed!".tr(),
-      body: '''We'll remind you of warranty expiration dates, payment dates,
-       and maintenance schedules so you don't miss any important details.'''
-          .tr(),
+      title: "onboarding_title_1".tr(),
+      body: "onboarding_body_1".tr(),
     ),
     BoardingModel(
       image: ImageAssets.onboarding3,
-      title: "Accurate financial analysis and reports!".tr(),
-      body:
-          '''"View monthly summaries and track your spending with smart reports that
-       help you manage your budget effectively.'''
-              .tr(),
+      title: "onboarding_title_2".tr(),
+      body: "onboarding_body_2".tr(),
     ),
     BoardingModel(
       image: ImageAssets.onboarding3,
-      title: '"Your data is always safe!".tr(),',
-      body: '''We store your invoices with strong encryption, with cloud sync, 
-      allowing you to access them securely from any device.'''
-          .tr(),
+      title: "onboarding_title_3".tr(),
+      body: "onboarding_body_3".tr(),
     ),
   ];
 
