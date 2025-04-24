@@ -47,6 +47,8 @@ class ImageAssets {
 
   static String reminder = '$imgPath/reminder.png';
 
-static String frame = '$imgPath/frame.png';
+  static String frame = '$imgPath/frame.png';
 
+  static String sFlag = '$imgPath/flag-400.png';
+  static String aFlag = '$imgPath/flag-wave-250.png';
 }

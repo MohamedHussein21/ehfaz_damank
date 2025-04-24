@@ -15,6 +15,7 @@ class DefaultTextForm extends StatelessWidget {
   final IconData? suffix;
   final VoidCallback? suffixPressed;
   bool isClickable = true;
+  final Iterable<String>? aoutofillHints;
 
   DefaultTextForm({
     super.key,
@@ -30,6 +31,7 @@ class DefaultTextForm extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.suffixPressed,
+    this.aoutofillHints,
   });
 
   @override
@@ -37,6 +39,7 @@ class DefaultTextForm extends StatelessWidget {
     return SizedBox(
       height: context.heigh * 0.07,
       child: TextFormField(
+        autofillHints: aoutofillHints,
         controller: controller,
         keyboardType: type,
         obscureText: isPassword!,

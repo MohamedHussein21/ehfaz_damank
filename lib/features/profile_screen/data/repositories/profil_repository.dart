@@ -22,7 +22,8 @@ class ProfilRepository extends ProfileRepo {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
@@ -32,17 +33,20 @@ class ProfilRepository extends ProfileRepo {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
   @override
-  Future<Either<Failure, EditProfileModel>> deleteUser({required String userId}) async {
+  Future<Either<Failure, EditProfileModel>> deleteUser(
+      {required String userId}) async {
     final result = await profileDatasource.deleteUser(userId: userId);
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 }

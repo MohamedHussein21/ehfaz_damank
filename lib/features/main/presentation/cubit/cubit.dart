@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ahfaz_damanak/features/bills_screen/presentation/pages/bills_screen.dart';
 import 'package:ahfaz_damanak/features/main/presentation/cubit/main_state.dart';
+import 'package:ahfaz_damanak/features/profile_screen/presentation/pages/profile-screen.dart';
 import 'package:ahfaz_damanak/features/statistics_screen/presentation/pages/statistics_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +25,7 @@ class MainCubit extends Cubit<MainStates> {
     ),
     const AddNewBill(),
     const StatisticsScreen(),
-    const NotificationScreen()
+    const ProfileScreen()
   ];
 
   changeBottom(int index) {

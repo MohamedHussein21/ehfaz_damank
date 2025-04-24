@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:ahfaz_damanak/core/helper/cash_helper.dart'; // Keep for backwards compatibility
 import 'package:ahfaz_damanak/core/storage/hive_helper.dart';
-import 'package:ahfaz_damanak/core/storage/models/auth_box.dart';
 import 'package:ahfaz_damanak/core/utils/constant.dart';
 import 'package:ahfaz_damanak/features/login/data/models/user_model.dart';
 import 'package:ahfaz_damanak/features/login/data/repositories/login_repo.dart';
@@ -11,6 +10,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/errors/server_excption.dart';
 import '../../data/datasources/login_datasource.dart';
 import '../../domain/repositories/login_repositery.dart';
 import '../../domain/usecases/login_use_case.dart';
@@ -39,45 +39,55 @@ class LoginCubit extends Cubit<LoginState> {
       // First step: clear any existing user data
       emit(LoginClearingData());
       userModel = null;
-      // Second step: proceed with login
+
       BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
       BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
 
       final result = await LoginUseCase(baseAuthRepository)
           .execute(phone: phone, password: password, googleToken: googleToken);
 
-      result.fold((failure) {
-        log("Login Error: ${failure.msg}");
-        emit(LoginError(failure.msg));
-        (authResponse) async {
-          // userModel = authResponse.data;
-          // Constants.token = authResponse?.apiToken;
-          // Constants.userId = userModel?.id;
-          // // Save user data to storage
-          // final saveSuccess = await _saveUserData(authResponse);
+      await result.fold(
+        (failure) async {
+          log("Login Error: ${failure.msg} -}");
 
-          // if (saveSuccess) {
-          //   emit(LoginSuccess(authResponse, authResponse.apiToken));
-          // } else {
-          emit(LoginError("Failed to save user data. Please try again."));
-          // }
-        };
-      }, (success) async {
-        userModel = success.data;
-        Constants.token = success.apiToken;
-        Constants.userId = userModel?.id;
-        // Save user data to storage
-        final saveSuccess = await _saveUserData(success);
+          final errorMessage = failure.msg;
+          emit(LoginError(errorMessage));
+        },
+        (success) async {
+          userModel = success.data;
+          Constants.token = success.apiToken;
+          Constants.userId = userModel?.id;
 
-        if (saveSuccess) {
-          emit(LoginSuccess(success, success.apiToken));
-        } else {
-          emit(LoginError("Failed to save user data. Please try again."));
-        }
-      });
+          final saveSuccess = await _saveUserData(success);
+
+          if (saveSuccess) {
+            emit(LoginSuccess(success, success.apiToken));
+          } else {
+            emit(LoginError("Failed to save user data. Please try again."));
+          }
+        },
+      );
+    } on DioException catch (e) {
+      final errorData = e.response?.data;
+
+      log("Dio Error: ${e.message}");
+      log("Full Response Data: ${e.response?.data}");
+
+      final errorMessage = errorData is Map
+          ? (errorData['data']?.toString() ??
+              errorData['msg']?.toString() ??
+              "حدث خطأ في الاتصال")
+          : "حدث خطأ في الاتصال بالخادم";
+
+      emit(LoginError(errorMessage));
     } catch (e) {
-      log("Unexpected Login Error: $e");
-      emit(LoginError("حدث خطأ غير متوقع، حاول مرة أخرى."));
+      if (e is ServerException) {
+        log("ServerException: ${e.errorModel.toString()}  ");
+        emit(LoginError(e.errorModel?.toString() ?? ''));
+      } else {
+        log("Unexpected Login Error: ${e.toString()}");
+        emit(LoginError('حدث خطأ غير متوقع، حاول مرة أخرى لاحقًا.'));
+      }
     }
   }
 

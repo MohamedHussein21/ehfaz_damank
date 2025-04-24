@@ -7,11 +7,14 @@ import 'package:ahfaz_damanak/features/register/presentation/pages/register_scre
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helper/cash_helper.dart';
 import '../../../../core/storage/hive_helper.dart';
+import '../../../../core/storage/models/auth_box.dart';
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/validator.dart';
@@ -29,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final loginKey = GlobalKey<FormState>();
+  bool rememberMe = false;
 
   @override
   void dispose() {
@@ -38,30 +42,44 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
   }
 
   @override
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedCredentials();
+  }
+
+  void _loadRememberedCredentials() async {
+    final remember = HiveHelper.getSetting(key: 'remember_me') ?? false;
+    if (remember) {
+      phoneController.text = HiveHelper.getSetting(key: 'saved_phone') ?? '';
+      passwordController.text =
+          HiveHelper.getSetting(key: 'saved_password') ?? '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            // Use async/await pattern for sequential operations
+            _saveCredentials();
             _saveUserDataAndNavigate(context, state);
           } else if (state is LoginError) {
-            // Show error message with appropriate context
-            String errorMessage = state.message;
+            String errorMessage = state.responseData ?? state.message;
 
-            // Add more helpful context if available
             if (state.errorCode != null) {
               errorMessage += " (${state.errorCode})";
             }
 
-            // Show the error message
-            Constants.showSnackBar(context,
-                text: errorMessage,
-                color: Colors.red,
-                scaffoldContext: context);
+            Constants.showSnackBar(
+              context,
+              text: errorMessage,
+              color: Colors.red,
+              scaffoldContext: context,
+            );
           } else if (state is LoginClearingData) {
-            // Show a temporary message that we're preparing the session
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Preparing your session...'.tr()),
@@ -85,6 +103,36 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Language change button in top right corner
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: TextButton(
+                          onPressed: () {
+                            _showLanguageBottomSheet(context);
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                context.locale.languageCode == 'ar'
+                                    ? "العربية"
+                                    : "English",
+                                style: TextStyle(
+                                  color: ColorManger.defaultColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              Icon(
+                                Icons.language,
+                                color: ColorManger.defaultColor,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
                       // Logo and title
                       Center(
                         child: Image(
@@ -132,30 +180,49 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                         ],
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.01),
-                      IntlPhoneField(
-                        controller: phoneController,
-                        initialCountryCode: 'SA',
-                        decoration: InputDecoration(
-                          hintText: 'Enter Phone Number'.tr(),
-                          hintStyle: TextStyle(color: ColorManger.grayColor),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Image(
-                                image: AssetImage(ImageAssets.smartPhone),
-                                height: 24,
-                                width: 24),
-                          ),
+                      AutofillGroup(
+                        child: Column(
+                          children: [
+                            Offstage(
+                              offstage: true,
+                              child: TextFormField(
+                                controller: phoneController,
+                                autofillHints: const [
+                                  AutofillHints.telephoneNumber
+                                ],
+                              ),
+                            ),
+                            IntlPhoneField(
+                              controller: phoneController,
+                              initialCountryCode: 'SA',
+                              decoration: InputDecoration(
+                                hintText: 'Enter Phone Number'.tr(),
+                                hintStyle:
+                                    TextStyle(color: ColorManger.grayColor),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Image(
+                                    image: AssetImage(ImageAssets.smartPhone),
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (phone) {
+                                log("Phone: ${phone.completeNumber}");
+                              },
+                              validator: (value) =>
+                                  phoneValidation(value?.number),
+                            ),
+                          ],
                         ),
-                        keyboardType: TextInputType.phone,
-                        onChanged: (phone) {
-                          log("Phone: ${phone.completeNumber}");
-                        },
-                        validator: (value) => phoneValidation(value?.number),
                       ),
+
                       SizedBox(height: MediaQueryValue(context).heigh * 0.01),
 
                       // Password field
@@ -174,6 +241,7 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.01),
                       DefaultTextForm(
+                        aoutofillHints: [AutofillHints.password],
                         controller: passwordController,
                         isPassword: true,
                         type: TextInputType.visiblePassword,
@@ -182,32 +250,42 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                         hintStyle: TextStyle(color: ColorManger.darkColor),
                         prefix: Image(image: AssetImage(ImageAssets.password)),
                       ),
+                      SizedBox(height: MediaQueryValue(context).heigh * 0.01),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: rememberMe,
+                            onChanged: (value) {
+                              setState(() {
+                                rememberMe = value!;
+                              });
+                            },
+                            activeColor: ColorManger.defaultColor,
+                          ),
+                          Text('Remember Me'.tr()),
+                        ],
+                      ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.04),
 
                       // Login button with loading state
                       DefaultButton(
                         title: 'Login'.tr(),
-                        // Only show loading indicator during actual login attempt
                         isLoading: state is LoginLoading,
-                        // Disable button during data clearing
                         submit: state is LoginClearingData
                             ? null
                             : () async {
                                 if (loginKey.currentState!.validate()) {
-                                  // Get firebase token
                                   final firebaseToken = await FirebaseMessaging
                                           .instance
                                           .getToken() ??
                                       '';
-
-                                  // Call login
                                   cubit.userLogin(
                                     phone: phoneController.text,
                                     password: passwordController.text,
                                     googleToken: firebaseToken,
                                   );
+                                  await _saveCredentials();
                                 } else {
-                                  // Show validation error message
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -218,14 +296,12 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                                   );
                                 }
                               },
-                        // Set color based on state
                         color: state is LoginClearingData
                             ? ColorManger.defaultColor.withOpacity(0.6)
                             : ColorManger.defaultColor,
                         width: MediaQueryValue(context).width * 0.9,
                       ),
 
-                      // Loading message during data clearing
                       if (state is LoginClearingData)
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
@@ -269,8 +345,66 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
     );
   }
 
-  /// Helper method to save user data and navigate to main screen
-  /// Uses a sequential approach with proper error handling
+  void _showLanguageBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.locale.languageCode == 'ar' ? "العربية" : "English",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Icon(Icons.language),
+                ],
+              ),
+              const Divider(),
+              ListTile(
+                leading: Image.asset(
+                  ImageAssets.sFlag,
+                  width: 24,
+                  height: 24,
+                ),
+                title: const Text("العربية"),
+                trailing: context.locale.languageCode == 'ar'
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  context.setLocale(const Locale('ar'));
+                  HiveHelper.saveSetting(key: HiveKeys.locale, value: 'ar');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Image.asset(
+                  ImageAssets.aFlag,
+                  width: 24,
+                  height: 24,
+                ),
+                title: const Text("English"),
+                trailing: context.locale.languageCode == 'en'
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  context.setLocale(const Locale('en'));
+                  HiveHelper.saveSetting(key: HiveKeys.locale, value: 'en');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _saveUserDataAndNavigate(
       BuildContext context, LoginSuccess state) async {
     try {
@@ -279,32 +413,24 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
       final apiToken = state.user.apiToken;
       final userId = state.user.data.id;
 
-      // Save to both storage systems for compatibility
-      // First save to HiveHelper (modern storage)
       final hiveSuccess = await HiveHelper.saveAuth(
         apiToken: apiToken,
         userId: userId,
       );
 
-      // Also save to CashHelper (legacy storage)
       final cashTokenSaved =
           await CashHelper.saveData(key: 'api_token', value: apiToken);
 
       final cashUserIdSaved =
           await CashHelper.saveData(key: 'user_id', value: userId);
 
-      // Verify all operations succeeded
       if (!hiveSuccess || !cashTokenSaved || !cashUserIdSaved) {
         throw Exception('Failed to save user data');
       }
-
-      // Log successful data saving
+      TextInput.finishAutofillContext();
       log('Successfully saved user data for user ID: $userId');
-
-      // Navigate to main screen
       Constants.navigateAndFinish(context, MainScreen());
     } catch (e) {
-      // Handle errors during data saving
       log('Error saving user data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -313,9 +439,22 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
         ),
       );
 
-      // Clear any partial data that might have been saved
       await HiveHelper.clearData();
       await CashHelper.clearData();
+    }
+  }
+
+  Future<void> _saveCredentials() async {
+    if (rememberMe) {
+      await HiveHelper.saveSetting(
+          key: 'saved_phone', value: phoneController.text);
+      await HiveHelper.saveSetting(
+          key: 'saved_password', value: passwordController.text);
+      await HiveHelper.saveSetting(key: 'remember_me', value: true);
+    } else {
+      await HiveHelper.removeData(key: 'saved_phone');
+      await HiveHelper.removeData(key: 'saved_password');
+      await HiveHelper.saveSetting(key: 'remember_me', value: false);
     }
   }
 }

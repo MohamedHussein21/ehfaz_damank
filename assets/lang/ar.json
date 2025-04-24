@@ -244,6 +244,14 @@
 "onboarding_title_3": "بياناتك دائماً في أمان!",
 "onboarding_body_3": "نخزن فواتيرك بتشفير قوي مع مزامنة سحابية، مما يتيح لك الوصول إليها بأمان من أي جهاز.",
 "warranty end date": "تاريخ انتهاء الضمان",
-"Bill updated successfully": "تم تحديث الفاتورة بنجاح"
+"Bill updated successfully": "تم تحديث الفاتورة بنجاح",
+"me": "أنا",
+"sign out": "تسجيل خروج",
+"are you sure you want to sign out?": "هل تريد تسجيل الخروج؟",
+"Remember Me": "تذكرني",
+"Preparing your session...": "يرجى الانتظار...",
+"Please fill all required fields": "يرجى ملء جميع الحقول المطلوبة",
+"order_name":"اسم الفاتورة",
+"order_expiry":"تاريخ الانتهاء"
 
 }

@@ -263,107 +263,110 @@ class _EditBillScreenState extends State<EditBillScreen> {
             },
             builder: (context, state) {
               return Scaffold(
-                  appBar: AppBar(
-                    title: Text(
-                      "Edit Bill".tr(),
-                      style: TextStyle(color: ColorManger.blackColor),
-                    ),
-                    leading: IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      color: ColorManger.blackColor,
-                      onPressed: () => Navigator.pop(context),
+                appBar: AppBar(
+                  title: Text(
+                    "Edit Bill".tr(),
+                    style: TextStyle(color: ColorManger.blackColor),
+                  ),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: ColorManger.blackColor,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildTextField(
+                            "bill name / product name".tr(), titleController,
+                            isRequired: true, enabled: false),
+                        buildTextField("price paid".tr(), amountController,
+                            isRequired: true, enabled: false),
+                        GestureDetector(
+                          child: AbsorbPointer(
+                            child: buildTextField(
+                                "date of purchase".tr(), dateController,
+                                enabled: false),
+                          ),
+                        ),
+                        buildTextField("store name".tr(), merchantController,
+                            enabled: false),
+                        buildTextField(
+                            "fatora number".tr(), fatoraNumberController,
+                            enabled: false),
+                        Text("category".tr()),
+                        const SizedBox(height: 10),
+                        // CategoryPicker(
+                        //   controller: categoryController,
+                        //   categories: categories,
+                        // ),
+                        // Make warranty date field editable
+                        GestureDetector(
+                          onTap: () => pickDate(warrantyEndDateController),
+                          child: AbsorbPointer(
+                            child: buildTextField("warranty end date".tr(),
+                                warrantyEndDateController),
+                          ),
+                        ),
+                        // const SizedBox(height: 16),
+                        // Text("warranty included(optional)".tr()),
+                        // Row(
+                        //   children: [
+                        //     Text("yes".tr()),
+                        //     Radio(
+                        //         value: 1,
+                        //         groupValue: dman,
+                        //         onChanged: (value) {
+                        //           setState(() => dman = value as int);
+                        //         }),
+                        //     Text("no".tr()),
+                        //     Radio(
+                        //         value: 0,
+                        //         groupValue: dman,
+                        //         onChanged: (value) {
+                        //           setState(() => dman = value as int);
+                        //         }),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 16),
+                        // Text("enable reminder before expiration".tr()),
+                        // Wrap(
+                        //   spacing: 8.0,
+                        //   children: reminderOptions
+                        //       .map((option) => buildReminderChip(
+                        //           option, reminderOptions.indexOf(option)))
+                        //       .toList(),
+                        // ),
+                        const SizedBox(height: 10),
+                        buildTextField("add bill note(optional)".tr(),
+                            warrantyNoteController,
+                            enabled: false),
+                        const SizedBox(height: 20),
+                        // Save button with loading state handling
+                        state is EditFatouraLouding
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: ColorManger.defaultColor,
+                                ),
+                              )
+                            : ElevatedButton(
+                                onPressed: saveBill,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorManger.defaultColor,
+                                  minimumSize: Size(double.infinity, 50),
+                                ),
+                                child: Text("save".tr(),
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                      ],
                     ),
                   ),
-                  body: SingleChildScrollView(
-                    padding: EdgeInsets.all(16.0),
-                    child: Form(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildTextField("bill name / product name".tr(),
-                                titleController,
-                                isRequired: true),
-                            buildTextField("price paid".tr(), amountController,
-                                isRequired: true),
-                            GestureDetector(
-                              child: AbsorbPointer(
-                                child: buildTextField(
-                                    "date of purchase".tr(), dateController),
-                              ),
-                            ),
-                            buildTextField(
-                                "store name".tr(), merchantController),
-                            buildTextField(
-                                "fatora number".tr(), fatoraNumberController),
-                            Text("category".tr()),
-                            const SizedBox(height: 10),
-                            CategoryPicker(
-                              controller: categoryController,
-                              categories: categories,
-                            ),
-                            GestureDetector(
-                              onTap: () => pickDate(warrantyEndDateController),
-                              child: AbsorbPointer(
-                                child: buildTextField("warranty end date".tr(),
-                                    warrantyEndDateController),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text("warranty included(optional)".tr()),
-                            Row(
-                              children: [
-                                Text("yes".tr()),
-                                Radio(
-                                    value: 1,
-                                    groupValue: dman,
-                                    onChanged: (value) {
-                                      setState(() => dman = value as int);
-                                    }),
-                                Text("no".tr()),
-                                Radio(
-                                    value: 0,
-                                    groupValue: dman,
-                                    onChanged: (value) {
-                                      setState(() => dman = value as int);
-                                    }),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Text("enable reminder before expiration".tr()),
-                            Wrap(
-                              spacing: 8.0,
-                              children: reminderOptions
-                                  .map((option) => buildReminderChip(
-                                      option, reminderOptions.indexOf(option)))
-                                  .toList(),
-                            ),
-                            const SizedBox(height: 10),
-                            buildTextField("add bill note(optional)".tr(),
-                                warrantyNoteController),
-                            const SizedBox(height: 20),
-                            // Save button with loading state handling
-                            state is EditFatouraLouding
-                                ? Center(
-                                    child: CircularProgressIndicator(
-                                      color: ColorManger.defaultColor,
-                                    ),
-                                  )
-                                : ElevatedButton(
-                                    onPressed: saveBill,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: ColorManger.defaultColor,
-                                      minimumSize: Size(double.infinity, 50),
-                                    ),
-                                    child: Text("save".tr(),
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ));
+                ),
+              );
             },
           );
         },
@@ -372,7 +375,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
   }
 
   Widget buildTextField(String label, TextEditingController controller,
-      {bool isRequired = false}) {
+      {bool isRequired = false, bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -380,6 +383,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
+          enabled: enabled,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),

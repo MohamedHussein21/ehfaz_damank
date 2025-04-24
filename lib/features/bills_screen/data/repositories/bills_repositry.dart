@@ -22,7 +22,8 @@ class BillsRepositry extends BillsRep {
       final result = await billsDataSource.getMyFatoras();
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
@@ -32,7 +33,8 @@ class BillsRepositry extends BillsRep {
       final result = await billsDataSource.deleteBill(billId);
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
@@ -64,7 +66,8 @@ class BillsRepositry extends BillsRep {
           orderId);
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
@@ -76,7 +79,8 @@ class BillsRepositry extends BillsRep {
           await billsDataSource.getFilter(categoryId, orderBy, damanOrder);
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 }

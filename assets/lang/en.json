@@ -236,7 +236,15 @@
   "onboarding_title_3": "Your data is always safe!",
   "onboarding_body_3": "We store your invoices with strong encryption, with cloud sync, allowing you to access them securely from any device.",
 "warranty end date":"warranty end date",
-"Bill updated successfully":"Bill updated successfully"
+"Bill updated successfully":"Bill updated successfully",
+"me":"me",
+"sign out": "sign out",
+"are you sure you want to sign out?": "are you sure you want to sign out?",
+"Remember Me":"Remember Me",
+"Preparing your session...":"Preparing your session...",
+"Please fill all required fields":"Please fill all required fields",
+"order_name":"order_name",
+"order_expiry":"order_expiry"
 
 
     

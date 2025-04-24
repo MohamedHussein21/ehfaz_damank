@@ -88,28 +88,8 @@ class _BuildDrawerState extends State<BuildDrawer> {
 
   List<Widget> _buildMenuItems(BuildContext context) {
     return [
-      _buildListTile(IconsAssets.profile, "account settings".tr(), () {
-        Constants.navigateTo(context, ProfileScreen());
-      }),
-      _buildDivider(),
-      _buildListTile(IconsAssets.note, "reminders".tr(), () {
-        Constants.navigateTo(context, RemindersScreen());
-      }),
-      _buildDivider(),
       _buildListTile(IconsAssets.star, "upgrade account".tr(), () {
         Constants.navigateTo(context, UpgradeAccountScreen());
-      }),
-      _buildDivider(),
-      _buildListTile(IconsAssets.card, "saved paid methods".tr(), () {
-        Constants.navigateTo(context, PaymentMethodsScreen());
-      }),
-      _buildDivider(),
-      _buildListTile(IconsAssets.invoice, "about saving your bills".tr(), () {
-        Constants.navigateTo(context, AboutDamanakScreen());
-      }),
-      _buildDivider(),
-      _buildListTile(IconsAssets.call, "contact us".tr(), () {
-        Constants.navigateTo(context, ContactUsScreen());
       }),
       _buildDivider(),
       _buildListTile(IconsAssets.transfer, "transfer account".tr(), () {
@@ -119,15 +99,19 @@ class _BuildDrawerState extends State<BuildDrawer> {
       _buildListTile(IconsAssets.move, "transfer bill".tr(), () {
         Constants.showToast(text: "soon".tr(), state: ToastStates.success);
       }),
+      // _buildDivider(),
+      // _buildListTile(IconsAssets.card, "saved paid methods".tr(), () {
+      //   Constants.navigateTo(context, PaymentMethodsScreen());
+      // }),
       _buildDivider(),
-      _buildListTile(IconsAssets.language, "change language".tr(), () {
-        final isArabic = context.locale.languageCode == 'ar';
-        final newLocale = isArabic ? const Locale('en') : const Locale('ar');
-
-        context.setLocale(newLocale);
-        HiveHelper.saveSetting(
-            key: HiveKeys.locale, value: newLocale.languageCode);
+      _buildListTile(IconsAssets.invoice, "about saving your bills".tr(), () {
+        Constants.navigateTo(context, AboutDamanakScreen());
       }),
+      _buildDivider(),
+      _buildListTile(IconsAssets.call, "contact us".tr(), () {
+        Constants.navigateTo(context, ContactUsScreen());
+      }),
+
       _buildDivider(),
       _buildLogoutTile(context),
     ];

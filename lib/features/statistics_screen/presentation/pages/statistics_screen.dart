@@ -115,6 +115,7 @@ class StatisticsScreen extends StatelessWidget {
             toY: totalAmount,
             color: _getColorForCategory(entry.value.categoryId),
             width: 20,
+            borderRadius: BorderRadius.zero,
           ),
         ],
       );
@@ -136,11 +137,19 @@ class StatisticsScreen extends StatelessWidget {
                   int index = value.toInt();
                   if (index >= 0 && index < categories.length) {
                     return Text(
-                      categories[index].categoryName,
+                      categories[index].categoryName.contains(' ')
+                          ? categories[index]
+                              .categoryName
+                              .replaceFirst(' ', '\n')
+                          : categories[index].categoryName,
                       style: const TextStyle(
-                          fontSize: 8,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 10,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                     );
                   }
                   return const SizedBox();
@@ -149,7 +158,7 @@ class StatisticsScreen extends StatelessWidget {
               ),
             ),
           ),
-          borderData: FlBorderData(show: true),
+          borderData: FlBorderData(show: false),
           barGroups: barGroups,
           minY: 0,
           maxY: _getMaxY(categories),

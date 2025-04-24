@@ -45,7 +45,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
         return AuthResponse.fromJson(response.data);
       } else {
         throw ServerException(
-          errorModel: ErrorModel(detail: response.data['data']),
+          errorModel: response.data['data'],
         );
       }
     } catch (e) {

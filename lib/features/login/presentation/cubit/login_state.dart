@@ -23,30 +23,28 @@ class LoginSuccess extends LoginState {
 class LoginError extends LoginState {
   final String message;
   final String? errorCode;
-  final Exception? exception;
+  final String? responseData;
 
   const LoginError(
     this.message, {
     this.errorCode,
-    this.exception,
+    this.responseData,
   });
 
   @override
-  List<Object> get props => [message, errorCode ?? '', exception?.toString() ?? ''];
+  List<Object> get props => [message, errorCode ?? '', responseData ?? ''];
 
-  /// Create a LoginError from an exception
-  factory LoginError.fromException(Exception e, {String? customMessage}) {
+  factory LoginError.fromResponse(Map<String, dynamic> response) {
     return LoginError(
-      customMessage ?? 'An error occurred: ${e.toString()}',
-      exception: e,
+      response['msg'] ?? 'error',
+      responseData: response['data']?.toString(),
     );
   }
 
-  /// Create a LoginError with an error code
-  factory LoginError.withCode(String message, String code) {
+  factory LoginError.fromException(Exception e, {String? customMessage}) {
     return LoginError(
-      message,
-      errorCode: code,
+      customMessage ?? 'An error occurred: ${e.toString()}',
+      responseData: e.toString(),
     );
   }
 }
@@ -71,7 +69,7 @@ class DataMigrationCompleted extends LoginState {
   final String? message;
 
   const DataMigrationCompleted({
-    required this.success, 
+    required this.success,
     this.message,
   });
 

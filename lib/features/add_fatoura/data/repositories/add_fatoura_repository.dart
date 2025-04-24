@@ -43,7 +43,7 @@ class AddFatouraRepository extends Addfatorarepo {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(
+      return Left(FailureServer(failure.errorModel.data,
           msg: failure.errorModel.errors ?? failure.errorModel.detail));
     }
   }
@@ -56,7 +56,8 @@ class AddFatouraRepository extends Addfatorarepo {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 
@@ -66,7 +67,8 @@ class AddFatouraRepository extends Addfatorarepo {
       final result = await addFatouraRemoteDataSource.getCategoris();
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 

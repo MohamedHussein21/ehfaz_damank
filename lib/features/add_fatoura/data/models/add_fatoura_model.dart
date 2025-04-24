@@ -8,7 +8,7 @@ class FatoraModel {
   final String purchaseDate;
   final String fatoraNumber;
   final int daman;
-    int? damanReminder;
+  String? damanReminder;
   final String damanDate;
   final String notes;
   final String updatedAt;
@@ -43,7 +43,7 @@ class FatoraModel {
       fatoraNumber: json['fatora_number'],
       daman: int.tryParse(json['daman'].toString()) ?? 0,
       damanDate: json['daman_date'],
-      damanReminder: json['daman_reminder'] ??0,
+      damanReminder: json['daman_reminder'] ?? '',
       notes: json['notes'],
       updatedAt: json['updated_at'],
       createdAt: json['created_at'],
@@ -79,7 +79,7 @@ class FatoraModel {
         fatoraNumber,
         daman,
         damanDate,
-        damanReminder ??0,
+        damanReminder ?? '',
         notes,
         price,
         createdAt,

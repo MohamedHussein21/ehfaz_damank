@@ -21,7 +21,8 @@ class ContactRepository extends ContactRepo {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      return Left(FailureServer(failure.errorModel.data,
+          msg: failure.errorModel.detail));
     }
   }
 }

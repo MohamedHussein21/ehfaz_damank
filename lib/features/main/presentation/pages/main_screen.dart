@@ -124,21 +124,16 @@ class MainScreen extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        cubit.changeBottom(cubit.pageIndex = 4);
-                      },
-                      icon: cubit.pageIndex == 4
-                          ? Image(
-                              image: AssetImage(IconsAssets.notification),
-                              color: ColorManger.defaultColor,
-                            )
-                          : Image(
-                              image: AssetImage(IconsAssets.notification),
-                              color: ColorManger.grayColor,
-                            ),
-                    ),
+                        onPressed: () {
+                          cubit.changeBottom(cubit.pageIndex = 4);
+                        },
+                        icon: cubit.pageIndex == 4
+                            ? Icon(Icons.person_outline_outlined,
+                                color: ColorManger.defaultColor)
+                            : Icon(Icons.person_outline_outlined,
+                                color: ColorManger.grayColor)),
                     Text(
-                      'Notification'.tr(),
+                      "me".tr(),
                       style: TextStyle(
                           color: cubit.pageIndex == 4
                               ? ColorManger.defaultColor

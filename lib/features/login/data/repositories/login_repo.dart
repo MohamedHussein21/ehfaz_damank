@@ -20,7 +20,12 @@ class LoginRepo extends BaseLoginRepository {
     try {
       return Right(result);
     } on ServerException catch (failure) {
-      return Left(FailureServer(msg: failure.errorModel.detail));
+      final errorData = failure.errorModel?.data;
+
+      return Left(FailureServer(
+        failure.errorModel?['data'] ?? 'Unknown error',
+        msg: errorData?['msg'] ?? 'Login failed',
+      ));
     }
   }
 }

@@ -68,12 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Scaffold(
               appBar: AppBar(
                 title: Text("account settings".tr()),
-                leading: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-                ),
               ),
               body: ListView(
                 padding: EdgeInsets.all(16.0),
@@ -119,8 +113,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileTile(String title, String value, VoidCallback onTap) {
     return ListTile(
-      title: Text(title),
-      subtitle: Text(value),
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      subtitle: Text(value, style: TextStyle(fontSize: 16)),
       trailing: Icon(Icons.edit),
       onTap: onTap,
     );
