@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
@@ -6,6 +7,7 @@ import 'package:ahfaz_damanak/features/add_fatoura/presentation/widgets/qr.dart'
 import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
@@ -14,6 +16,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/icons_assets.dart';
 import '../widgets/invoice_category_selector .dart';
+import '../widgets/scanQr.dart';
 
 class AddNewBill extends StatefulWidget {
   const AddNewBill({super.key});
@@ -171,58 +174,56 @@ class _AddNewBillState extends State<AddNewBill> {
       create: (context) => AddFatouraCubit(),
       child: Scaffold(
         appBar: AppBar(
-            title: Text("add new bill".tr()),
-            leading: IconButton(
-                icon: Icon(Icons.qr_code_scanner, color: Colors.black),
-                onPressed: () async {
-                  String? scannedData = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => QRScannerScreen()),
-                  );
+          title: Text("add new bill".tr()),
+          leading: IconButton(
+            icon: Icon(Icons.qr_code_scanner, color: Colors.black),
+            onPressed: () async {
+              String? scannedData = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QRScannerScreen()),
+              );
 
-                  if (scannedData != null && scannedData.isNotEmpty) {
-                    try {
-                      var cubit = context.read<AddFatouraCubit>();
+              if (scannedData == null || scannedData.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("No QR code found".tr())),
+                );
+                return;
+              }
 
-                      if (Constants.userId == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text("error : user id not found".tr())),
-                        );
-                        return;
-                      }
-
-                      int? parsedOrderId = int.tryParse(scannedData);
-                      if (parsedOrderId == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("qr code not valid".tr())),
-                        );
-                        return;
-                      }
-
-                      cubit.addFromQr(Constants.userId!, parsedOrderId);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "please wait until the transfer request is accepted"
-                                  .tr()),
-                          backgroundColor: Colors.green,
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.compare_arrows),
+                          title: Text('Transfer Invoice'.tr()),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _handleTransferInvoice(context, scannedData);
+                          },
                         ),
-                      );
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                "${"qr code not valid".tr()} ${e.toString()}")),
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("no qr code".tr())),
-                    );
-                  }
-                })),
+                        ListTile(
+                          leading: Icon(Icons.add),
+                          title: Text('Add New Invoice'.tr()),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _handleAddNewInvoice(context, scannedData);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
         body: BlocConsumer<AddFatouraCubit, AddFatouraState>(
           listener: (context, state) {
             if (state is AddFatouraSuccess) {
@@ -482,5 +483,108 @@ class _AddNewBillState extends State<AddNewBill> {
         });
       },
     );
+  }
+
+  void _handleTransferInvoice(BuildContext context, String scannedData) async {
+    try {
+      var cubit = context.read<AddFatouraCubit>();
+
+      if (Constants.userId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("error : user id not found".tr())),
+        );
+        return;
+      }
+
+      int? parsedOrderId = int.tryParse(scannedData);
+      if (parsedOrderId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("qr code not valid".tr())),
+        );
+        return;
+      }
+
+      cubit.addFromQr(Constants.userId!, parsedOrderId);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text("please wait until the transfer request is accepted".tr()),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${"qr code not valid".tr()} ${e.toString()}")),
+      );
+    }
+  }
+
+  void _handleAddNewInvoice(BuildContext context, String scannedData) async {
+    try {
+      var decodedData = ZatcaQrDecoder.decode(scannedData);
+
+      setState(() {
+        titleController.text = decodedData['sellerName'] ?? '';
+        merchantController.text = decodedData['sellerName'] ?? '';
+        purchaseDateController.text = decodedData['invoiceDate'] ?? '';
+        amountController.text = decodedData['invoiceTotal'] ?? '';
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invoice Data decoded and added to the form!".tr()),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("${"failed to decode QR".tr()} ${e.toString()}"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
+
+class ZatcaQrDecoder {
+  static Map<String, dynamic> decode(String base64QrCode) {
+    Uint8List bytes = base64.decode(base64QrCode);
+    Map<String, dynamic> result = {};
+
+    int index = 0;
+    int tagNumber = 1;
+    while (index < bytes.length) {
+      int tag = bytes[index];
+      int length = bytes[index + 1];
+      Uint8List valueBytes = bytes.sublist(index + 2, index + 2 + length);
+      String value = utf8.decode(valueBytes);
+
+      switch (tag) {
+        case 1:
+          result['sellerName'] = value;
+          break;
+        case 2:
+          result['vatNumber'] = value;
+          break;
+        case 3:
+          result['invoiceDate'] = value;
+          break;
+        case 4:
+          result['invoiceTotal'] = value;
+          break;
+        case 5:
+          result['vatTotal'] = value;
+          break;
+        default:
+          result['tag_$tagNumber'] = value;
+      }
+
+      index += 2 + length;
+      tagNumber++;
+    }
+
+    return result;
   }
 }

@@ -88,9 +88,9 @@ class _BuildDrawerState extends State<BuildDrawer> {
 
   List<Widget> _buildMenuItems(BuildContext context) {
     return [
-      _buildListTile(IconsAssets.star, "upgrade account".tr(), () {
-        Constants.navigateTo(context, UpgradeAccountScreen());
-      }),
+      // _buildListTile(IconsAssets.star, "upgrade account".tr(), () {
+      //   Constants.navigateTo(context, UpgradeAccountScreen());
+      // }),
       _buildDivider(),
       _buildListTile(IconsAssets.transfer, "transfer account".tr(), () {
         Constants.showToast(text: "soon".tr(), state: ToastStates.success);
