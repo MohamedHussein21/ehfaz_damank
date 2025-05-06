@@ -13,12 +13,18 @@ class RegisterRepo extends BaseRegisterRepository {
   RegisterRepo(this.registerRemoteDataSource);
 
   @override
-  Future<Either<Failure, RegisterModel>> userRegister(String name, String phone,
-      String password, String passwordConfirmation, String googleToken) async {
+  Future<Either<Failure, RegisterModel>> userRegister(
+      String name,
+      String phone,
+      String password,
+      String passwordConfirmation,
+      String googleToken,
+      String email) async {
     final result = await registerRemoteDataSource.userRegister(
         name: name,
         phone: phone,
         password: password,
+        email: email,
         passwordConfirmation: passwordConfirmation,
         googleToken: googleToken);
 
@@ -32,9 +38,9 @@ class RegisterRepo extends BaseRegisterRepository {
 
   @override
   Future<Either<Failure, VerifyResponse>> userVerify(
-      String phone, int otp) async {
+      String email, int code) async {
     final result =
-        await registerRemoteDataSource.userVerify(phone: phone, otp: otp);
+        await registerRemoteDataSource.userVerify(email: email, code: code);
     try {
       return Right(result);
     } on ServerException catch (failure) {

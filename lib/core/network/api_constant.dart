@@ -20,6 +20,11 @@ class ApiConstant {
   static const String notes = '$baseurl/notes';
   static const String notifications = '$baseurl/notifications';
   static const String categories = '$baseurl/categories';
+  static const String updatePassword = '$baseurl/updatePassword';
+  static const String sendVerifyForgetPasswordNum =
+      '$baseurl/sendVerifyForgetPasswordNum';
+  static const String rechangepass = '$baseurl/rechangepass';
+  static const String verifyForgetPassword = '$baseurl/verifyForgetPassword';
 
   static const headers = {'Content-Type': 'application/json'};
 }

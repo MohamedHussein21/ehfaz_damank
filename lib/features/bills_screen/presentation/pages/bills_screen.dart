@@ -176,7 +176,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     },
                     child: ListTile(
                       title: Text(
-                        '${bill.name ?? ''}',
+                        bill.name ?? '',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(

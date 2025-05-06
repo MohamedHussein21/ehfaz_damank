@@ -11,7 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/errors/server_excption.dart';
+import '../../../register/data/models/register_model.dart';
 import '../../data/datasources/login_datasource.dart';
+import '../../data/models/changePasswordModel.dart';
+import '../../data/models/forgetPassModel.dart';
+import '../../data/models/sentcodeMoadel.dart';
 import '../../domain/repositories/login_repositery.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../pages/login_screen.dart';
@@ -146,5 +150,78 @@ class LoginCubit extends Cubit<LoginState> {
       MaterialPageRoute(builder: (context) => const LoginScreen()),
       (route) => false,
     );
+  }
+
+  Future<void> changePassword({
+    required String password,
+    required String confirmPassword,
+    required String email,
+    required String code,
+  }) async {
+    emit(ChangePasswordLoading());
+    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
+    BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
+
+    final result = await LoginUseCase(baseAuthRepository).changePassword(
+      password: password,
+      confirmPassword: confirmPassword,
+      email: email,
+      code: code,
+    );
+
+    await result.fold(
+      (failure) async {
+        emit(ChangePasswordError(failure.msg));
+      },
+      (success) async {
+        emit(ChangePasswordSuccess(success));
+      },
+    );
+  }
+
+  Future<void> verifyForgetPassword({
+    required String email,
+    required String code,
+  }) async {
+    emit(VerifyForgetPasswordLoading());
+    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
+    BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
+
+    final result = await LoginUseCase(baseAuthRepository).verifyForgetPassword(
+      email: email,
+      code: code,
+    );
+
+    await result.fold(
+      (failure) async {
+        emit(VerifyForgetPasswordError(failure.msg));
+      },
+      (success) async {
+        emit(VerifyForgetPasswordSuccess(success));
+      },
+    );
+  }
+
+  Future<void> sentVerifyForgetPassword({required String email}) async {
+    emit(SendVerifyForgetPasswordEmailLoading());
+    BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
+    BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
+
+    try {
+      final result = await LoginUseCase(baseAuthRepository)
+          .sendVerifyForgetPasswordEmail(email: email);
+
+      await result.fold(
+        (failure) async {
+          emit(SendVerifyForgetPasswordEmailError(failure.msg));
+        },
+        (success) async {
+          emit(SendVerifyForgetPasswordEmailSuccess(success));
+        },
+      );
+    } catch (e) {
+      emit(SendVerifyForgetPasswordEmailError(
+          "يرجي التاكد من البريد الالكتروني"));
+    }
   }
 }

@@ -252,6 +252,20 @@
 "Preparing your session...": "يرجى الانتظار...",
 "Please fill all required fields": "يرجى ملء جميع الحقول المطلوبة",
 "order_name":"اسم الفاتورة",
-"order_expiry":"تاريخ الانتهاء"
+"order_expiry":"تاريخ الانتهاء",
+"No QR code found":"لم يتم العثور على كود الفاتورة  ",
+"Transfer Invoice":"نقل الفاتورة",
+"Add New Invoice":"اضافة فاتورة جديدة",
+"Invoice Data decoded and added to the form!":"تم اضافة الفاتورة برجاء اكمال البيانات ",
+"failed to decode QR":"فشل في اضافة الفاتورة",
+"Forgot Password?":"نسيت كلمة المرور؟",
+"new password":"كلمة المرور الجديدة",
+"new password description":"قم بإنشاء كلمة مرور جديدة لحسابك",
+"confirm password":"تاكيد كلمة المرور",
+"change password":"تغير كلمة المرور",
+"password updated successfully":"تم تغير كلمة المرور بنجاح",
+"Enter Your Email":"ادخل البريد الخاص بك",
+"email":"البريد الالكتروني",
+"Enter email":"ادخل البريد الالكتروني"
 
 }

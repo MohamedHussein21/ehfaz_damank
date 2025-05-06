@@ -5,8 +5,6 @@ import 'package:ahfaz_damanak/features/contactUs/presentation/pages/contact_scre
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'payment_screen.dart';
-
 class BuyPlanScreen extends StatefulWidget {
   const BuyPlanScreen({super.key});
 

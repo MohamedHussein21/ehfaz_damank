@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../core/storage/hive_helper.dart';
-import '../../../../core/storage/models/auth_box.dart';
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/icons_assets.dart';
@@ -12,12 +11,8 @@ import '../../../about_us/about_us.dart';
 import '../../../contactUs/presentation/pages/contact_screen.dart';
 import '../../../login/presentation/cubit/login_cubit.dart';
 import '../../../login/presentation/pages/login_screen.dart';
-import '../../../notes/presentation/pages/notes.dart';
-import '../../../payment/presentation/pages/payment_screen.dart';
 import '../../../plans/presentation/pages/plans_screen.dart';
 import '../../../profile_screen/presentation/cubit/profile_screen_cubit.dart';
-import '../../../profile_screen/presentation/pages/profile-screen.dart';
-import '../cubit/home_screen_cubit.dart';
 
 class BuildDrawer extends StatefulWidget {
   const BuildDrawer({super.key});
@@ -88,9 +83,9 @@ class _BuildDrawerState extends State<BuildDrawer> {
 
   List<Widget> _buildMenuItems(BuildContext context) {
     return [
-      // _buildListTile(IconsAssets.star, "upgrade account".tr(), () {
-      //   Constants.navigateTo(context, UpgradeAccountScreen());
-      // }),
+      _buildListTile(IconsAssets.star, "upgrade account".tr(), () {
+        Constants.navigateTo(context, UpgradeAccountScreen());
+      }),
       _buildDivider(),
       _buildListTile(IconsAssets.transfer, "transfer account".tr(), () {
         Constants.showToast(text: "soon".tr(), state: ToastStates.success);

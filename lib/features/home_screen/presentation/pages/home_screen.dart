@@ -182,19 +182,23 @@ class HomeScreen extends StatelessWidget {
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            if (invoices.isEmpty) {
-                              return Center(
-                                child: Text(
-                                  'No current bills'.tr(),
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              );
-                            }
                             return invoices[index];
                           },
                           childCount: invoices.length,
                         ),
                       ),
+                      if (invoices.isEmpty)
+                        SliverToBoxAdapter(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                'No current bills'.tr(),
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
                       SliverPadding(
                         padding: EdgeInsets.only(
                             top: MediaQueryValue(context).toPadding * 0.7),

@@ -14,11 +14,12 @@ abstract class BaseRegisterRemoteDataSource {
     required String password,
     required String passwordConfirmation,
     required String googleToken,
+    required String email,
   });
 
   Future<VerifyResponse> userVerify({
-    required String phone,
-    required int otp,
+    required String email,
+    required int code,
   });
 }
 
@@ -30,6 +31,7 @@ class RegisterRemoteDataSource extends BaseRegisterRemoteDataSource {
     required String password,
     required String passwordConfirmation,
     required String googleToken,
+    required String email,
   }) async {
     try {
       final response = await Dio().post(
@@ -43,6 +45,7 @@ class RegisterRemoteDataSource extends BaseRegisterRemoteDataSource {
           'phone': phone,
           'password': password,
           'password_confirmation': passwordConfirmation,
+          'email': email,
         },
       );
 
@@ -72,7 +75,7 @@ class RegisterRemoteDataSource extends BaseRegisterRemoteDataSource {
 
   @override
   Future<VerifyResponse> userVerify(
-      {required String phone, required int otp}) async {
+      {required String email, required int code}) async {
     try {
       final response = await Dio().post(
         ApiConstant.verify,
@@ -81,8 +84,8 @@ class RegisterRemoteDataSource extends BaseRegisterRemoteDataSource {
           validateStatus: (status) => status! < 500,
         ),
         data: {
-          'phone': phone,
-          'code': otp,
+          'email': email,
+          'code': code,
         },
       );
 

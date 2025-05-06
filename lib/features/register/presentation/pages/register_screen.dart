@@ -9,8 +9,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import '../../../../core/storage/hive_helper.dart';
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/validator.dart';
@@ -32,6 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final emailController = TextEditingController();
 
   bool rememberMe = false;
   @override
@@ -43,9 +46,9 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
           log(state.hashCode);
 
           if (state is RegisterScreenSuccess) {
-            CashHelper.saveData(key: 'api_token', value: state.user.apiToken)
+            HiveHelper.saveData(key: 'api_token', value: state.user.apiToken)
                 .then((value) {
-              CashHelper.saveData(key: 'user_id', value: state.user.data.id);
+              HiveHelper.saveData(key: 'user_id', value: state.user.data.id);
               Constants.navigateTo(
                   context,
                   OtpScreen(
@@ -77,7 +80,6 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         child: Image(
                           height: MediaQueryValue(context).heigh * 0.15,
                           image: AssetImage(ImageAssets.logo),
-                          color: ColorManger.defaultColor,
                         ),
                       ),
                       Center(
@@ -109,6 +111,20 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         type: TextInputType.text,
                         validate: (value) => generalValidation(value),
                         hint: 'Enter Your name'.tr(),
+                        hintStyle: TextStyle(color: ColorManger.grayColor),
+                      ),
+                      Text(
+                        'Email'.tr(),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
+                      DefaultTextForm(
+                        controller: emailController,
+                        isPassword: false,
+                        type: TextInputType.text,
+                        validate: (value) => generalValidation(value),
+                        hint: 'Enter Your email'.tr(),
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                       ),
                       Text(
@@ -189,6 +205,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                                       name: nameController.text,
                                       phone: phoneController.text,
                                       password: passwordController.text,
+                                      email: emailController.text,
                                       passwordConfirmation:
                                           confirmPasswordController.text,
                                       googleToken: (await FirebaseMessaging

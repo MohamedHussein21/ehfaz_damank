@@ -21,7 +21,7 @@ class AddFatouraUsercase {
       required int daman,
       required String damanDate,
       required String notes,
-      required int price,
+      required double price,
       required int reminder,
       required XFile image}) async {
     return await addfatorarepo.addFatoura(

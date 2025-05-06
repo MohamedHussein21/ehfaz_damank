@@ -89,3 +89,39 @@ class StorageOperationFailed extends LoginState {
   @override
   List<Object> get props => [operation, message];
 }
+
+class ChangePasswordLoading extends LoginState {}
+
+class ChangePasswordSuccess extends LoginState {
+  final VerifyResponseModel verifyResponseModel;
+  const ChangePasswordSuccess(this.verifyResponseModel);
+}
+
+class ChangePasswordError extends LoginState {
+  final String message;
+  const ChangePasswordError(this.message);
+}
+
+class VerifyForgetPasswordError extends LoginState {
+  final String message;
+  const VerifyForgetPasswordError(this.message);
+}
+
+class VerifyForgetPasswordSuccess extends LoginState {
+  final SentModel sentModel;
+  const VerifyForgetPasswordSuccess(this.sentModel);
+}
+
+class VerifyForgetPasswordLoading extends LoginState {}
+
+class SendVerifyForgetPasswordEmailLoading extends LoginState {}
+
+class SendVerifyForgetPasswordEmailSuccess extends LoginState {
+  final RegisterModel registerModel;
+  const SendVerifyForgetPasswordEmailSuccess(this.registerModel);
+}
+
+class SendVerifyForgetPasswordEmailError extends LoginState {
+  final String message;
+  const SendVerifyForgetPasswordEmailError(this.message);
+}

@@ -15,7 +15,7 @@ abstract class BillsDataSource {
   Future<DeleteModel> deleteBill(String billId);
   Future<EditFatoraModel> editFatoura(
     int categoryId,
-    int price,
+    double price,
     String name,
     String storeName,
     String purchaseDate,
@@ -87,7 +87,7 @@ class BillsDataSourceImpl implements BillsDataSource {
   @override
   Future<EditFatoraModel> editFatoura(
     int categoryId,
-    int price,
+    double price,
     String name,
     String storeName,
     String purchaseDate,

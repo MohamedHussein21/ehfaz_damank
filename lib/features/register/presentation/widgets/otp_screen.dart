@@ -1,4 +1,3 @@
-
 import 'package:ahfaz_damanak/features/main/presentation/pages/main_screen.dart';
 import 'package:ahfaz_damanak/features/register/presentation/cubit/register_screen_cubit.dart';
 import 'package:buildcondition/buildcondition.dart';
@@ -75,7 +74,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     child: Image(
                       height: MediaQueryValue(context).heigh * 0.1,
                       image: AssetImage(ImageAssets.logo),
-                      color: ColorManger.defaultColor,
                     ),
                   ),
                   SizedBox(height: MediaQueryValue(context).heigh * 0.02),
@@ -116,8 +114,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       title: 'Confirm'.tr(),
                       submit: () {
                         cubit.userVerify(
-                            phone: widget.model.data.phone,
-                            otp: widget.model.verified);
+                            email: widget.model.data.email!,
+                            code: widget.model.verified);
                       },
                       width: MediaQueryValue(context).width * 0.9,
                     ),
@@ -147,13 +145,5 @@ class _OtpScreenState extends State<OtpScreen> {
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    for (var controller in otpControllers) {
-      controller.dispose();
-    }
-    super.dispose();
   }
 }

@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../contactUs/presentation/pages/contact_screen.dart';
-import '../widgets/buy_plan.dart';
 
 class UpgradeAccountScreen extends StatefulWidget {
   const UpgradeAccountScreen({super.key});

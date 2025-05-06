@@ -2,7 +2,6 @@ import 'package:ahfaz_damanak/core/storage/hive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../helper/cash_helper.dart';
 import 'color_mange.dart';
 
 enum ToastStates { success, error, warning }
@@ -145,7 +144,7 @@ class Constants {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextFormField(
           maxLines: maxLine,
@@ -153,6 +152,7 @@ class Constants {
           keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(color: Colors.grey),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           validator: validator,

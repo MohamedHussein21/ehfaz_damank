@@ -4,7 +4,7 @@ class Bill {
   int? id;
   int? userId;
   int? categoryId;
-  int? price;
+  double? price;
   String? name;
   String? storeName;
   String? purchaseDate;
@@ -40,7 +40,7 @@ class Bill {
       id: json['id'],
       userId: json['user_id'],
       categoryId: json['category_id'],
-      price: json['price'],
+      price: double.tryParse(json['price']?.toString() ?? '0.0') ?? 0.0,
       name: json['name'],
       storeName: json['store_name'],
       purchaseDate: json['purchase_date'],

@@ -5,7 +5,6 @@ import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart
 import 'package:ahfaz_damanak/features/bills_screen/data/models/del_model.dart';
 
 import 'package:dartz/dartz.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../domain/repositories/Bills_rep.dart';
 import '../datasources/biills_data_source.dart';
@@ -41,7 +40,7 @@ class BillsRepositry extends BillsRep {
   @override
   Future<Either<Failure, EditFatoraModel>> editFatoura(
       int categoryId,
-      int price,
+      double price,
       String name,
       String storeName,
       String purchaseDate,

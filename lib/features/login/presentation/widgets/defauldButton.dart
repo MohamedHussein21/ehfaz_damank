@@ -1,4 +1,3 @@
-import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/color_mange.dart';

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/Failure.dart';
 import '../../data/models/bills_model.dart';
@@ -19,7 +18,7 @@ class BillsUseCase {
 
   Future<Either<Failure, EditFatoraModel>> editBill(
           {required int categoryId,
-          required int price,
+          required double price,
           required String name,
           required String storeName,
           required String purchaseDate,

@@ -35,7 +35,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Image(
           height: MediaQueryValue(context).heigh * 0.3,
           image: AssetImage(ImageAssets.logo),
-          color: ColorManger.defaultColor,
         ),
       ),
     );

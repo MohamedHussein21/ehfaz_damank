@@ -5,12 +5,14 @@ class Register extends Equatable {
   final String phone;
   final String password;
   final String passwordConfirmation;
+  final String email;
 
   const Register(
     this.name,
     this.phone,
     this.password,
     this.passwordConfirmation,
+    this.email,
   );
 
   @override
@@ -19,5 +21,6 @@ class Register extends Equatable {
         phone,
         password,
         passwordConfirmation,
+        email,
       ];
 }

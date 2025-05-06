@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../add_fatoura/presentation/pages/add_screen.dart';
 import '../../../bills_screen/presentation/cubit/bills_screen_cubit.dart';
 import '../../../home_screen/presentation/pages/home_screen.dart';
-import '../../../notification/presentation/pages/notification_screen.dart';
 
 class MainCubit extends Cubit<MainStates> {
   MainCubit() : super(MainInitialStates());

@@ -244,7 +244,21 @@
 "Preparing your session...":"Preparing your session...",
 "Please fill all required fields":"Please fill all required fields",
 "order_name":"order_name",
-"order_expiry":"order_expiry"
+"order_expiry":"order_expiry",
+"No QR code found":"No QR code found",
+"Transfer Invoice":"Transfer Invoice",
+"Add New Invoice":"Add New Invoice",
+"Invoice Data decoded and added to the form!":"Invoice Data decoded and added to the form!",
+"failed to decode QR":"failed to decode QR",
+"Forgot Password?":"Forgot Password?",
+"new password":"new password",
+"confirm password":"confirm password",
+"change password":"change password",
+"password updated successfully":"password updated successfully",
+"new password description":"doin new password for your account",
+"Enter Your Email":"Enter Your Email",
+"email":"email",
+"Enter email":"Enter email"
 
 
     

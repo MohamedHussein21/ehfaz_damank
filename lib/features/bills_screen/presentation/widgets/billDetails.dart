@@ -15,6 +15,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
 
 import '../../../../core/utils/icons_assets.dart';
 import '../../../add_fatoura/data/models/categoris_model.dart';
@@ -23,7 +25,7 @@ import '../../data/models/bills_model.dart';
 class BillDetailsScreen extends StatelessWidget {
   final Bill bill;
 
-  BillDetailsScreen({super.key, required this.bill});
+  const BillDetailsScreen({super.key, required this.bill});
 
   @override
   Widget build(BuildContext context) {
@@ -212,17 +214,84 @@ class BillDetailsScreen extends StatelessWidget {
                     if (bill.image != null) ...[
                       if (bill.image!.toLowerCase().endsWith('.pdf'))
                         _buildAttachment(
-                            icon: Icons.picture_as_pdf,
-                            label: "PDF",
-                            filePath: bill.image!,
-                            context: context),
+                          icon: Icons.picture_as_pdf,
+                          label: "PDF",
+                          filePath:
+                              'http://damank.mazaadnajd.com/public/dash/assets/img/${bill.image!}',
+                          context: context,
+                        ),
                       if (bill.image!.toLowerCase().endsWith('.png') ||
                           bill.image!.toLowerCase().endsWith('.jpg'))
-                        _buildAttachment(
-                            icon: Icons.image,
-                            label: "image".tr(),
-                            filePath: bill.image!,
-                            context: context),
+                        GestureDetector(
+                          onTap: () {
+                            // فتح الصورة في Dialog لما يضغط
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                insetPadding: EdgeInsets.all(10),
+                                child: InteractiveViewer(
+                                  child: Image.network(
+                                    'http://damank.mazaadnajd.com/public/dash/assets/img/${bill.image!}',
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: SizedBox(
+                                  width: 200,
+                                  height: 200,
+                                  child: Image.network(
+                                    'http://damank.mazaadnajd.com/public/dash/assets/img/${bill.image!}',
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) => Center(
+                                      child: Text(
+                                        "Failed to load image".tr(),
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    icon:
+                                        Icon(Icons.share, color: Colors.white),
+                                    onPressed: () async {
+                                      final url =
+                                          'http://damank.mazaadnajd.com/public/dash/assets/img/${bill.image!}';
+                                      final response = await Dio().get(url,
+                                          options: Options(
+                                              responseType:
+                                                  ResponseType.bytes));
+                                      final tempDir =
+                                          await getTemporaryDirectory();
+                                      final file = File(
+                                          '${tempDir.path}/${bill.image!}');
+                                      await file.writeAsBytes(response.data);
+                                      await Share.shareXFiles(
+                                          [XFile(file.path)],
+                                          text: 'Check out this image');
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (!bill.image!.toLowerCase().endsWith('.pdf') &&
                           !bill.image!.toLowerCase().endsWith('.png') &&
                           !bill.image!.toLowerCase().endsWith('.jpg'))
@@ -353,11 +422,15 @@ class BillDetailsScreen extends StatelessWidget {
           Text(title,
               style:
                   const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: valueColor ?? Colors.black,
-                  fontWeight: FontWeight.bold)),
+          SizedBox(width: 50),
+          Flexible(
+            child: Text(value,
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 14,
+                    color: valueColor ?? Colors.black,
+                    fontWeight: FontWeight.bold)),
+          ),
         ],
       ),
     );
@@ -417,5 +490,24 @@ class BillDetailsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _shareImageFromUrl(String imageUrl) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final path = '${tempDir.path}/shared_image.jpg';
+
+      final response = await Dio().get(
+        imageUrl,
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      final file = File(path);
+      await file.writeAsBytes(response.data);
+
+      await Share.shareXFiles([XFile(path)], text: 'Check out this image!');
+    } catch (e) {
+      print('Error sharing image: $e');
+    }
   }
 }

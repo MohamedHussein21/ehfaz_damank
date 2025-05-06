@@ -11,12 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/icons_assets.dart';
 import '../widgets/invoice_category_selector .dart';
-import '../widgets/scanQr.dart';
 
 class AddNewBill extends StatefulWidget {
   const AddNewBill({super.key});
@@ -202,7 +200,7 @@ class _AddNewBillState extends State<AddNewBill> {
                       children: [
                         ListTile(
                           leading: Icon(Icons.compare_arrows),
-                          title: Text('Transfer Invoice'.tr()),
+                          title: Text("Transfer Invoice".tr()),
                           onTap: () {
                             Navigator.pop(context);
                             _handleTransferInvoice(context, scannedData);
@@ -210,7 +208,7 @@ class _AddNewBillState extends State<AddNewBill> {
                         ),
                         ListTile(
                           leading: Icon(Icons.add),
-                          title: Text('Add New Invoice'.tr()),
+                          title: Text("Add New Invoice".tr()),
                           onTap: () {
                             Navigator.pop(context);
                             _handleAddNewInvoice(context, scannedData);
@@ -335,7 +333,9 @@ class _AddNewBillState extends State<AddNewBill> {
                         return null;
                       },
                     ),
-                    Text("select category".tr()),
+                    Text("select category".tr(),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     InvoiceCategorySelector(
                       categories:
@@ -344,6 +344,7 @@ class _AddNewBillState extends State<AddNewBill> {
                         setState(() => selectedCategoryId = categoryId);
                       },
                     ),
+                    SizedBox(height: 10),
                     GestureDetector(
                       onTap: () => pickDate(warrantyEndDateController),
                       child: AbsorbPointer(
@@ -425,7 +426,8 @@ class _AddNewBillState extends State<AddNewBill> {
                                 damanDate: warrantyEndDateController.text,
                                 notes: warrantyNoteController.text,
                                 image: selectedImage,
-                                price: int.tryParse(amountController.text) ?? 0,
+                                price: double.tryParse(amountController.text) ??
+                                    0.0,
                                 reminder: selectedReminderValue,
                               );
                         }
@@ -524,10 +526,21 @@ class _AddNewBillState extends State<AddNewBill> {
     try {
       var decodedData = ZatcaQrDecoder.decode(scannedData);
 
+      String? rawDate = decodedData['invoiceDate'];
+      String formattedDate = '';
+      if (rawDate != null && rawDate.isNotEmpty) {
+        try {
+          DateTime parsedDate = DateTime.parse(rawDate);
+          formattedDate = DateFormat('yyyy-MM-dd', 'en_US').format(parsedDate);
+        } catch (e) {
+          formattedDate = rawDate;
+        }
+      }
+
       setState(() {
         titleController.text = decodedData['sellerName'] ?? '';
         merchantController.text = decodedData['sellerName'] ?? '';
-        purchaseDateController.text = decodedData['invoiceDate'] ?? '';
+        purchaseDateController.text = formattedDate;
         amountController.text = decodedData['invoiceTotal'] ?? '';
       });
 

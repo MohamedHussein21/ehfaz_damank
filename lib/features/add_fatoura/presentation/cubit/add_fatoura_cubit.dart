@@ -30,7 +30,7 @@ class AddFatouraCubit extends Cubit<AddFatouraState> {
     required int daman,
     required String damanDate,
     required String notes,
-    required int price,
+    required double price,
     required int reminder,
     XFile? image,
   }) async {

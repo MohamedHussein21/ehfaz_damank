@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 
 import 'package:ahfaz_damanak/core/utils/color_mange.dart';
 import 'package:ahfaz_damanak/features/bills_screen/data/models/bills_model.dart';
@@ -89,7 +88,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
     // Update local bill object
     setState(() {
       widget.bill.name = titleController.text;
-      widget.bill.price = int.tryParse(amountController.text);
+      widget.bill.price = double.tryParse(amountController.text);
       widget.bill.purchaseDate = dateController.text;
       widget.bill.categoryId = int.tryParse(categoryController.text);
       widget.bill.daman = dman;
@@ -103,7 +102,7 @@ class _EditBillScreenState extends State<EditBillScreen> {
     // Call the edit method - navigation is handled in the BlocListener
     context.read<BillsScreenCubit>().editBill(
           categoryId: int.tryParse(categoryController.text) ?? 0,
-          price: int.tryParse(amountController.text) ?? 0,
+          price: double.tryParse(amountController.text) ?? 0.0,
           name: titleController.text,
           storeName: merchantController.text,
           purchaseDate: dateController.text,

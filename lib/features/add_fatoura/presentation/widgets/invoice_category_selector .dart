@@ -40,6 +40,7 @@ class _InvoiceCategorySelectorState extends State<InvoiceCategorySelector> {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: "select category".tr(),
+        labelStyle: const TextStyle(color: Colors.grey),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
       value: selectedCategory,

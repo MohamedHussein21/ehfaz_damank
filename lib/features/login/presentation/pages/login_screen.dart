@@ -3,6 +3,7 @@ import 'package:ahfaz_damanak/core/utils/images_mange.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
 import 'package:ahfaz_damanak/features/login/presentation/cubit/login_cubit.dart';
 import 'package:ahfaz_damanak/features/login/presentation/widgets/defauldButton.dart';
+import 'package:ahfaz_damanak/features/login/presentation/widgets/forget_pass.dart';
 import 'package:ahfaz_damanak/features/register/presentation/pages/register_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -19,6 +20,7 @@ import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/validator.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 import '../widgets/defaultFormField.dart';
+import '../widgets/forget_pass_email.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -137,7 +139,6 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                         child: Image(
                           height: MediaQueryValue(context).heigh * 0.2,
                           image: AssetImage(ImageAssets.logo),
-                          color: ColorManger.defaultColor,
                         ),
                       ),
                       Center(
@@ -262,11 +263,22 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                             activeColor: ColorManger.defaultColor,
                           ),
                           Text('Remember Me'.tr()),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              Constants.navigateTo(context, ForgetPassEmail());
+                            },
+                            child: Text(
+                              'Forgot Password?'.tr(),
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.04),
 
-                      // Login button with loading state
                       DefaultButton(
                         title: 'Login'.tr(),
                         isLoading: state is LoginLoading,

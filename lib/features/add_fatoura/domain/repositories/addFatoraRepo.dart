@@ -16,7 +16,7 @@ abstract class Addfatorarepo {
       int daman,
       String damanDate,
       String notes,
-      int price,
+      double price,
       int reminder,
       XFile image);
 

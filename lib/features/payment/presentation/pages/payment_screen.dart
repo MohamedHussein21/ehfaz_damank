@@ -6,8 +6,6 @@ import 'package:ahfaz_damanak/features/contactUs/presentation/pages/contact_scre
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/add_card.dart';
-
 class PaymentMethodsScreen extends StatelessWidget {
   const PaymentMethodsScreen({super.key});
 

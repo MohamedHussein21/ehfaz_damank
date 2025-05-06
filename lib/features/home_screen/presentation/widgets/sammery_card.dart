@@ -36,7 +36,7 @@ class SummaryCard extends StatelessWidget {
           Spacer(),
           Text(value,
               style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 13,
                   color: ColorManger.defaultColor,
                   fontWeight: FontWeight.bold)),
         ],

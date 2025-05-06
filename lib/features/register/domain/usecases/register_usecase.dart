@@ -15,13 +15,14 @@ class RegisterUsecase {
       required String phone,
       required String password,
       required String passwordConfirmation,
-      required String googleToken}) async {
+      required String googleToken,
+      required String email}) async {
     return await baseRegisterRepository.userRegister(
-        name, phone, password, passwordConfirmation, googleToken);
+        name, phone, password, passwordConfirmation, googleToken, email);
   }
 
   Future<Either<Failure, VerifyResponse>> verify(
-      {required String phone, required int otp}) async {
-    return await baseRegisterRepository.userVerify(phone, otp);
+      {required String email, required int code}) async {
+    return await baseRegisterRepository.userVerify(email, code);
   }
 }

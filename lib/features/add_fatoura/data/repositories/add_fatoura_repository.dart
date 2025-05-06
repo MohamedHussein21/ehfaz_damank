@@ -24,7 +24,7 @@ class AddFatouraRepository extends Addfatorarepo {
       int daman,
       String damanDate,
       String notes,
-      int price,
+      double price,
       int reminder,
       XFile image) async {
     final result = await addFatouraRemoteDataSource.addFatora(

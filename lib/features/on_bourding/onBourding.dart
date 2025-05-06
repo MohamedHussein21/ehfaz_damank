@@ -110,7 +110,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       );
                     }
                   },
-                  child: isLast ? Text('Start'.tr()) : Text('Next'.tr()),
+                  child: isLast ? Text('start'.tr()) : Text('Next'.tr()),
                 ),
                 const Spacer(),
                 TextButton(

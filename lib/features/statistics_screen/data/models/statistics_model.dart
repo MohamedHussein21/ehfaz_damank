@@ -43,7 +43,7 @@ class Category {
   final int categoryId;
   final String categoryName;
   final int orderCount;
-  final int totalAmount;
+  final double totalAmount;
   final double percentage;
 
   Category({
@@ -59,7 +59,7 @@ class Category {
       categoryId: json['category_id'],
       categoryName: json['category_name'],
       orderCount: json['order_count'],
-      totalAmount: json['total_amount'],
+      totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0.0,
       percentage: json['percentage'].toDouble(),
     );
   }
@@ -85,14 +85,14 @@ class DailySpending {
 
 class DaySpending {
   final int day;
-  final String totalSpent;
+  final double totalSpent;
 
   DaySpending({required this.day, required this.totalSpent});
 
   factory DaySpending.fromJson(Map<String, dynamic> json) {
     return DaySpending(
       day: json['day'],
-      totalSpent: json['total_spent'],
+      totalSpent: double.tryParse(json['total_spent'].toString()) ?? 0.0,
     );
   }
 }
@@ -100,7 +100,7 @@ class DaySpending {
 class MonthlySpending {
   final String month;
   final int monthNum;
-  final String totalSpent;
+  final double totalSpent;
 
   MonthlySpending(
       {required this.month, required this.monthNum, required this.totalSpent});
@@ -109,21 +109,23 @@ class MonthlySpending {
     return MonthlySpending(
       month: json['month'],
       monthNum: json['month_num'],
-      totalSpent: json['total_spent'],
+      totalSpent: double.tryParse(json['total_spent'].toString()) ??
+          0.0, // json['total_spent'],
     );
   }
 }
 
 class YearlySpending {
   final int year;
-  final String totalSpent;
+  final double totalSpent;
 
   YearlySpending({required this.year, required this.totalSpent});
 
   factory YearlySpending.fromJson(Map<String, dynamic> json) {
     return YearlySpending(
       year: json['year'],
-      totalSpent: json['total_spent'],
+      totalSpent: double.tryParse(json['total_spent'].toString()) ??
+          0.0, // json['total_spent'],
     );
   }
 }

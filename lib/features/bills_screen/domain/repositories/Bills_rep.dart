@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/errors/Failure.dart';
 import '../../data/models/bills_model.dart';
@@ -11,7 +10,7 @@ abstract class BillsRep {
   Future<Either<Failure, DeleteModel>> deleteBill(String billId);
   Future<Either<Failure, EditFatoraModel>> editFatoura(
       int categoryId,
-      int price,
+      double price,
       String name,
       String storeName,
       String purchaseDate,

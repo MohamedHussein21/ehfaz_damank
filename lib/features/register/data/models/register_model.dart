@@ -25,6 +25,7 @@ class RegisterData {
   final int id;
   final String name;
   final String phone;
+  final String? email;
   final String? googleToken;
   final String type;
   final int confirmed;
@@ -35,6 +36,7 @@ class RegisterData {
     required this.id,
     required this.name,
     required this.phone,
+    required this.email,
     this.googleToken,
     required this.type,
     required this.confirmed,
@@ -47,6 +49,7 @@ class RegisterData {
       id: json['id'],
       name: json['name'],
       phone: json['phone'],
+      email: json['email'],
       googleToken: json['google_token'],
       type: json['type'],
       confirmed: json['confirmed'],

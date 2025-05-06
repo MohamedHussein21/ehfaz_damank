@@ -1,6 +1,6 @@
 class FatoraModel {
   final int id;
-  final int price;
+  final double price;
   final int userId;
   final int categoryId;
   final String name;
@@ -34,7 +34,7 @@ class FatoraModel {
   factory FatoraModel.fromJson(Map<String, dynamic> json) {
     return FatoraModel(
       id: json['id'],
-      price: int.tryParse(json['price'].toString()) ?? 0,
+      price: double.tryParse(json['price'].toString()) ?? 0.0,
       userId: json['user_id'],
       categoryId: int.tryParse(json['category_id'].toString()) ?? 0,
       name: json['name'],

@@ -54,7 +54,7 @@ class BillsScreenCubit extends Cubit<BillsScreenState> {
 
   void editBill(
       {required int categoryId,
-      required int price,
+      required double price,
       required String name,
       required String storeName,
       required String purchaseDate,
