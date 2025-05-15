@@ -20,13 +20,13 @@ abstract class BaseRemoteDataSource {
   Future<VerifyResponseModel> changePassword({
     required String password,
     required String confirmPassword,
-    required String email,
+    required String phone,
     required String code,
   });
-  Future<RegisterModel> sendVerifyForgetPasswordEmail({required String email});
+  Future<RegisterModel> sendVerifyForgetPasswordEmail({required String phone});
 
   Future<SentModel> verifyForgetPassword({
-    required String email,
+    required String phone,
     required String code,
   });
 }
@@ -75,7 +75,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
   Future<VerifyResponseModel> changePassword(
       {required String password,
       required String confirmPassword,
-      required String email,
+      required String phone,
       required String code}) async {
     try {
       final response = await dio.post(
@@ -90,7 +90,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
         data: {
           'new_pass': password,
           'confirm_pass': confirmPassword,
-          'email': email,
+          'phone': phone,
           'code': code
         },
       );
@@ -112,7 +112,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
 
   @override
   Future<RegisterModel> sendVerifyForgetPasswordEmail(
-      {required String email}) async {
+      {required String phone}) async {
     try {
       final response = await dio.post(
         ApiConstant.sendVerifyForgetPasswordNum,
@@ -123,7 +123,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
           },
         ),
         data: {
-          'email': email,
+          'phone': phone,
         },
       );
 
@@ -144,8 +144,10 @@ class RemoteDataSource extends BaseRemoteDataSource {
 
   @override
   Future<SentModel> verifyForgetPassword(
-      {required String email, required String code}) async {
+      {required String phone, required String code}) async {
     try {
+      log('Code to verify: $code');
+      log('Phone number: $phone');
       final response = await dio.post(
         ApiConstant.verifyForgetPassword,
         options: Options(
@@ -155,7 +157,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
           },
           validateStatus: (status) => status != null && status < 500,
         ),
-        data: {'email': email, 'code': code},
+        data: {'phone': phone, 'code': code},
       );
 
       log('Response: ${response.data}');
@@ -164,7 +166,7 @@ class RemoteDataSource extends BaseRemoteDataSource {
         return SentModel.fromJson(response.data);
       } else {
         throw ServerException(
-          errorModel: response.data,
+          errorModel: response.data['data'],
         );
       }
     } catch (e) {

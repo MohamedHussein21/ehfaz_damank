@@ -37,12 +37,12 @@ class LoginRepo extends BaseLoginRepository {
   Future<Either<Failure, VerifyResponseModel>> changePassword(
       {required String password,
       required String confirmPassword,
-      required String email,
+      required String phone,
       required String code}) async {
     final result = await baseRemoteDataSource.changePassword(
         password: password,
         confirmPassword: confirmPassword,
-        email: email,
+        phone: phone,
         code: code);
 
     try {
@@ -59,9 +59,9 @@ class LoginRepo extends BaseLoginRepository {
 
   @override
   Future<Either<Failure, RegisterModel>> sendVerifyForgetPasswordEmail(
-      {required String email}) async {
+      {required String phone}) async {
     final result = await baseRemoteDataSource.sendVerifyForgetPasswordEmail(
-      email: email,
+      phone: phone,
     );
 
     try {
@@ -78,9 +78,9 @@ class LoginRepo extends BaseLoginRepository {
 
   @override
   Future<Either<Failure, SentModel>> verifyForgetPassword(
-      {required String email, required String code}) async {
+      {required String phone, required String code}) async {
     final result = await baseRemoteDataSource.verifyForgetPassword(
-        email: email, code: code);
+        phone: phone, code: code);
 
     try {
       return Right(result);

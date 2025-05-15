@@ -12,9 +12,9 @@ import '../../../../core/utils/images_mange.dart';
 import '../cubit/login_cubit.dart';
 
 class OtpScreenScreen extends StatefulWidget {
-  final String email;
+  final String phone;
 
-  const OtpScreenScreen({super.key, required this.email});
+  const OtpScreenScreen({super.key, required this.phone});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -50,7 +50,7 @@ class _OtpScreenState extends State<OtpScreenScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            '${'enter the verification code sent to'.tr()} ${widget.email}',
+            '${'enter the verification code sent to'.tr()} ${widget.phone}',
             style: const TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -73,7 +73,7 @@ class _OtpScreenState extends State<OtpScreenScreen> {
               if (state is VerifyForgetPasswordSuccess) {
                 Constants.navigateTo(
                   context,
-                  ChangePasswordScreen(email: widget.email, otp: _otpCode),
+                  ChangePasswordScreen(phone: widget.phone, otp: _otpCode),
                 );
               } else if (state is VerifyForgetPasswordError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -88,7 +88,7 @@ class _OtpScreenState extends State<OtpScreenScreen> {
                 submit: () {
                   if (_otpCode.length == 4) {
                     cubit.verifyForgetPassword(
-                      email: widget.email,
+                      phone: widget.phone,
                       code: _otpCode,
                     );
                   } else {

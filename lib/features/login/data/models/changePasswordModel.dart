@@ -1,7 +1,6 @@
 class UserModel {
   final int id;
   final String name;
-  final String email;
   final String phone;
   final String? emailVerifiedAt;
   final String? googleToken;
@@ -15,7 +14,6 @@ class UserModel {
   UserModel({
     required this.id,
     required this.name,
-    required this.email,
     required this.phone,
     this.emailVerifiedAt,
     this.googleToken,
@@ -30,7 +28,6 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json['id'],
         name: json['name'],
-        email: json['email'],
         phone: json['phone'],
         emailVerifiedAt: json['email_verified_at'],
         googleToken: json['google_token'],
@@ -45,7 +42,6 @@ class UserModel {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'email': email,
         'phone': phone,
         'email_verified_at': emailVerifiedAt,
         'google_token': googleToken,

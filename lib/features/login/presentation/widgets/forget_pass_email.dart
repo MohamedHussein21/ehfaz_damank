@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ahfaz_damanak/core/utils/mediaQuery.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/images_mange.dart';
@@ -24,7 +25,8 @@ class ForgetPassEmail extends StatefulWidget {
 
 class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
   final loginKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  String? fullPhoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
         listener: (context, state) {
           if (state is SendVerifyForgetPasswordEmailSuccess) {
             Constants.navigateTo(
-                context, OtpScreenScreen(email: emailController.text));
+                context, OtpScreenScreen(phone: fullPhoneNumber ?? ''));
           }
           if (state is SendVerifyForgetPasswordEmailError) {
             Constants.showSnackBar(context,
@@ -76,7 +78,7 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                         ),
                         Center(
                           child: Text(
-                            "Enter Your Email".tr(),
+                            "Enter Your phone".tr(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge
@@ -99,7 +101,7 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                               Row(
                                 children: [
                                   Text(
-                                    'email'.tr(),
+                                    'phone'.tr(),
                                     style:
                                         Theme.of(context).textTheme.bodyMedium,
                                   ),
@@ -113,16 +115,33 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                               ),
                               SizedBox(height: 5),
 
-                              DefaultTextForm(
-                                controller: emailController,
-                                isPassword: false,
-                                type: TextInputType.text,
-                                validate: (value) => emailValidation(value),
-                                hint: 'Enter email'.tr(),
-                                hintStyle:
-                                    TextStyle(color: ColorManger.darkColor),
-                                prefix: Image(
-                                    image: AssetImage(ImageAssets.password)),
+                              IntlPhoneField(
+                                controller: phoneController,
+                                initialCountryCode: 'SA',
+                                decoration: InputDecoration(
+                                  hintText: 'Enter Phone Number'.tr(),
+                                  hintStyle:
+                                      TextStyle(color: ColorManger.grayColor),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image(
+                                        image:
+                                            AssetImage(ImageAssets.smartPhone),
+                                        height: 24,
+                                        width: 24),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.phone,
+                                onChanged: (phone) {
+                                  fullPhoneNumber = phone.completeNumber;
+                                  print(phone.completeNumber);
+                                },
+                                validator: (value) =>
+                                    phoneValidation(value?.number),
                               ),
                               SizedBox(
                                   height:
@@ -141,7 +160,8 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                                 submit: () {
                                   if (loginKey.currentState!.validate()) {
                                     cubit.sentVerifyForgetPassword(
-                                      email: emailController.text,
+                                      phone: fullPhoneNumber ??
+                                          phoneController.text,
                                     );
                                   }
                                 },

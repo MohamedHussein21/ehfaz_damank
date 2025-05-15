@@ -34,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
   final passwordController = TextEditingController();
   final loginKey = GlobalKey<FormState>();
   bool rememberMe = false;
+  String? fullPhoneNumber;
 
   @override
   void dispose() {
@@ -214,6 +215,7 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                               ),
                               keyboardType: TextInputType.phone,
                               onChanged: (phone) {
+                                fullPhoneNumber = phone.completeNumber;
                                 log("Phone: ${phone.completeNumber}");
                               },
                               validator: (value) =>
@@ -291,7 +293,8 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                                           .getToken() ??
                                       '';
                                   cubit.userLogin(
-                                    phone: phoneController.text,
+                                    phone:
+                                        fullPhoneNumber ?? phoneController.text,
                                     password: passwordController.text,
                                     googleToken: firebaseToken,
                                   );

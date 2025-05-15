@@ -155,7 +155,7 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> changePassword({
     required String password,
     required String confirmPassword,
-    required String email,
+    required String phone,
     required String code,
   }) async {
     emit(ChangePasswordLoading());
@@ -165,7 +165,7 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await LoginUseCase(baseAuthRepository).changePassword(
       password: password,
       confirmPassword: confirmPassword,
-      email: email,
+      phone: phone,
       code: code,
     );
 
@@ -180,7 +180,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> verifyForgetPassword({
-    required String email,
+    required String phone,
     required String code,
   }) async {
     emit(VerifyForgetPasswordLoading());
@@ -188,7 +188,7 @@ class LoginCubit extends Cubit<LoginState> {
     BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
 
     final result = await LoginUseCase(baseAuthRepository).verifyForgetPassword(
-      email: email,
+      phone: phone,
       code: code,
     );
 
@@ -202,14 +202,14 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  Future<void> sentVerifyForgetPassword({required String email}) async {
+  Future<void> sentVerifyForgetPassword({required String phone}) async {
     emit(SendVerifyForgetPasswordEmailLoading());
     BaseRemoteDataSource baseRemoteDataSource = RemoteDataSource(Dio());
     BaseLoginRepository baseAuthRepository = LoginRepo(baseRemoteDataSource);
 
     try {
       final result = await LoginUseCase(baseAuthRepository)
-          .sendVerifyForgetPasswordEmail(email: email);
+          .sendVerifyForgetPasswordEmail(phone: phone);
 
       await result.fold(
         (failure) async {

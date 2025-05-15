@@ -114,7 +114,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       title: 'Confirm'.tr(),
                       submit: () {
                         cubit.userVerify(
-                            email: widget.model.data.email!,
+                            phone: widget.model.data.phone,
                             code: widget.model.verified);
                       },
                       width: MediaQueryValue(context).width * 0.9,

@@ -1,7 +1,6 @@
 class Sentcodemoadel {
   final int id;
   final String name;
-  final String email;
   final String phone;
   final String? emailVerifiedAt;
   final String? googleToken;
@@ -15,7 +14,6 @@ class Sentcodemoadel {
   Sentcodemoadel({
     required this.id,
     required this.name,
-    required this.email,
     required this.phone,
     this.emailVerifiedAt,
     this.googleToken,
@@ -31,7 +29,6 @@ class Sentcodemoadel {
     return Sentcodemoadel(
       id: json['id'],
       name: json['name'],
-      email: json['email'],
       phone: json['phone'],
       emailVerifiedAt: json['email_verified_at'],
       googleToken: json['google_token'],
@@ -48,7 +45,6 @@ class Sentcodemoadel {
     return {
       'id': id,
       'name': name,
-      'email': email,
       'phone': phone,
       'email_verified_at': emailVerifiedAt,
       'google_token': googleToken,

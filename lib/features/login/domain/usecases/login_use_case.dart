@@ -22,33 +22,33 @@ class LoginUseCase {
   }
 
   Future<Either<Failure, RegisterModel>> sendVerifyForgetPasswordEmail({
-    required String email,
+    required String phone,
   }) async {
     return await baseAuthRepository.sendVerifyForgetPasswordEmail(
-      email: email,
+      phone: phone,
     );
   }
 
   Future<Either<Failure, VerifyResponseModel>> changePassword({
     required String password,
     required String confirmPassword,
-    required String email,
+    required String phone,
     required String code,
   }) async {
     return await baseAuthRepository.changePassword(
       password: password,
       confirmPassword: confirmPassword,
-      email: email,
+      phone: phone,
       code: code,
     );
   }
 
   Future<Either<Failure, SentModel>> verifyForgetPassword({
-    required String email,
+    required String phone,
     required String code,
   }) async {
     return await baseAuthRepository.verifyForgetPassword(
-      email: email,
+      phone: phone,
       code: code,
     );
   }

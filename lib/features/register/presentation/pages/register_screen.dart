@@ -35,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final emailController = TextEditingController();
+  String? fullPhoneNumber;
 
   bool rememberMe = false;
   @override
@@ -114,20 +115,6 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         hintStyle: TextStyle(color: ColorManger.grayColor),
                       ),
                       Text(
-                        'Email'.tr(),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        textAlign: TextAlign.start,
-                      ),
-                      SizedBox(height: MediaQueryValue(context).heigh * 0.02),
-                      DefaultTextForm(
-                        controller: emailController,
-                        isPassword: false,
-                        type: TextInputType.text,
-                        validate: (value) => generalValidation(value),
-                        hint: 'Enter Your email'.tr(),
-                        hintStyle: TextStyle(color: ColorManger.grayColor),
-                      ),
-                      Text(
                         'Phone Number'.tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.start,
@@ -153,6 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                         ),
                         keyboardType: TextInputType.phone,
                         onChanged: (phone) {
+                          fullPhoneNumber = phone.completeNumber;
                           print(phone.completeNumber);
                         },
                         validator: (value) => phoneValidation(value?.number),
@@ -201,17 +189,18 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                               title: 'Sign Up'.tr(),
                               submit: () async {
                                 if (formKey.currentState!.validate()) {
+                                  final firebaseToken = await FirebaseMessaging
+                                          .instance
+                                          .getToken() ??
+                                      '';
                                   cubit.userRegister(
-                                      name: nameController.text,
-                                      phone: phoneController.text,
-                                      password: passwordController.text,
-                                      email: emailController.text,
-                                      passwordConfirmation:
-                                          confirmPasswordController.text,
-                                      googleToken: (await FirebaseMessaging
-                                              .instance
-                                              .getToken()) ??
-                                          '');
+                                    name: nameController.text,
+                                    phone: fullPhoneNumber!,
+                                    password: passwordController.text,
+                                    passwordConfirmation:
+                                        confirmPasswordController.text,
+                                    googleToken: firebaseToken,
+                                  );
                                 }
                               },
                               width: MediaQueryValue(context).width * 0.9,

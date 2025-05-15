@@ -25,7 +25,6 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String phone,
     required String password,
     required String passwordConfirmation,
-    required String email,
     String googleToken = '',
   }) async {
     emit(RegisterScreenLoading());
@@ -41,7 +40,6 @@ class RegisterCubit extends Cubit<RegisterState> {
         password: password,
         passwordConfirmation: passwordConfirmation,
         googleToken: googleToken,
-        email: email,
       );
 
       result.fold(
@@ -64,14 +62,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterScreenRememberMe(rememberMe));
   }
 
-  void userVerify({required String email, required int code}) async {
+  void userVerify({required String phone, required int code}) async {
     emit(RegisterScreenVerifyLoading());
     BaseRegisterRemoteDataSource baseRemoteDataSource =
         RegisterRemoteDataSource();
     BaseRegisterRepository baseAuthRepository =
         RegisterRepo(baseRemoteDataSource);
     final result = await RegisterUsecase(baseAuthRepository).verify(
-      email: email,
+      phone: phone,
       code: code,
     );
     result.fold((l) => emit(RegisterScreenVerifyError(l.msg)), (r) {

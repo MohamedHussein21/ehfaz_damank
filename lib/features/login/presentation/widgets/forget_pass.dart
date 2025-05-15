@@ -15,10 +15,10 @@ import '../pages/login_screen.dart';
 import '../widgets/defaultFormField.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  final String email;
+  final String phone;
   final String otp;
   const ChangePasswordScreen(
-      {super.key, required this.email, required this.otp});
+      {super.key, required this.phone, required this.otp});
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
@@ -182,13 +182,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                 title: "confirm".tr(),
                                 isLoading: state is ChangePasswordLoading,
                                 submit: () {
-                                  log('dfghjkl;${passwordController.text}  ${confirmPasswordController.text}  ${widget.email}  ${widget.otp}');
+                                  log('dfghjkl;${passwordController.text}  ${confirmPasswordController.text}  ${widget.phone}  ${widget.otp}');
                                   if (loginKey.currentState!.validate()) {
                                     cubit.changePassword(
                                         password: passwordController.text,
                                         confirmPassword:
                                             confirmPasswordController.text,
-                                        email: widget.email,
+                                        phone: widget.phone,
                                         code: widget.otp);
                                   }
                                 },

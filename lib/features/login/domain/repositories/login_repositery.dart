@@ -14,15 +14,15 @@ abstract class BaseLoginRepository {
   Future<Either<Failure, VerifyResponseModel>> changePassword(
       {required String password,
       required String confirmPassword,
-      required String email,
+      required String phone,
       required String code});
 
   Future<Either<Failure, RegisterModel>> sendVerifyForgetPasswordEmail({
-    required String email,
+    required String phone,
   });
 
   Future<Either<Failure, SentModel>> verifyForgetPassword({
-    required String email,
+    required String phone,
     required String code,
   });
 }

@@ -6,12 +6,12 @@ import '../../data/models/register_model.dart';
 
 abstract class BaseRegisterRepository {
   Future<Either<Failure, RegisterModel>> userRegister(
-      String name,
-      String phone,
-      String password,
-      String passwordConfirmation,
-      String googleToken,
-      String email);
+    String name,
+    String phone,
+    String password,
+    String passwordConfirmation,
+    String googleToken,
+  );
 
-  Future<Either<Failure, VerifyResponse>> userVerify(String email, int code);
+  Future<Either<Failure, VerifyResponse>> userVerify(String phone, int code);
 }

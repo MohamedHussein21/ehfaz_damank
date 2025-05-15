@@ -14,17 +14,16 @@ class RegisterRepo extends BaseRegisterRepository {
 
   @override
   Future<Either<Failure, RegisterModel>> userRegister(
-      String name,
-      String phone,
-      String password,
-      String passwordConfirmation,
-      String googleToken,
-      String email) async {
+    String name,
+    String phone,
+    String password,
+    String passwordConfirmation,
+    String googleToken,
+  ) async {
     final result = await registerRemoteDataSource.userRegister(
         name: name,
         phone: phone,
         password: password,
-        email: email,
         passwordConfirmation: passwordConfirmation,
         googleToken: googleToken);
 
@@ -38,9 +37,9 @@ class RegisterRepo extends BaseRegisterRepository {
 
   @override
   Future<Either<Failure, VerifyResponse>> userVerify(
-      String email, int code) async {
+      String phone, int code) async {
     final result =
-        await registerRemoteDataSource.userVerify(email: email, code: code);
+        await registerRemoteDataSource.userVerify(phone: phone, code: code);
     try {
       return Right(result);
     } on ServerException catch (failure) {

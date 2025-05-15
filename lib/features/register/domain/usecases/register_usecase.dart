@@ -10,19 +10,19 @@ class RegisterUsecase {
 
   RegisterUsecase(this.baseRegisterRepository);
 
-  Future<Either<Failure, RegisterModel>> execute(
-      {required String name,
-      required String phone,
-      required String password,
-      required String passwordConfirmation,
-      required String googleToken,
-      required String email}) async {
+  Future<Either<Failure, RegisterModel>> execute({
+    required String name,
+    required String phone,
+    required String password,
+    required String passwordConfirmation,
+    required String googleToken,
+  }) async {
     return await baseRegisterRepository.userRegister(
-        name, phone, password, passwordConfirmation, googleToken, email);
+        name, phone, password, passwordConfirmation, googleToken);
   }
 
   Future<Either<Failure, VerifyResponse>> verify(
-      {required String email, required int code}) async {
-    return await baseRegisterRepository.userVerify(email, code);
+      {required String phone, required int code}) async {
+    return await baseRegisterRepository.userVerify(phone, code);
   }
 }
