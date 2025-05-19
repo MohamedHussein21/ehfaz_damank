@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/helper/cash_helper.dart';
+import '../../core/storage/hive_helper.dart';
 import '../../core/utils/color_mange.dart';
 import '../../core/utils/constant.dart';
 import '../../core/utils/images_mange.dart';
@@ -52,7 +53,7 @@ class _OnBoardingState extends State<OnBoarding> {
   var boardingController = PageController();
 
   void submit() {
-    CashHelper.saveData(key: 'OnBoarding', value: true).then((value) {
+    HiveHelper.saveData(key: 'OnBoarding', value: true).then((value) {
       if (value) {
         Constants.navigateAndFinish(context, const LoginScreen());
       }

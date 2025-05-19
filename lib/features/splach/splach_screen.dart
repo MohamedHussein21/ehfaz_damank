@@ -21,11 +21,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   void startTimer() {
     Timer(const Duration(seconds: 3), () {
-      bool? onBoarding = HiveHelper.getData(key: 'OnBoarding') ??
-          CashHelper.getData(key: 'OnBoarding');
+      bool? onBoarding = HiveHelper.getData(key: 'OnBoarding');
       String? token = HiveHelper.getData(key: 'api_token');
 
-      if (onBoarding != null && onBoarding == true) {
+      if (onBoarding == true) {
         if (token != null) {
           Constants.navigateAndFinish(context, const MainScreen());
         } else {
