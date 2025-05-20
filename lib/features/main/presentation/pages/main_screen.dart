@@ -34,7 +34,7 @@ class MainScreen extends StatelessWidget {
           ),
           body: cubit.pages[cubit.pageIndex],
           bottomNavigationBar: Container(
-            height: 70,
+            height: 80,
             decoration: BoxDecoration(
               color: ColorManger.wightColor,
               borderRadius: const BorderRadius.only(
