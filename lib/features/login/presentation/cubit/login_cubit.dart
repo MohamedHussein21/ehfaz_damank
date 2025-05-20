@@ -220,8 +220,28 @@ class LoginCubit extends Cubit<LoginState> {
         },
       );
     } catch (e) {
-      emit(SendVerifyForgetPasswordEmailError(
-          "يرجي التاكد من البريد الالكتروني"));
+      emit(SendVerifyForgetPasswordEmailError("يرجي التاكد من  رقم الهاتف "));
     }
+  }
+
+  bool isShowPass = false;
+  bool isShowConfirmPass = false;
+
+  IconData suffix = Icons.visibility_outlined;
+  IconData suffixConfirm = Icons.visibility_outlined;
+
+  void changePassVisibility() {
+    isShowPass = !isShowPass;
+    suffix =
+        isShowPass ? Icons.visibility_off_outlined : Icons.visibility_outlined;
+    emit(ChangePasswordVisibilityState());
+  }
+
+  void changeConfirmPassVisibility() {
+    isShowConfirmPass = !isShowConfirmPass;
+    suffixConfirm = isShowConfirmPass
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+    emit(ChangePasswordVisibilityState());
   }
 }

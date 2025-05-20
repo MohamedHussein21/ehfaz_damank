@@ -121,14 +121,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                               DefaultTextForm(
                                 aoutofillHints: [AutofillHints.password],
                                 controller: passwordController,
-                                isPassword: true,
+                                isPassword: cubit.isShowPass,
                                 type: TextInputType.visiblePassword,
                                 validate: (value) => passwordValidation(value),
                                 hint: 'Enter Password'.tr(),
+                                suffix: IconButton(
+                                  onPressed: () {
+                                    cubit.changePassVisibility();
+                                    setState(() {});
+                                  },
+                                  icon: Icon(cubit.suffix),
+                                ),
+                                onSubmit: (value) {},
                                 hintStyle:
                                     TextStyle(color: ColorManger.darkColor),
                                 prefix: Image(
-                                    image: AssetImage(ImageAssets.password)),
+                                  image: AssetImage(ImageAssets.password),
+                                ),
                               ),
                               SizedBox(
                                   height:
@@ -154,22 +163,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   height:
                                       MediaQueryValue(context).heigh * 0.01),
                               DefaultTextForm(
-                                aoutofillHints: [AutofillHints.password],
                                 controller: confirmPasswordController,
-                                isPassword: true,
-                                type: TextInputType.visiblePassword,
+                                isPassword: cubit.isShowConfirmPass,
+                                type: TextInputType.text,
+                                suffix: IconButton(
+                                  onPressed: () {
+                                    cubit.changeConfirmPassVisibility();
+                                    setState(() {});
+                                  },
+                                  icon: Icon(cubit.suffixConfirm),
+                                ),
                                 validate: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please confirm your password';
-                                  }
+                                  passwordValidation(value);
                                   if (value != passwordController.text) {
                                     return 'Passwords do not match';
                                   }
                                   return null;
                                 },
-                                hint: 'Enter Password'.tr(),
+                                hint: 'Confirm Password'.tr(),
                                 hintStyle:
-                                    TextStyle(color: ColorManger.darkColor),
+                                    TextStyle(color: ColorManger.grayColor),
                                 prefix: Image(
                                     image: AssetImage(ImageAssets.password)),
                               ),

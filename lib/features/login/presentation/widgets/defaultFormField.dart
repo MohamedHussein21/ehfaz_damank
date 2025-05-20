@@ -12,7 +12,7 @@ class DefaultTextForm extends StatelessWidget {
   final String hint;
   final TextStyle? hintStyle;
   final Widget? prefix;
-  final IconData? suffix;
+  final Widget? suffix;
   final VoidCallback? suffixPressed;
   bool isClickable = true;
   final Iterable<String>? aoutofillHints;
@@ -56,9 +56,7 @@ class DefaultTextForm extends StatelessWidget {
           suffixIcon: suffix != null
               ? IconButton(
                   onPressed: suffixPressed,
-                  icon: Icon(
-                    suffix,
-                  ),
+                  icon: suffix!,
                 )
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

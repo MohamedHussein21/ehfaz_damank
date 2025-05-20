@@ -52,3 +52,5 @@ class RegisterScreenVerifyError extends RegisterState {
 }
 
 class RegisterScreenVerifyLoading extends RegisterState {}
+
+class ChangePasswordVisibilityState extends RegisterState {}

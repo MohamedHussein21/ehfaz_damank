@@ -125,3 +125,9 @@ class SendVerifyForgetPasswordEmailError extends LoginState {
   final String message;
   const SendVerifyForgetPasswordEmailError(this.message);
 }
+
+class ChangePasswordVisibilityState extends LoginState {
+  const ChangePasswordVisibilityState();
+  @override
+  List<Object> get props => [];
+}

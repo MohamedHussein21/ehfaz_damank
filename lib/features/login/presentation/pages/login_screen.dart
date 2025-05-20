@@ -245,13 +245,24 @@ class _LoginScreenState extends State<LoginScreen> with Validations {
                       DefaultTextForm(
                         aoutofillHints: [AutofillHints.password],
                         controller: passwordController,
-                        isPassword: true,
+                        isPassword: cubit.isShowPass,
                         type: TextInputType.visiblePassword,
                         validate: (value) => passwordValidation(value),
                         hint: 'Enter Password'.tr(),
+                        suffix: IconButton(
+                          onPressed: () {
+                            cubit.changePassVisibility();
+                            setState(() {});
+                          },
+                          icon: Icon(cubit.suffix),
+                        ),
+                        onSubmit: (value) {},
                         hintStyle: TextStyle(color: ColorManger.darkColor),
-                        prefix: Image(image: AssetImage(ImageAssets.password)),
+                        prefix: Image(
+                          image: AssetImage(ImageAssets.password),
+                        ),
                       ),
+
                       SizedBox(height: MediaQueryValue(context).heigh * 0.01),
                       Row(
                         children: [

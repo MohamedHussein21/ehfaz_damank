@@ -4,6 +4,7 @@ import 'package:ahfaz_damanak/features/register/data/models/register_model.dart'
 import 'package:ahfaz_damanak/features/register/data/repositories/register_repo.dart';
 import 'package:ahfaz_damanak/features/register/domain/usecases/register_usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../login/data/models/verify_model.dart';
@@ -77,5 +78,26 @@ class RegisterCubit extends Cubit<RegisterState> {
       verifyResponse = r.data;
     });
     log('RegisterCubit: userVerify: $verifyResponse');
+  }
+
+  bool isShowPass = false;
+  bool isShowConfirmPass = false;
+
+  IconData suffix = Icons.visibility_outlined;
+  IconData suffixConfirm = Icons.visibility_outlined;
+
+  void changePassVisibility() {
+    isShowPass = !isShowPass;
+    suffix =
+        isShowPass ? Icons.visibility_off_outlined : Icons.visibility_outlined;
+    emit(ChangePasswordVisibilityState());
+  }
+
+  void changeConfirmPassVisibility() {
+    isShowConfirmPass = !isShowConfirmPass;
+    suffixConfirm = isShowConfirmPass
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+    emit(ChangePasswordVisibilityState());
   }
 }

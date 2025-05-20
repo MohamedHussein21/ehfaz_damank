@@ -152,13 +152,24 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                       ),
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       DefaultTextForm(
+                        aoutofillHints: [AutofillHints.password],
                         controller: passwordController,
-                        isPassword: false,
-                        type: TextInputType.text,
+                        isPassword: cubit.isShowPass,
+                        type: TextInputType.visiblePassword,
                         validate: (value) => passwordValidation(value),
                         hint: 'Enter Password'.tr(),
-                        hintStyle: TextStyle(color: ColorManger.grayColor),
-                        prefix: Image(image: AssetImage(ImageAssets.password)),
+                        suffix: IconButton(
+                          onPressed: () {
+                            cubit.changePassVisibility();
+                            setState(() {});
+                          },
+                          icon: Icon(cubit.suffix),
+                        ),
+                        onSubmit: (value) {},
+                        hintStyle: TextStyle(color: ColorManger.darkColor),
+                        prefix: Image(
+                          image: AssetImage(ImageAssets.password),
+                        ),
                       ),
                       Text(
                         'Confirm Password'.tr(),
@@ -168,8 +179,15 @@ class _RegisterScreenState extends State<RegisterScreen> with Validations {
                       SizedBox(height: MediaQueryValue(context).heigh * 0.02),
                       DefaultTextForm(
                         controller: confirmPasswordController,
-                        isPassword: false,
+                        isPassword: cubit.isShowConfirmPass,
                         type: TextInputType.text,
+                        suffix: IconButton(
+                          onPressed: () {
+                            cubit.changeConfirmPassVisibility();
+                            setState(() {});
+                          },
+                          icon: Icon(cubit.suffixConfirm),
+                        ),
                         validate: (value) {
                           passwordValidation(value);
                           if (value != passwordController.text) {

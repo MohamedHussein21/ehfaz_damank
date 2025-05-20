@@ -78,7 +78,7 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                         ),
                         Center(
                           child: Text(
-                            "Enter Your phone".tr(),
+                            "Enter Phone Number".tr(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge
@@ -101,7 +101,7 @@ class _ForgetPassEmailState extends State<ForgetPassEmail> with Validations {
                               Row(
                                 children: [
                                   Text(
-                                    'phone'.tr(),
+                                    "Phone Number".tr(),
                                     style:
                                         Theme.of(context).textTheme.bodyMedium,
                                   ),
