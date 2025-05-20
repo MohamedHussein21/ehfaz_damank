@@ -80,16 +80,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       profile.name,
                       () =>
                           _navigateToScreen(EditNameScreen(profile: profile))),
+                  Divider(
+                    thickness: 1,
+                    color: Colors.grey.shade100,
+                  ),
                   _buildProfileTile(
                       "Phone Number".tr(),
                       profile.phone,
                       () =>
                           _navigateToScreen(EditNameScreen(profile: profile))),
+                  Divider(
+                    thickness: 1,
+                    color: Colors.grey.shade100,
+                  ),
                   Text("privacy and security".tr(),
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   _buildProfileTile("Password".tr(), "**********",
                       () => _navigateToScreen(EditPasswordScreen())),
+                  Divider(
+                    thickness: 1,
+                    color: Colors.grey.shade100,
+                  ),
                   SizedBox(height: 10),
                   _buildDeleteAccountButton(),
                 ],

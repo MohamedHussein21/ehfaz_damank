@@ -10,6 +10,7 @@ import '../../../../core/utils/color_mange.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/images_mange.dart';
 import '../cubit/login_cubit.dart';
+import 'dart:ui' as ui;
 
 class OtpScreenScreen extends StatefulWidget {
   final String phone;
@@ -55,17 +56,20 @@ class _OtpScreenState extends State<OtpScreenScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          OtpTextField(
-            numberOfFields: 4,
-            borderColor: ColorManger.defaultColor,
-            focusedBorderColor: ColorManger.defaultColor,
-            showFieldAsBox: true,
-            borderRadius: BorderRadius.circular(12),
-            fieldWidth: 55,
-            onCodeChanged: (String code) {},
-            onSubmit: (String verificationCode) {
-              _otpCode = verificationCode;
-            },
+          Directionality(
+            textDirection: ui.TextDirection.ltr,
+            child: OtpTextField(
+              numberOfFields: 4,
+              borderColor: ColorManger.defaultColor,
+              focusedBorderColor: ColorManger.defaultColor,
+              showFieldAsBox: true,
+              borderRadius: BorderRadius.circular(12),
+              fieldWidth: 55,
+              onCodeChanged: (String code) {},
+              onSubmit: (String verificationCode) {
+                _otpCode = verificationCode;
+              },
+            ),
           ),
           const SizedBox(height: 32),
           BlocConsumer<LoginCubit, LoginState>(
